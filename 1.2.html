@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <script src="analytics-include.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akademi Pengekodan: Algoritma</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+        
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        .nav-item.active {
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 600;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row h-screen overflow-hidden selection:bg-blue-500 selection:text-white bg-slate-900">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-slate-800 border-b border-slate-700 p-4 flex justify-between items-center z-30">
+        <h1 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fas fa-project-diagram text-blue-400"></i> Akademi Kod (1.2)
+        </h1>
+        <button id="mobile-menu-btn" class="text-slate-300 hover:text-white focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/80 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 z-50 w-72 bg-slate-800 border-r border-slate-700 flex flex-col h-full shadow-2xl md:shadow-none">
+        <div class="p-6 border-b border-slate-700 hidden md:block">
+            <h1 class="text-xl font-bold text-white flex items-center gap-3">
+                <i class="fas fa-project-diagram text-blue-400"></i>
+                Akademi Kod
+            </h1>
+            <p class="text-xs text-slate-400 mt-2">Sains Komputer - Topik 1.2</p>
+        </div>
+        
+        <div class="p-4 md:hidden flex justify-between items-center border-b border-slate-700">
+            <span class="text-white font-bold text-lg">Menu Navigasi</span>
+            <button id="close-sidebar-btn" class="text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <div class="p-4 border-b border-slate-700 bg-slate-800/50">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-semibold text-slate-300">Pengalaman (XP)</span>
+                <span id="xp-counter" class="text-sm font-bold text-yellow-400">0 / 1500</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                <div id="xp-bar" class="bg-yellow-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="index.html" class="w-full flex items-center gap-3 px-4 py-3 mb-4 rounded-lg text-left text-white bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-600 shadow-md">
+                <i class="fas fa-arrow-left w-5 text-center text-rose-400"></i>
+                <span class="font-bold">Kembali ke Portal</span>
+            </a>
+
+            <div class="pt-2 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Modul Pembelajaran</div>
+            <button onclick="loadModule('modul1')" id="nav-modul1" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-code-branch w-5 text-center text-blue-400"></i>
+                <span class="text-sm md:text-base">M1: Asas Algoritma</span>
+            </button>
+            <button onclick="loadModule('modul2')" id="nav-modul2" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-wrench w-5 text-center text-orange-400"></i>
+                <span class="text-sm md:text-base">M2: Larian Kering</span>
+            </button>
+            <button onclick="loadModule('modul3')" id="nav-modul3" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-table w-5 text-center text-green-400"></i>
+                <span class="text-sm md:text-base">M3: Jadual Penjejakan</span>
+            </button>
+            <button onclick="loadModule('modul4')" id="nav-modul4" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-file-code w-5 text-center text-purple-400"></i>
+                <span class="text-sm md:text-base">M4: Terjemahan Kod</span>
+            </button>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Penilaian</div>
+            <button onclick="loadModule('ujian')" id="nav-ujian" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-trophy w-5 text-center text-yellow-400"></i>
+                <span class="text-sm md:text-base">Ujian Akhir (Boss)</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 relative overflow-y-auto h-full">
+        <!-- Toast Notification -->
+        <div id="toast" class="fixed top-5 right-5 z-50 transform transition-transform duration-300 translate-x-full bg-slate-800 border border-slate-600 px-4 py-3 md:px-6 md:py-4 rounded-lg shadow-xl flex items-center gap-3">
+            <i id="toast-icon" class="fas fa-check-circle text-green-400 text-lg md:text-xl"></i>
+            <div>
+                <h4 id="toast-title" class="font-bold text-white text-sm md:text-base">Berjaya!</h4>
+                <p id="toast-msg" class="text-xs md:text-sm text-slate-300">Jawapan anda tepat. +50 XP</p>
+            </div>
+        </div>
+
+        <div id="content-area" class="max-w-5xl mx-auto p-4 md:p-8 pb-24 md:pb-20">
+            <!-- Content gets injected here -->
+        </div>
+    </main>
+
+    <script>
+        // --- Mobile Menu Logic ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleSidebar);
+        if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- State Management ---
+        let currentXP = 0;
+        const state = { m1_done: false, m2_done: false, m3_done: false, m4_done: false, ujian_done: false };
+
+        function addXP(amount) {
+            currentXP += amount;
+            if (currentXP > 1500) currentXP = 1500;
+            document.getElementById('xp-counter').innerText = `${currentXP} / 1500`;
+            document.getElementById('xp-bar').style.width = `${(currentXP / 1500) * 100}%`;
+            
+            const counter = document.getElementById('xp-counter');
+            counter.classList.add('scale-125', 'text-white');
+            setTimeout(() => counter.classList.remove('scale-125', 'text-white'), 300);
+        }
+
+        function showToast(title, msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle text-green-400 text-xl';
+                toast.style.borderLeft = '4px solid #4ade80';
+            } else {
+                icon.className = 'fas fa-times-circle text-red-400 text-xl';
+                toast.style.borderLeft = '4px solid #f87171';
+            }
+
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => { toast.classList.add('translate-x-full'); }, 3000);
+        }
+
+        function updateNavActive(moduleId) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const activeNav = document.getElementById(`nav-${moduleId}`);
+            if(activeNav) activeNav.classList.add('active');
+        }
+
+        function loadModule(moduleId) {
+            if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) {
+                toggleSidebar();
+            }
+
+            const container = document.getElementById('content-area');
+            updateNavActive(moduleId);
+            window.scrollTo(0, 0);
+            
+            let html = '';
+
+            switch (moduleId) {
+                case 'modul1':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-blue-500/20 text-blue-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.2.1 & 1.2.2</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Asas Algoritma & Struktur</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-sm md:text-lg">Algoritma adalah siri langkah logik untuk menyelesaikan masalah. Ia boleh ditulis menggunakan dua cara utama: <strong>Pseudokod</strong> atau <strong>Carta Alir</strong>.</p>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-10">
+                                <!-- Pseudokod -->
+                                <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform p-4 md:p-5">
+                                    <h3 class="font-bold text-blue-400 text-lg md:text-xl mb-3 border-b border-slate-700 pb-2">Pseudokod</h3>
+                                    <p class="text-xs md:text-sm text-slate-300 mb-4">Penulisan algoritma menggunakan ayat ringkas (teks) yang menyerupai bahasa pengaturcaraan tetapi tidak terikat kepada tatabahasa ketat.</p>
+                                    <div class="bg-slate-900 rounded p-3 text-xs md:text-sm code-font text-slate-300 overflow-x-auto whitespace-pre">
+MULA
+  INPUT umur
+  JIKA umur >= 18
+    PAPAR "Layak mengundi"
+  TAMAT JIKA
+TAMAT</div>
+                                </div>
+
+                                <!-- Carta Alir -->
+                                <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform p-4 md:p-5">
+                                    <h3 class="font-bold text-emerald-400 text-lg md:text-xl mb-3 border-b border-slate-700 pb-2">Carta Alir</h3>
+                                    <p class="text-xs md:text-sm text-slate-300 mb-4">Perwakilan grafik yang menggunakan simbol geometri standard bagi menunjukkan turutan langkah.</p>
+                                    <div class="flex flex-wrap gap-3 mt-2 text-xs text-slate-400">
+                                        <div class="flex items-center gap-2 w-full md:w-auto"><div class="w-8 h-4 border-2 border-emerald-500 rounded-full flex-shrink-0"></div> Mula/Tamat (Terminal)</div>
+                                        <div class="flex items-center gap-2 w-full md:w-auto"><div class="w-8 h-4 border-2 border-blue-500 flex-shrink-0" style="transform: skew(-20deg);"></div> Input/Output</div>
+                                        <div class="flex items-center gap-2 w-full md:w-auto"><div class="w-8 h-4 border-2 border-purple-500 flex-shrink-0"></div> Proses (Petak)</div>
+                                        <div class="flex items-center gap-2 w-full md:w-auto"><div class="w-6 h-6 border-2 border-yellow-500 rotate-45 flex-shrink-0 mx-1"></div> Pilihan (Rombus)</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4"><i class="fas fa-dumbbell mr-2 text-blue-400"></i>Cabaran Kefahaman</h3>
+                                <p class="text-sm text-slate-300 mb-4">Dalam Carta Alir, bentuk geometri manakah yang digunakan untuk mewakili <strong>Struktur Kawalan Pilihan (Syarat Ya/Tidak)</strong>?</p>
+                                
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <select id="m1-q1" class="bg-slate-700 text-white text-sm rounded border border-slate-600 focus:border-blue-500 p-3 outline-none w-full sm:w-1/2">
+                                        <option value="">-- Pilih Bentuk Geometri --</option>
+                                        <option value="petak">Segi Empat Tepat (Petak)</option>
+                                        <option value="rombus">Lelayang (Rombus)</option>
+                                        <option value="bulat">Bujur (Oval)</option>
+                                    </select>
+                                    <button onclick="checkM1()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 sm:py-2 rounded-lg font-semibold transition-colors w-full sm:w-auto text-sm md:text-base">Semak Jawapan</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul2':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-orange-500/20 text-orange-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.2.3</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Uji dan Baiki (Larian Kering)</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-sm md:text-lg">Algoritma perlu diuji sebelum ditaip ke dalam komputer. Proses menguji menggunakan kertas dan pen dengan memasukkan nilai secara manual dipanggil <strong>Larian Kering (Dry Run)</strong>.</p>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden mb-8">
+                                <div class="bg-slate-700/50 p-4 border-b border-slate-700">
+                                    <h3 class="font-bold text-white text-lg">Makmal Larian Kering</h3>
+                                </div>
+                                <div class="p-5 md:p-6">
+                                    <p class="text-sm text-slate-300 mb-4">Pseudokod di bawah sepatutnya memaparkan perkataan "Helo" sebanyak 3 kali. Namun, ia mempunyai satu <strong>Ralat Logik</strong> (Gelung Infiniti). Lakukan larian kering dalam minda anda.</p>
+                                    
+                                    <div class="bg-slate-900 rounded p-4 text-xs md:text-sm code-font text-orange-300 mb-6 overflow-x-auto whitespace-pre border border-slate-700">
+1. MULA
+2. SET i = 1
+3. SELAGI i <= 3 DO
+4.    PAPAR "Helo"
+5. TAMAT SELAGI
+6. TAMAT</div>
+                                    
+                                    <p class="text-sm text-slate-300 mb-4">Sila pilih baris arahan yang tertinggal dan perlu ditambah di antara <strong>Baris 4 dan Baris 5</strong> untuk membaiki ralat ini.</p>
+
+                                    <div class="flex flex-col md:flex-row gap-3">
+                                        <button onclick="checkM2('salah')" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-lg border border-slate-600 text-sm md:text-base transition-colors">SET i = 1</button>
+                                        <button onclick="checkM2('betul')" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-lg border border-slate-600 text-sm md:text-base transition-colors font-bold text-emerald-400">KIRA i = i + 1</button>
+                                        <button onclick="checkM2('salah2')" class="flex-1 bg-slate-700 hover:bg-slate-600 text-white px-4 py-3 rounded-lg border border-slate-600 text-sm md:text-base transition-colors">PAPAR i</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul3':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-green-500/20 text-green-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.2.4 & 1.2.5</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Jadual Penjejakan & Output</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-sm md:text-lg">Untuk mengesan perubahan nilai pemboleh ubah dengan lebih teratur, kita menggunakan <strong>Jadual Penjejakan (Tracing Table)</strong>.</p>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-4 md:p-6 mb-8 flex flex-col lg:flex-row gap-6 lg:gap-8">
+                                <!-- Algoritma -->
+                                <div class="w-full lg:w-1/3">
+                                    <h3 class="font-bold text-white mb-3 md:mb-4">Algoritma:</h3>
+                                    <div class="bg-slate-900 rounded p-4 code-font text-xs md:text-sm text-slate-300 leading-relaxed shadow-inner overflow-x-auto whitespace-pre border border-slate-700">
+1. x = 10
+2. y = 5
+3. x = x - y
+4. y = y + x
+5. PAPAR y</div>
+                                </div>
+
+                                <!-- Jadual -->
+                                <div class="w-full lg:w-2/3">
+                                    <h3 class="font-bold text-white mb-3 md:mb-4">Jadual Penjejakan:</h3>
+                                    <div class="overflow-x-auto rounded-lg border border-slate-700">
+                                        <table class="w-full text-xs md:text-sm text-left text-slate-300 border-collapse min-w-[300px]">
+                                            <thead class="text-xs text-slate-400 uppercase bg-slate-700">
+                                                <tr>
+                                                    <th class="px-3 md:px-4 py-2 border-b border-slate-600">Baris</th>
+                                                    <th class="px-3 md:px-4 py-2 border-b border-slate-600">Nilai 'x'</th>
+                                                    <th class="px-3 md:px-4 py-2 border-b border-slate-600">Nilai 'y'</th>
+                                                    <th class="px-3 md:px-4 py-2 border-b border-slate-600">Output Skrin</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="bg-slate-800 border-b border-slate-700">
+                                                    <td class="px-3 md:px-4 py-2 font-bold">1</td>
+                                                    <td class="px-3 md:px-4 py-2 text-green-400 font-bold">10</td>
+                                                    <td class="px-3 md:px-4 py-2">-</td>
+                                                    <td class="px-3 md:px-4 py-2">-</td>
+                                                </tr>
+                                                <tr class="bg-slate-800 border-b border-slate-700">
+                                                    <td class="px-3 md:px-4 py-2 font-bold">2</td>
+                                                    <td class="px-3 md:px-4 py-2">10</td>
+                                                    <td class="px-3 md:px-4 py-2 text-blue-400 font-bold">5</td>
+                                                    <td class="px-3 md:px-4 py-2">-</td>
+                                                </tr>
+                                                <tr class="bg-slate-800 border-b border-slate-700">
+                                                    <td class="px-3 md:px-4 py-2 font-bold">3</td>
+                                                    <td class="px-3 md:px-4 py-2">(10-5) = <span class="text-green-400 font-bold">5</span></td>
+                                                    <td class="px-3 md:px-4 py-2">5</td>
+                                                    <td class="px-3 md:px-4 py-2">-</td>
+                                                </tr>
+                                                <tr class="bg-slate-800 border-b border-slate-700">
+                                                    <td class="px-3 md:px-4 py-2 font-bold">4</td>
+                                                    <td class="px-3 md:px-4 py-2">5</td>
+                                                    <td class="px-3 md:px-4 py-2">(5+5) = <span class="text-blue-400 font-bold">10</span></td>
+                                                    <td class="px-3 md:px-4 py-2">-</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="mt-6 bg-slate-900 p-4 md:p-5 rounded-lg border border-slate-700">
+                                        <p class="text-sm font-semibold mb-3">Berdasarkan jadual di atas, apakah hasil <strong>Output</strong> pada Baris ke-5?</p>
+                                        <div class="flex flex-col sm:flex-row gap-3">
+                                            <input type="number" id="m3-q1-input" class="bg-slate-800 border border-slate-600 text-white rounded px-4 py-3 sm:py-2 w-full sm:w-32 focus:border-green-500 outline-none text-base" placeholder="Nilai...">
+                                            <button onclick="checkM3()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 sm:py-2 rounded-lg font-semibold transition-colors w-full sm:w-auto text-sm md:text-base">Jawab</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul4':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-purple-500/20 text-purple-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.2.6</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Terjemahan Algoritma ke Kod</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-sm md:text-lg">Langkah terakhir selepas algoritma disahkan bebas ralat logik adalah menterjemahkannya (coding) ke dalam bahasa pengaturcaraan seperti Python, Java, atau C++.</p>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden mb-8">
+                                <div class="flex flex-col md:flex-row bg-slate-700/50 border-b border-slate-700">
+                                    <div class="flex-1 py-3 px-4 font-bold text-blue-400 border-b border-slate-600 md:border-b-0 md:border-r border-slate-700 text-center">Pseudokod</div>
+                                    <div class="flex-1 py-3 px-4 font-bold text-purple-400 text-center">Kod Sebenar (Python)</div>
+                                </div>
+                                
+                                <div class="flex flex-col md:flex-row p-4 md:p-6 gap-4 md:gap-6 relative">
+                                    <div class="flex-1 bg-slate-900 rounded p-4 code-font text-xs md:text-sm text-blue-300 border border-slate-700 overflow-x-auto whitespace-pre">
+MULA
+  SET x = 5
+  JIKA x > 2
+    PAPAR "Lulus"
+  TAMAT JIKA
+TAMAT</div>
+                                    <div class="hidden md:flex items-center justify-center text-slate-500"><i class="fas fa-arrow-right text-xl"></i></div>
+                                    <div class="flex md:hidden items-center justify-center text-slate-500 py-2"><i class="fas fa-arrow-down text-xl"></i></div>
+                                    <div class="flex-1 bg-slate-900 rounded p-4 code-font text-xs md:text-sm text-purple-300 border border-slate-700 overflow-x-auto whitespace-pre">
+# Tiada mula
+x = 5
+if x > 2:
+    print("Lulus")
+# Tiada tamat</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4">Latihan Menterjemah</h3>
+                                <p class="text-sm text-slate-300 mb-4">Terjemahkan baris pseudokod berikut kepada kod fungsi paparan standard (Python/Java):<br><strong class="bg-slate-900 px-2 py-1 rounded mt-2 inline-block text-blue-300">PAPAR "Hai Dunia"</strong></p>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <button onclick="checkM4('A')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-4 md:p-3 text-left code-font text-sm transition-colors">A) display "Hai Dunia"</button>
+                                    <button onclick="checkM4('B')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-4 md:p-3 text-left code-font text-sm transition-colors">B) print("Hai Dunia")</button>
+                                    <button onclick="checkM4('C')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-4 md:p-3 text-left code-font text-sm transition-colors">C) INPUT "Hai Dunia"</button>
+                                    <button onclick="checkM4('D')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-4 md:p-3 text-left code-font text-sm transition-colors">D) SHOW("Hai Dunia")</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'ujian':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-yellow-500/20 text-yellow-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold"><i class="fas fa-trophy mr-2"></i>BOSS</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white">Ujian Penilaian Akhir</h2>
+                            </div>
+                            
+                            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-5 md:p-8 shadow-2xl relative overflow-hidden">
+                                <div class="relative z-10">
+                                    <h3 class="text-lg md:text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4">Jawab 15 soalan berikut dengan tepat.</h3>
+                                    
+                                    <div class="space-y-8 md:space-y-10">
+                                        <!-- Q1 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">1. Apakah fungsi utama sebuah algoritma?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq1" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Siri langkah logik untuk menyelesaikan masalah</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq1" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Perisian untuk menaip kod Java</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q2 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">2. Dua cara paling lazim untuk menulis/mewakili algoritma?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq2" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Pangkalan Data dan Jadual</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq2" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Pseudokod dan Carta Alir</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q3 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">3. Dalam carta alir, apakah simbol geometri bagi Struktur Pilihan (Syarat)?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq3" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Segi Empat Tepat</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq3" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Lelayang (Rombus)</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q4 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">4. Struktur kawalan yang melakukan langkah baris demi baris dari atas ke bawah tanpa bersyarat?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq4" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Kawalan Urutan</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq4" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Kawalan Ulangan</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q5 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">5. Struktur kawalan yang berulang selagi syarat masih benar?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq5" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Kawalan Pilihan</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq5" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Kawalan Ulangan</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q6 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">6. Kaedah menguji algoritma secara manual di atas kertas dinamakan...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq6" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Larian Kering (Dry Run)</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq6" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Menterjemah (Coding)</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q7 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">7. Larian kering sangat berkesan untuk mengesan sejenis ralat yang komputer sukar cari. Apakah ralat itu?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq7" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Ralat Sintaks</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq7" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Ralat Logik</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q8 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">8. Alat yang dibina sewaktu larian kering untuk merekod nilai pemboleh ubah dipanggil...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq8" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Jadual Penjejakan (Tracing Table)</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq8" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Pangkalan Data (Database)</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q9 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">9. Semak nilai ini: x=10, kemudian x=x-3. Apakah nilai x sekarang?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq9" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">10</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq9" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">7</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q10 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">10. Ramal output. Jika A=4, B=5 dan C=A+B. PAPAR C. Outputnya ialah...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq10" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">9</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq10" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">20</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q11 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">11. Dalam carta alir, simbol yang senget (Segi empat selari / Parallelogram) digunakan untuk...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq11" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Mula dan Tamat</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq11" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Input dan Output</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q12 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">12. Proses menukar algoritma/pseudokod kepada bahasa yang difahami mesin (komputer) dipanggil...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq12" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Menterjemah kepada kod (Coding)</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq12" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Larian Kering</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q13 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">13. Terjemahkan pseudokod <code class="bg-slate-800 px-1 rounded">PAPAR "Hai"</code> kepada sintaks (kod) Python.</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq13" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">print("Hai")</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq13" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">System.out.print("Hai")</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q14 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">14. Kata kunci pseudokod manakah yang mewakili struktur Ulangan?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq14" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">JIKA ... TAMAT JIKA</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq14" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">SELAGI ... TAMAT SELAGI</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q15 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">15. Salah satu ciri algoritma yang baik adalah ia mesti mempunyai...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq15" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Titik mula (MULA) dan penamat (TAMAT) yang jelas</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq15" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Kod warna berbeza</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button onclick="checkUjian()" class="w-full mt-10 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-900/20 transform transition hover:-translate-y-1">Hantar Jawapan</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // --- Evaluators ---
+        function checkM1() {
+            const val = document.getElementById('m1-q1').value;
+            if (val === 'rombus') {
+                if(!state.m1_done) { addXP(100); state.m1_done = true; }
+                showToast("Tepat!", "Lelayang (Rombus) digunakan untuk pilihan/syarat (Ya/Tidak).");
+            } else {
+                showToast("Salah", "Sila semak semula bentuk untuk Struktur Pilihan.", "error");
+            }
+        }
+
+        function checkM2(val) {
+            if (val === 'betul') {
+                if(!state.m2_done) { addXP(150); state.m2_done = true; }
+                showToast("Pandai!", "Menambah 'KIRA i = i + 1' menjadikan kaunter naik dan memberhentikan gelung infiniti.");
+            } else {
+                showToast("Kurang Tepat", "Kaunter i perlulah dinaikkan untuk keluar dari gelung.", "error");
+            }
+        }
+
+        function checkM3() {
+            const val = document.getElementById('m3-q1-input').value;
+            if (val === '10') {
+                if(!state.m3_done) { addXP(200); state.m3_done = true; }
+                showToast("Hebat!", "Nilai 'y' terkini pada Baris 4 ialah 10. Ia dipaparkan ke output.");
+            } else {
+                showToast("Salah", "Lihat nilai terkini pada Lajur y Baris ke-4.", "error");
+            }
+        }
+
+        function checkM4(val) {
+            if (val === 'B') {
+                if(!state.m4_done) { addXP(100); state.m4_done = true; }
+                showToast("Tepat Sekali!", "Di dalam Python, 'PAPAR' diterjemahkan sebagai print().");
+            } else {
+                showToast("Tidak Tepat", "Sila pilih sintaks yang betul bagi Python/Java.", "error");
+            }
+        }
+
+        function checkUjian() {
+            const answers = { uq1: 'A', uq2: 'B', uq3: 'C', uq4: 'A', uq5: 'B', uq6: 'B', uq7: 'C', uq8: 'A', uq9: 'C', uq10: 'B', uq11: 'B', uq12: 'A', uq13: 'A', uq14: 'B', uq15: 'A' };
+            let allAnswered = true, allCorrect = true;
+
+            for (let i = 1; i <= 15; i++) {
+                const q = document.querySelector(`input[name="uq${i}"]:checked`);
+                if (!q) { allAnswered = false; break; }
+                if (q.value !== answers[`uq${i}`]) { allCorrect = false; }
+            }
+
+            if (!allAnswered) {
+                showToast("Perhatian", "Sila jawab kesemua 15 soalan.", "error"); return;
+            }
+
+            if (allCorrect) {
+                if(!state.ujian_done) { addXP(1000); state.ujian_done = true; }
+                document.getElementById('content-area').innerHTML = `
+                    <div class="animate-fade-in text-center pt-10 md:pt-20 pb-20">
+                        <i class="fas fa-medal text-7xl md:text-9xl text-blue-400 mb-8 drop-shadow-[0_0_30px_rgba(59,130,246,0.5)]"></i>
+                        <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Tahniah! Anda Lulus.</h1>
+                        <p class="text-sm md:text-xl text-slate-300 max-w-2xl mx-auto px-4">Anda telah menguasai kemahiran asas membina, menjejak, dan membaiki Algoritma!</p>
+                        <p class="mt-8 text-xl md:text-2xl font-bold text-blue-400">Total XP: ${currentXP}</p>
+                        <div class="mt-12">
+                            <a href="index.html" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-sm md:text-lg transition-colors shadow-lg shadow-blue-900/50">
+                                <i class="fas fa-home mr-2"></i> Kembali ke Portal Utama
+                            </a>
+                        </div>
+                    </div>
+                `;
+                window.scrollTo(0, 0);
+            } else {
+                showToast("Gagal", "Terdapat jawapan yang salah. Sila cuba lagi.", "error");
+            }
+        }
+
+        window.onload = () => { loadModule('modul1'); };
+    </script>
+</body>
+</html>
