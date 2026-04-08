@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VM2DF83GJ7"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-VM2DF83GJ7');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Akademi Pengekodan: Struktur Kawalan</title>
@@ -20,42 +11,25 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* Slate 900 */
-            color: #e2e8f0; /* Slate 200 */
+            background-color: #0f172a;
+            color: #e2e8f0;
         }
         
         .code-font {
             font-family: 'Fira Code', monospace;
         }
 
-        /* Custom Scrollbar for dark theme */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #1e293b; 
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #475569; 
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #64748b; 
-        }
-
-        .glass-panel {
-            background: rgba(30, 41, 59, 0.7);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
 
         .nav-item.active {
-            background-color: #3b82f6; /* Blue 500 */
+            background-color: #3b82f6;
             color: white;
             font-weight: 600;
         }
 
-        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -65,16 +39,36 @@
         }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden selection:bg-blue-500 selection:text-white">
+<body class="flex flex-col md:flex-row h-screen overflow-hidden selection:bg-blue-500 selection:text-white bg-slate-900">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-slate-800 border-b border-slate-700 p-4 flex justify-between items-center z-30">
+        <h1 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fas fa-sitemap text-blue-400"></i> Akademi Kod (1.4)
+        </h1>
+        <button id="mobile-menu-btn" class="text-slate-300 hover:text-white focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/80 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
 
     <!-- Sidebar Navigation -->
-    <aside class="w-72 bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-300 z-20">
-        <div class="p-6 border-b border-slate-700">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 z-50 w-72 bg-slate-800 border-r border-slate-700 flex flex-col h-full shadow-2xl md:shadow-none">
+        <div class="p-6 border-b border-slate-700 hidden md:block">
             <h1 class="text-xl font-bold text-white flex items-center gap-3">
                 <i class="fas fa-sitemap text-blue-400"></i>
                 Akademi Kod
             </h1>
             <p class="text-xs text-slate-400 mt-2">Sains Komputer - Topik 1.4</p>
+        </div>
+        
+        <div class="p-4 md:hidden flex justify-between items-center border-b border-slate-700">
+            <span class="text-white font-bold text-lg">Menu Navigasi</span>
+            <button id="close-sidebar-btn" class="text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
         </div>
 
         <div class="p-4 border-b border-slate-700 bg-slate-800/50">
@@ -88,7 +82,6 @@
         </div>
 
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-            <!-- Butang Kembali ke Portal Utama -->
             <a href="index.html" class="w-full flex items-center gap-3 px-4 py-3 mb-4 rounded-lg text-left text-white bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-600 shadow-md">
                 <i class="fas fa-arrow-left w-5 text-center text-rose-400"></i>
                 <span class="font-bold">Kembali ke Portal</span>
@@ -97,63 +90,70 @@
             <div class="pt-2 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Modul Pembelajaran</div>
             <button onclick="loadModule('modul1')" id="nav-modul1" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
                 <i class="fas fa-code-branch w-5 text-center text-blue-400"></i>
-                <span>M1: Pilihan (1.4.1)</span>
+                <span class="text-sm md:text-base">M1: Pilihan</span>
             </button>
             <button onclick="loadModule('modul2')" id="nav-modul2" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
                 <i class="fas fa-equals w-5 text-center text-orange-400"></i>
-                <span>M2: Operator (1.4.2)</span>
+                <span class="text-sm md:text-base">M2: Operator</span>
             </button>
             <button onclick="loadModule('modul3')" id="nav-modul3" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
                 <i class="fas fa-undo-alt w-5 text-center text-green-400"></i>
-                <span>M3: Ulangan (1.4.3)</span>
+                <span class="text-sm md:text-base">M3: Ulangan</span>
             </button>
             <button onclick="loadModule('modul4')" id="nav-modul4" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
                 <i class="fas fa-plus-circle w-5 text-center text-purple-400"></i>
-                <span>M4: Aplikasi (1.4.4)</span>
+                <span class="text-sm md:text-base">M4: Aplikasi</span>
             </button>
             <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Penilaian</div>
             <button onclick="loadModule('ujian')" id="nav-ujian" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
                 <i class="fas fa-trophy w-5 text-center text-yellow-400"></i>
-                <span>Ujian Akhir (Boss)</span>
+                <span class="text-sm md:text-base">Ujian Akhir (Boss)</span>
             </button>
         </nav>
     </aside>
 
     <!-- Main Content Area -->
-    <main class="flex-1 bg-slate-900 relative overflow-y-auto">
+    <main class="flex-1 relative overflow-y-auto h-full">
         <!-- Toast Notification -->
-        <div id="toast" class="fixed top-5 right-5 z-50 transform transition-transform duration-300 translate-x-full glass-panel px-6 py-4 rounded-lg shadow-xl flex items-center gap-3">
-            <i id="toast-icon" class="fas fa-check-circle text-green-400 text-xl"></i>
+        <div id="toast" class="fixed top-5 right-5 z-50 transform transition-transform duration-300 translate-x-full bg-slate-800 border border-slate-600 px-4 py-3 md:px-6 md:py-4 rounded-lg shadow-xl flex items-center gap-3">
+            <i id="toast-icon" class="fas fa-check-circle text-green-400 text-lg md:text-xl"></i>
             <div>
-                <h4 id="toast-title" class="font-bold text-white">Berjaya!</h4>
-                <p id="toast-msg" class="text-sm text-slate-300">Jawapan anda tepat. +50 XP</p>
+                <h4 id="toast-title" class="font-bold text-white text-sm md:text-base">Berjaya!</h4>
+                <p id="toast-msg" class="text-xs md:text-sm text-slate-300">Jawapan anda tepat. +50 XP</p>
             </div>
         </div>
 
-        <div id="content-area" class="max-w-5xl mx-auto p-8 pb-20">
+        <div id="content-area" class="max-w-5xl mx-auto p-4 md:p-8 pb-24 md:pb-20">
             <!-- Content gets injected here -->
         </div>
     </main>
 
     <script>
+        // --- Mobile Menu Logic ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleSidebar);
+        if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
         // --- State Management ---
         let currentXP = 0;
-        const state = {
-            m1_done: false,
-            m2_done: false,
-            m3_done: false,
-            m4_done: false,
-            ujian_done: false
-        };
+        const state = { m1_done: false, m2_done: false, m3_done: false, m4_done: false, ujian_done: false };
 
-        // --- Utility Functions ---
         function addXP(amount) {
             currentXP += amount;
             if (currentXP > 1500) currentXP = 1500;
             document.getElementById('xp-counter').innerText = `${currentXP} / 1500`;
             document.getElementById('xp-bar').style.width = `${(currentXP / 1500) * 100}%`;
             
-            // Highlight animation
             const counter = document.getElementById('xp-counter');
             counter.classList.add('scale-125', 'text-white');
             setTimeout(() => counter.classList.remove('scale-125', 'text-white'), 300);
@@ -175,18 +175,20 @@
             }
 
             toast.classList.remove('translate-x-full');
-            setTimeout(() => {
-                toast.classList.add('translate-x-full');
-            }, 3000);
+            setTimeout(() => { toast.classList.add('translate-x-full'); }, 3000);
         }
 
         function updateNavActive(moduleId) {
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById(`nav-${moduleId}`).classList.add('active');
+            const activeNav = document.getElementById(`nav-${moduleId}`);
+            if(activeNav) activeNav.classList.add('active');
         }
 
-        // --- Render Functions ---
         function loadModule(moduleId) {
+            if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) {
+                toggleSidebar();
+            }
+
             const container = document.getElementById('content-area');
             updateNavActive(moduleId);
             window.scrollTo(0, 0);
@@ -197,29 +199,28 @@
                 case 'modul1':
                     html = `
                         <div class="animate-fade-in">
-                            <div class="flex items-center gap-3 mb-6">
-                                <span class="bg-blue-500/20 text-blue-400 py-1 px-3 rounded-full text-sm font-bold">1.4.1</span>
-                                <h2 class="text-3xl font-bold text-white">Struktur Kawalan Pilihan</h2>
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-blue-500/20 text-blue-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.4.1</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Struktur Kawalan Pilihan</h2>
                             </div>
                             
-                            <p class="text-slate-300 mb-6 text-lg">Membenarkan atur cara membuat keputusan untuk melaksanakan blok kod tertentu berdasarkan syarat yang diuji.</p>
+                            <p class="text-slate-300 mb-6 text-sm md:text-lg">Membenarkan atur cara membuat keputusan untuk melaksanakan blok kod tertentu berdasarkan syarat.</p>
 
-                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-10">
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-10">
                                 <!-- If-Else -->
                                 <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform">
                                     <div class="bg-blue-900/50 p-4 border-b border-blue-500/30 flex items-center gap-2">
                                         <i class="fas fa-code-branch text-blue-400"></i>
                                         <h3 class="font-bold text-blue-100">1. if-else</h3>
                                     </div>
-                                    <div class="p-5">
-                                        <p class="text-sm text-slate-300 mb-4">Digunakan apabila terdapat syarat boolean (Benar/Palsu) yang perlu dinilai, termasuk julat (range).</p>
-                                        <div class="bg-slate-900 rounded p-3 text-sm code-font text-blue-300 mb-2">
-                                            if (markah >= 50) {<br>
-                                            &nbsp;&nbsp;print("Lulus");<br>
-                                            } else {<br>
-                                            &nbsp;&nbsp;print("Gagal");<br>
-                                            }
-                                        </div>
+                                    <div class="p-4 md:p-5">
+                                        <p class="text-xs md:text-sm text-slate-300 mb-4">Digunakan untuk menilai syarat boolean (Benar/Palsu) termasuk julat (range).</p>
+                                        <div class="bg-slate-900 rounded p-3 text-xs md:text-sm code-font text-blue-300 overflow-x-auto whitespace-pre">
+if (markah >= 50) {
+  print("Lulus");
+} else {
+  print("Gagal");
+}</div>
                                     </div>
                                 </div>
 
@@ -229,34 +230,29 @@
                                         <i class="fas fa-list-ul text-purple-400"></i>
                                         <h3 class="font-bold text-purple-100">2. switch-case</h3>
                                     </div>
-                                    <div class="p-5">
-                                        <p class="text-sm text-slate-300 mb-4">Digunakan apabila kita menguji satu pemboleh ubah dengan nilai-nilai tetap yang spesifik (contoh: menu pilihan).</p>
-                                        <div class="bg-slate-900 rounded p-3 text-sm code-font text-purple-300 mb-2">
-                                            switch(hari) {<br>
-                                            &nbsp;&nbsp;case 1: print("Isnin"); break;<br>
-                                            &nbsp;&nbsp;case 2: print("Selasa"); break;<br>
-                                            &nbsp;&nbsp;default: print("Cuti");<br>
-                                            }
-                                        </div>
+                                    <div class="p-4 md:p-5">
+                                        <p class="text-xs md:text-sm text-slate-300 mb-4">Digunakan apabila menguji pemboleh ubah dengan nilai-nilai tetap spesifik (cth: menu).</p>
+                                        <div class="bg-slate-900 rounded p-3 text-xs md:text-sm code-font text-purple-300 overflow-x-auto whitespace-pre">
+switch(hari) {
+  case 1: print("Isnin"); break;
+  case 2: print("Selasa"); break;
+  default: print("Cuti");
+}</div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Latihan -->
-                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
-                                <h3 class="text-xl font-bold text-white mb-4"><i class="fas fa-dumbbell mr-2 text-blue-400"></i>Cabaran Kefahaman</h3>
-                                <p class="text-sm text-slate-300 mb-4">Anda diminta membina sebuah sistem pesanan makanan restoran yang mempunyai menu 1 hingga 5. Struktur manakah yang **PALING SESUAI** dan efisien untuk digunakan?</p>
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4"><i class="fas fa-dumbbell mr-2 text-blue-400"></i>Cabaran Kefahaman</h3>
+                                <p class="text-sm text-slate-300 mb-4">Untuk sistem pesanan makanan restoran yang mempunyai menu 1 hingga 5, struktur manakah yang **PALING SESUAI** dan efisien?</p>
                                 
-                                <div class="space-y-4">
-                                    <select id="m1-q1" class="bg-slate-700 text-white text-sm rounded border border-slate-600 focus:border-blue-500 focus:ring-blue-500 p-2.5 outline-none w-full md:w-1/2">
-                                        <option value="">-- Pilih Struktur Kawalan --</option>
+                                <div class="flex flex-col md:flex-row gap-3">
+                                    <select id="m1-q1" class="bg-slate-700 text-white text-sm rounded border border-slate-600 focus:border-blue-500 p-3 outline-none w-full md:w-auto">
+                                        <option value="">-- Pilih Struktur --</option>
                                         <option value="if">if-else bersarang</option>
                                         <option value="switch">switch-case</option>
                                     </select>
-                                </div>
-                                
-                                <div class="mt-6 flex justify-end">
-                                    <button onclick="checkM1()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">Semak Jawapan</button>
+                                    <button onclick="checkM1()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 md:py-2 rounded-lg font-semibold transition-colors flex-shrink-0 text-sm md:text-base">Semak Jawapan</button>
                                 </div>
                             </div>
                         </div>
@@ -266,54 +262,49 @@
                 case 'modul2':
                     html = `
                         <div class="animate-fade-in">
-                            <div class="flex items-center gap-3 mb-6">
-                                <span class="bg-orange-500/20 text-orange-400 py-1 px-3 rounded-full text-sm font-bold">1.4.2</span>
-                                <h2 class="text-3xl font-bold text-white">Operator Hubungan & Logikal</h2>
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-orange-500/20 text-orange-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.4.2</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Operator Hubungan & Logikal</h2>
                             </div>
                             
-                            <p class="text-slate-300 mb-6 text-lg">Struktur kawalan pilihan menjadi lebih berkuasa apabila kita menggabungkan beberapa syarat sekaligus menggunakan operator.</p>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8">
                                 <div class="bg-slate-800 border border-slate-700 rounded-xl p-5">
                                     <h3 class="font-bold text-white mb-3 border-b border-slate-700 pb-2">Operator Hubungan</h3>
                                     <ul class="text-sm text-slate-300 space-y-2">
-                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-orange-300">==</code> Sama dengan</li>
-                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-orange-300">!=</code> Tidak sama dengan</li>
-                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-orange-300">&gt;</code> Lebih besar</li>
-                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-orange-300">&lt;</code> Lebih kecil</li>
-                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-orange-300">&gt;=</code> Lebih besar atau sama</li>
-                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-orange-300">&lt;=</code> Lebih kecil atau sama</li>
+                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-orange-300 w-10 inline-block text-center">==</code> Sama dengan</li>
+                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-orange-300 w-10 inline-block text-center">!=</code> Tidak sama</li>
+                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-orange-300 w-10 inline-block text-center">&gt;</code> Lebih besar</li>
+                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-orange-300 w-10 inline-block text-center">&lt;</code> Lebih kecil</li>
                                     </ul>
                                 </div>
                                 <div class="bg-slate-800 border border-slate-700 rounded-xl p-5">
                                     <h3 class="font-bold text-white mb-3 border-b border-slate-700 pb-2">Operator Logikal</h3>
                                     <ul class="text-sm text-slate-300 space-y-2">
-                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-emerald-300">&&</code> (AND) Kedua-dua mesti Benar</li>
-                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-emerald-300">||</code> (OR) Salah satu mesti Benar</li>
-                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-emerald-300">!</code> (NOT) Menukar Benar jadi Palsu</li>
+                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-emerald-300 w-10 inline-block text-center">&&</code> (AND) Kedua-dua mesti Benar</li>
+                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-emerald-300 w-10 inline-block text-center">||</code> (OR) Salah satu mesti Benar</li>
+                                        <li><code class="bg-slate-900 px-2 py-1 rounded text-emerald-300 w-10 inline-block text-center">!</code> (NOT) Menukar ke Palsu</li>
                                     </ul>
                                 </div>
                             </div>
 
                             <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
-                                <div class="bg-slate-700/50 p-4 border-b border-slate-700 flex justify-between items-center">
+                                <div class="bg-slate-700/50 p-4 border-b border-slate-700">
                                     <h3 class="font-bold text-white">Latihan Kod</h3>
                                 </div>
-                                <div class="p-6">
-                                    <p class="text-sm text-slate-300 mb-4">Seorang pelajar perlu mendapat markah lebih daripada 40 <strong>DAN</strong> peratus kehadiran mesti sama dengan 100 untuk mendapat Sijil. Tentukan hasil (True/False) bagi pernyataan ini berdasarkan nilai pemboleh ubah di bawah.</p>
+                                <div class="p-5 md:p-6">
+                                    <p class="text-sm text-slate-300 mb-4">Pelajar perlukan markah > 40 <strong>DAN</strong> kehadiran == 100. Tentukan hasil operasi di bawah.</p>
                                     
-                                    <div class="bg-slate-900 rounded p-4 text-sm code-font text-slate-300 mb-6">
-                                        int markah = 35;<br>
-                                        int kehadiran = 100;<br><br>
-                                        <span class="text-slate-500">// Penilaian Syarat:</span><br>
-                                        boolean layak = <span class="text-orange-300">(markah &gt; 40)</span> <span class="text-emerald-300">&&</span> <span class="text-orange-300">(kehadiran == 100)</span>;
-                                    </div>
+                                    <div class="bg-slate-900 rounded p-4 text-xs md:text-sm code-font text-slate-300 mb-6 overflow-x-auto whitespace-pre">
+int markah = 35;
+int kehadiran = 100;
+
+boolean layak = <span class="text-orange-300">(markah &gt; 40)</span> <span class="text-emerald-300">&&</span> <span class="text-orange-300">(kehadiran == 100)</span>;</div>
                                     
-                                    <div class="flex items-center justify-between">
-                                        <p class="text-sm text-slate-300">Apakah nilai akhir bagi pemboleh ubah <code class="bg-slate-700 px-1 rounded">layak</code>?</p>
-                                        <div class="flex gap-2">
-                                            <button onclick="checkM2('true')" class="bg-slate-700 hover:bg-emerald-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors border border-slate-600">TRUE</button>
-                                            <button onclick="checkM2('false')" class="bg-slate-700 hover:bg-rose-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors border border-slate-600">FALSE</button>
+                                    <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                                        <p class="text-sm text-slate-300">Apakah nilai <code class="bg-slate-700 px-1 rounded">layak</code>?</p>
+                                        <div class="flex gap-2 w-full md:w-auto">
+                                            <button onclick="checkM2('true')" class="flex-1 md:flex-none bg-slate-700 hover:bg-emerald-600 text-white px-6 py-3 md:py-2 rounded-lg font-semibold transition-colors border border-slate-600 text-sm">TRUE</button>
+                                            <button onclick="checkM2('false')" class="flex-1 md:flex-none bg-slate-700 hover:bg-rose-600 text-white px-6 py-3 md:py-2 rounded-lg font-semibold transition-colors border border-slate-600 text-sm">FALSE</button>
                                         </div>
                                     </div>
                                 </div>
@@ -325,60 +316,55 @@
                 case 'modul3':
                     html = `
                         <div class="animate-fade-in">
-                            <div class="flex items-center gap-3 mb-6">
-                                <span class="bg-green-500/20 text-green-400 py-1 px-3 rounded-full text-sm font-bold">1.4.3</span>
-                                <h2 class="text-3xl font-bold text-white">Struktur Kawalan Ulangan</h2>
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-green-500/20 text-green-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.4.3</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Struktur Kawalan Ulangan</h2>
                             </div>
                             
-                            <p class="text-slate-300 mb-6 text-lg">Membenarkan atur cara mengulang blok kod yang sama berulang kali selagi syarat yang ditetapkan adalah benar.</p>
-
-                            <div class="space-y-6 mb-10">
+                            <div class="space-y-4 md:space-y-6 mb-8 md:mb-10">
                                 <!-- For -->
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col md:flex-row items-center gap-6">
-                                    <div class="bg-slate-900 w-full md:w-1/3 p-4 rounded text-sm code-font text-green-300">
-                                        for(int i=0; i<5; i++) {<br>
-                                        &nbsp;&nbsp;print("Helo");<br>
-                                        }
-                                    </div>
+                                <div class="bg-slate-800 p-4 md:p-5 rounded-xl border border-slate-700 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
+                                    <div class="bg-slate-900 w-full md:w-1/3 p-3 md:p-4 rounded text-xs md:text-sm code-font text-green-300 overflow-x-auto whitespace-pre">
+for(int i=0; i<5; i++) {
+  print("Helo");
+}</div>
                                     <div class="w-full md:w-2/3">
-                                        <h3 class="text-xl font-bold text-white mb-2">1. Gelung 'for'</h3>
-                                        <p class="text-slate-400 text-sm">Digunakan apabila <strong>bilangan ulangan telah diketahui</strong> sebelum gelung bermula. Mempunyai nilai awal, syarat, dan kaunter (kemaskini) di dalam satu baris yang sama.</p>
+                                        <h3 class="text-lg md:text-xl font-bold text-white mb-1 md:mb-2">1. Gelung 'for'</h3>
+                                        <p class="text-slate-400 text-xs md:text-sm">Bila <strong>bilangan ulangan telah diketahui</strong> awal-awal.</p>
                                     </div>
                                 </div>
 
                                 <!-- While -->
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col md:flex-row items-center gap-6">
-                                    <div class="bg-slate-900 w-full md:w-1/3 p-4 rounded text-sm code-font text-blue-300">
-                                        while(duit > 0) {<br>
-                                        &nbsp;&nbsp;print("Beli barang");<br>
-                                        &nbsp;&nbsp;duit--;<br>
-                                        }
-                                    </div>
+                                <div class="bg-slate-800 p-4 md:p-5 rounded-xl border border-slate-700 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
+                                    <div class="bg-slate-900 w-full md:w-1/3 p-3 md:p-4 rounded text-xs md:text-sm code-font text-blue-300 overflow-x-auto whitespace-pre">
+while(duit > 0) {
+  print("Beli");
+  duit--;
+}</div>
                                     <div class="w-full md:w-2/3">
-                                        <h3 class="text-xl font-bold text-white mb-2">2. Gelung 'while'</h3>
-                                        <p class="text-slate-400 text-sm">Digunakan apabila bilangan ulangan <strong>tidak diketahui</strong>. Ia akan menyemak syarat pada <strong>permulaan</strong>. Jika palsu dari awal, blok kod tidak akan dijalankan langsung.</p>
+                                        <h3 class="text-lg md:text-xl font-bold text-white mb-1 md:mb-2">2. Gelung 'while'</h3>
+                                        <p class="text-slate-400 text-xs md:text-sm">Bila bilangan ulangan <strong>tidak diketahui</strong>. Menyemak syarat pada <strong>permulaan</strong>.</p>
                                     </div>
                                 </div>
 
                                 <!-- Do-While -->
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 flex flex-col md:flex-row items-center gap-6">
-                                    <div class="bg-slate-900 w-full md:w-1/3 p-4 rounded text-sm code-font text-purple-300">
-                                        do {<br>
-                                        &nbsp;&nbsp;print("Sila teka");<br>
-                                        } while (salah);
-                                    </div>
+                                <div class="bg-slate-800 p-4 md:p-5 rounded-xl border border-slate-700 flex flex-col md:flex-row items-start md:items-center gap-4 md:gap-6">
+                                    <div class="bg-slate-900 w-full md:w-1/3 p-3 md:p-4 rounded text-xs md:text-sm code-font text-purple-300 overflow-x-auto whitespace-pre">
+do {
+  print("Teka");
+} while (salah);</div>
                                     <div class="w-full md:w-2/3">
-                                        <h3 class="text-xl font-bold text-white mb-2">3. Gelung 'do-while'</h3>
-                                        <p class="text-slate-400 text-sm">Menyemak syarat pada <strong>hujung</strong> gelung. Ini memastikan blok kod di dalamnya akan dijalankan <strong>sekurang-kurangnya sekali</strong> walaupun syarat asal adalah palsu.</p>
+                                        <h3 class="text-lg md:text-xl font-bold text-white mb-1 md:mb-2">3. Gelung 'do-while'</h3>
+                                        <p class="text-slate-400 text-xs md:text-sm">Menyemak syarat pada <strong>hujung</strong> gelung. Blok kod dijalankan <strong>sekurang-kurangnya sekali</strong>.</p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
-                                <h3 class="text-xl font-bold text-white mb-4">Uji Minda</h3>
-                                <p class="text-sm text-slate-300 mb-4">Anda membina satu permainan meneka kata laluan. Atur cara mesti meminta pengguna meneka sekurang-kurangnya sekali. Jika salah, ia ulang bertanya. Struktur manakah paling sesuai?</p>
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4">Uji Minda</h3>
+                                <p class="text-sm text-slate-300 mb-4">Atur cara meminta pengguna meneka sekurang-kurangnya sekali. Struktur manakah paling sesuai?</p>
                                 
-                                <div class="flex gap-3">
+                                <div class="flex flex-wrap gap-2 md:gap-3">
                                     <button onclick="checkM3('for')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded px-4 py-2 transition-colors">for</button>
                                     <button onclick="checkM3('while')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded px-4 py-2 transition-colors">while</button>
                                     <button onclick="checkM3('dowhile')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded px-4 py-2 transition-colors font-bold text-purple-300">do-while</button>
@@ -391,45 +377,42 @@
                 case 'modul4':
                     html = `
                         <div class="animate-fade-in">
-                            <div class="flex items-center gap-3 mb-6">
-                                <span class="bg-purple-500/20 text-purple-400 py-1 px-3 rounded-full text-sm font-bold">1.4.4</span>
-                                <h2 class="text-3xl font-bold text-white">Aplikasi Ulangan & Fungsi Terbina</h2>
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-purple-500/20 text-purple-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.4.4</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Aplikasi Ulangan</h2>
                             </div>
                             
-                            <p class="text-slate-300 mb-6 text-lg">Mengenal pasti komponen dan kaedah penting yang sering digabungkan bersama struktur kawalan ulangan.</p>
-
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-                                <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl text-center">
-                                    <h3 class="font-bold text-white text-lg mb-2">Increment / Decrement</h3>
-                                    <div class="text-3xl font-black text-rose-400 mb-3 tracking-widest">++ / --</div>
-                                    <p class="text-sm text-slate-400">Operator <code class="text-rose-300">++</code> akan menambah nilai pemboleh ubah sebanyak 1. <code class="text-rose-300">--</code> akan menolak sebanyak 1. Berfungsi sebagai kaunter gelung.</p>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                                <div class="bg-slate-800 border border-slate-700 p-4 md:p-5 rounded-xl text-center">
+                                    <h3 class="font-bold text-white text-base md:text-lg mb-2">Inc / Dec</h3>
+                                    <div class="text-2xl md:text-3xl font-black text-rose-400 mb-3 tracking-widest">++ / --</div>
+                                    <p class="text-xs md:text-sm text-slate-400">Menambah atau menolak nilai sebanyak 1. (Kaunter gelung)</p>
                                 </div>
-                                <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl text-center">
-                                    <h3 class="font-bold text-white text-lg mb-2">Class Math</h3>
-                                    <div class="text-lg font-black text-blue-400 mb-3 code-font">Math.random()</div>
-                                    <p class="text-sm text-slate-400">Digunakan untuk menjana nombor rawak secara automatik. Sering digunakan dalam gelung untuk membina permainan atau simulasi.</p>
+                                <div class="bg-slate-800 border border-slate-700 p-4 md:p-5 rounded-xl text-center">
+                                    <h3 class="font-bold text-white text-base md:text-lg mb-2">Class Math</h3>
+                                    <div class="text-base md:text-lg font-black text-blue-400 mb-3 code-font">Math.random()</div>
+                                    <p class="text-xs md:text-sm text-slate-400">Menjana nombor rawak secara automatik.</p>
                                 </div>
-                                <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl text-center">
-                                    <h3 class="font-bold text-white text-lg mb-2">Bendera (Boolean)</h3>
-                                    <div class="text-lg font-black text-emerald-400 mb-3 code-font">true / false</div>
-                                    <p class="text-sm text-slate-400">Pemboleh ubah boolean digunakan sebagai isyarat (flag) untuk mengawal aliran logik sama ada gelung patut diteruskan atau diberhentikan.</p>
+                                <div class="bg-slate-800 border border-slate-700 p-4 md:p-5 rounded-xl text-center sm:col-span-2 md:col-span-1">
+                                    <h3 class="font-bold text-white text-base md:text-lg mb-2">Bendera</h3>
+                                    <div class="text-base md:text-lg font-black text-emerald-400 mb-3 code-font">boolean</div>
+                                    <p class="text-xs md:text-sm text-slate-400">Isyarat untuk meneruskan atau memberhentikan gelung.</p>
                                 </div>
                             </div>
 
-                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
-                                <h3 class="text-xl font-bold text-white mb-4">Latihan Kod: Kaunter Increment</h3>
-                                <p class="text-sm text-slate-300 mb-4">Berdasarkan potongan kod Java/C++ di bawah, berapakah nilai yang akan dipaparkan (di-print) ke skrin pada baris akhir?</p>
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4">Latihan Kod: Kaunter</h3>
+                                <p class="text-sm text-slate-300 mb-4">Berapakah nilai yang akan dipaparkan ke skrin pada baris akhir?</p>
                                 
-                                <div class="bg-slate-900 rounded p-4 text-sm code-font text-slate-300 mb-6">
-                                    int x = 5;<br>
-                                    x++;<br>
-                                    x++;<br>
-                                    print(x);
-                                </div>
+                                <div class="bg-slate-900 rounded p-3 md:p-4 text-sm code-font text-slate-300 mb-6 overflow-x-auto whitespace-pre">
+int x = 5;
+x++;
+x++;
+print(x);</div>
                                 
-                                <div class="flex items-center gap-3">
-                                    <input type="number" id="m4-q1-input" class="bg-slate-700 border border-slate-600 text-white rounded px-4 py-2 w-32 focus:border-purple-500 outline-none" placeholder="Nilai...">
-                                    <button onclick="checkM4()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">Semak</button>
+                                <div class="flex flex-col md:flex-row gap-3">
+                                    <input type="number" id="m4-q1-input" class="bg-slate-700 border border-slate-600 text-white rounded px-4 py-3 md:py-2 md:w-32 focus:border-purple-500 outline-none" placeholder="Nilai...">
+                                    <button onclick="checkM4()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 md:py-2 rounded-lg font-semibold transition-colors text-sm md:text-base">Semak</button>
                                 </div>
                             </div>
                         </div>
@@ -440,168 +423,127 @@
                     html = `
                         <div class="animate-fade-in">
                             <div class="flex items-center gap-3 mb-6">
-                                <span class="bg-yellow-500/20 text-yellow-400 py-1 px-3 rounded-full text-sm font-bold"><i class="fas fa-trophy mr-2"></i>BOSS</span>
-                                <h2 class="text-3xl font-bold text-white">Ujian Penilaian Akhir (15 Soalan)</h2>
+                                <span class="bg-yellow-500/20 text-yellow-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold"><i class="fas fa-trophy mr-2"></i>BOSS</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white">Ujian Penilaian Akhir</h2>
                             </div>
                             
-                            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-8 shadow-2xl relative overflow-hidden">
+                            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-5 md:p-8 shadow-2xl relative overflow-hidden">
                                 <div class="relative z-10">
-                                    <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4">Jawab semua soalan berikut dengan tepat untuk melengkapkan kursus Topik 1.4.</h3>
+                                    <h3 class="text-lg md:text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4">Jawab 15 soalan berikut dengan tepat.</h3>
                                     
-                                    <div class="space-y-10">
+                                    <div class="space-y-8 md:space-y-10">
                                         <!-- Q1 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">1. Apakah tujuan utama struktur kawalan pilihan dalam pengaturcaraan?</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">1. Tujuan utama struktur kawalan pilihan?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq1" value="A" class="text-blue-500"><span class="text-slate-300">Menyimpan pelbagai jenis data dalam memori</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq1" value="B" class="text-blue-500"><span class="text-slate-300">Membolehkan atur cara membuat keputusan melaksanakan kod berdasarkan syarat</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq1" value="C" class="text-blue-500"><span class="text-slate-300">Menjadikan pangkalan data lebih selamat</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq1" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Menyimpan pelbagai jenis data</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq1" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Membuat keputusan melaksanakan kod berdasarkan syarat</span></label>
                                             </div>
                                         </div>
-
                                         <!-- Q2 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">2. Bilakah masa yang PALING SESUAI untuk menggunakan <code class="bg-slate-800 px-1 rounded">switch-case</code> berbanding <code class="bg-slate-800 px-1 rounded">if-else</code>?</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">2. Bilakah <code class="bg-slate-800 px-1 rounded">switch-case</code> sesuai digunakan?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq2" value="A" class="text-blue-500"><span class="text-slate-300">Apabila menguji julat (range) nombor seperti markah >= 50</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq2" value="B" class="text-blue-500"><span class="text-slate-300">Apabila menguji pilihan daripada satu siri nilai tetap (seperti menu 1, 2, 3)</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq2" value="C" class="text-blue-500"><span class="text-slate-300">Apabila bilangan ulangan telah diketahui dengan pasti</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq2" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Menguji julat markah</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq2" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Menguji siri nilai tetap (seperti menu 1, 2)</span></label>
                                             </div>
                                         </div>
-
                                         <!-- Q3 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">3. Antara simbol berikut, manakah yang mewakili operator hubungan "Sama Dengan" yang sebenar semasa membina syarat?</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">3. Operator "Sama Dengan" yang sebenar?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq3" value="A" class="text-blue-500"><span class="text-slate-300">=</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq3" value="B" class="text-blue-500"><span class="text-slate-300">==</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq3" value="C" class="text-blue-500"><span class="text-slate-300">!=</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq3" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">=</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq3" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">==</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q4 -->
+                                        <!-- Q4 & Q5 ... Q15 Data Structure -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">4. Operator logikal <code class="bg-slate-800 px-1 rounded">&&</code> (AND) bermaksud...</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">4. Operator logikal <code class="bg-slate-800 px-1 rounded">&&</code> (AND) bermaksud...</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq4" value="A" class="text-blue-500"><span class="text-slate-300">Kedua-dua syarat MESTILAH benar untuk menghasilkan jawapan akhir Benar (True).</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq4" value="B" class="text-blue-500"><span class="text-slate-300">Salah satu syarat sahajalah yang perlu benar untuk menghasilkan jawapan akhir Benar.</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq4" value="C" class="text-blue-500"><span class="text-slate-300">Menukar hasil syarat yang Benar kepada Palsu.</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq4" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Kedua-dua syarat MESTILAH benar</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq4" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Salah satu sahaja perlu benar</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q5 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">5. Operator logikal <code class="bg-slate-800 px-1 rounded">||</code> (OR) bermaksud...</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">5. Operator logikal <code class="bg-slate-800 px-1 rounded">||</code> (OR) bermaksud...</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq5" value="A" class="text-blue-500"><span class="text-slate-300">Kedua-dua syarat MESTILAH benar untuk menghasilkan jawapan akhir Benar (True).</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq5" value="B" class="text-blue-500"><span class="text-slate-300">Salah satu syarat sahajalah yang perlu benar untuk menghasilkan jawapan akhir Benar.</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq5" value="C" class="text-blue-500"><span class="text-slate-300">Menukar hasil syarat yang Benar kepada Palsu.</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq5" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Kedua-dua syarat MESTILAH benar</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq5" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Salah satu sahaja perlu benar</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q6 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">6. Apakah hasil operasi <code class="bg-slate-800 px-1 rounded">(5 &gt; 3) && (2 &lt; 1)</code>?</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">6. Hasil operasi <code class="bg-slate-800 px-1 rounded">(5 &gt; 3) && (2 &lt; 1)</code>?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq6" value="A" class="text-blue-500"><span class="text-slate-300">TRUE (Benar)</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq6" value="B" class="text-blue-500"><span class="text-slate-300">FALSE (Palsu)</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq6" value="C" class="text-blue-500"><span class="text-slate-300">Ralat Sintaks</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq6" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">TRUE</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq6" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">FALSE</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q7 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">7. Struktur kawalan ulangan <code class="bg-slate-800 px-1 rounded">for</code> paling sesuai digunakan apabila...</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">7. <code class="bg-slate-800 px-1 rounded">for</code> loop paling sesuai apabila...</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq7" value="A" class="text-blue-500"><span class="text-slate-300">Bilangan ulangan tidak diketahui terlebih dahulu</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq7" value="B" class="text-blue-500"><span class="text-slate-300">Kod mesti dijalankan sekurang-kurangnya sekali</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq7" value="C" class="text-blue-500"><span class="text-slate-300">Bilangan ulangan telah diketahui dengan jelas</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq7" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Bilangan ulangan tidak diketahui</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq7" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Bilangan ulangan telah diketahui dengan jelas</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q8 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">8. Berapakah kali perkataan "Helo" akan dicetak dalam gelung ini: <code class="bg-slate-800 px-1 rounded">for(int i=0; i&lt;3; i++)</code>?</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">8. Berapa kali "Helo" dicetak: <code class="bg-slate-800 px-1 rounded">for(int i=0; i&lt;3; i++)</code>?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq8" value="A" class="text-blue-500"><span class="text-slate-300">2 kali</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq8" value="B" class="text-blue-500"><span class="text-slate-300">3 kali</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq8" value="C" class="text-blue-500"><span class="text-slate-300">4 kali</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq8" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">3 kali</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq8" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">4 kali</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q9 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">9. Apakah perbezaan utama antara gelung <code class="bg-slate-800 px-1 rounded">while</code> dan <code class="bg-slate-800 px-1 rounded">do-while</code>?</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">9. Perbezaan <code class="bg-slate-800 px-1 rounded">while</code> dan <code class="bg-slate-800 px-1 rounded">do-while</code>?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq9" value="A" class="text-blue-500"><span class="text-slate-300">'do-while' akan memastikan kod di dalamnya dijalankan sekurang-kurangnya sekali</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq9" value="B" class="text-blue-500"><span class="text-slate-300">'while' berjalan lebih pantas di dalam komputer</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq9" value="C" class="text-blue-500"><span class="text-slate-300">'do-while' menyemak syarat pada permulaan gelung</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq9" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">'do-while' dijalankan sekurang-kurangnya sekali</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq9" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">'do-while' semak syarat awal-awal</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q10 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">10. Apakah yang berlaku jika syarat di dalam gelung <code class="bg-slate-800 px-1 rounded">while</code> tidak pernah berubah dan sentiasa dinilai sebagai Benar?</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">10. Jika syarat <code class="bg-slate-800 px-1 rounded">while</code> sentiasa Benar?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq10" value="A" class="text-blue-500"><span class="text-slate-300">Berlaku ralat logik dan gelung berhenti serta-merta</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq10" value="B" class="text-blue-500"><span class="text-slate-300">Berlaku gelung infiniti (infinite loop) yang mungkin menyebabkan program crash</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq10" value="C" class="text-blue-500"><span class="text-slate-300">Program akan memaparkan ralat sintaks</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq10" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Gelung berhenti</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq10" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Berlaku gelung infiniti (infinite loop)</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q11 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">11. Apakah maksud operator increment <code class="bg-slate-800 px-1 rounded">++</code> dalam pernyataan <code class="bg-slate-800 px-1 rounded">i++</code>?</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">11. Maksud <code class="bg-slate-800 px-1 rounded">++</code> dalam <code class="bg-slate-800 px-1 rounded">i++</code>?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq11" value="A" class="text-blue-500"><span class="text-slate-300">Nilai i ditolak sebanyak 1</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq11" value="B" class="text-blue-500"><span class="text-slate-300">Nilai i digandakan</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq11" value="C" class="text-blue-500"><span class="text-slate-300">Nilai i ditambah sebanyak 1</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq11" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Ditolak 1</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq11" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Ditambah 1</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q12 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">12. Apakah output bagi baris kod ini: <code class="bg-slate-800 px-1 rounded">int x = 10; x--; print(x);</code>?</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">12. Output bagi <code class="bg-slate-800 px-1 rounded">int x=10; x--; print(x);</code>?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq12" value="A" class="text-blue-500"><span class="text-slate-300">9</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq12" value="B" class="text-blue-500"><span class="text-slate-300">10</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq12" value="C" class="text-blue-500"><span class="text-slate-300">11</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq12" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">9</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq12" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">10</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q13 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">13. Kaedah fungsi (method) terbina dalam <code class="bg-slate-800 px-1 rounded">Math.random()</code> digunakan untuk tujuan...</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">13. Fungsi <code class="bg-slate-800 px-1 rounded">Math.random()</code> untuk?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq13" value="A" class="text-blue-500"><span class="text-slate-300">Menjana nombor rawak secara automatik</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq13" value="B" class="text-blue-500"><span class="text-slate-300">Membundarkan nilai perpuluhan</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq13" value="C" class="text-blue-500"><span class="text-slate-300">Mencari nilai purata (average) sesuatu array</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq13" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Menjana nombor rawak</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq13" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Bundarkan perpuluhan</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q14 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">14. Jenis data <code class="bg-slate-800 px-1 rounded">Boolean</code> dicipta untuk memegang HANYA dua nilai, iaitu...</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">14. <code class="bg-slate-800 px-1 rounded">Boolean</code> memegang nilai?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq14" value="A" class="text-blue-500"><span class="text-slate-300">1 atau -1</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq14" value="B" class="text-blue-500"><span class="text-slate-300">True atau False (Benar/Palsu)</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq14" value="C" class="text-blue-500"><span class="text-slate-300">Nombor genap atau nombor ganjil</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq14" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">1 atau -1</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq14" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">True atau False</span></label>
                                             </div>
                                         </div>
-
-                                        <!-- Q15 -->
                                         <div>
-                                            <p class="font-semibold text-slate-200 mb-3">15. Jika anda membina aplikasi Carian (Search) menggunakan gelung, bilakah masa yang sesuai pemboleh ubah 'bendera' boolean <code class="bg-slate-800 px-1 rounded">jumpa = false;</code> ditukar kepada <code class="bg-slate-800 px-1 rounded">true</code>?</p>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">15. Dalam carian, bilakah 'bendera' (flag) ditukar <code class="bg-slate-800 px-1 rounded">true</code>?</p>
                                             <div class="space-y-2">
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq15" value="A" class="text-blue-500"><span class="text-slate-300">Apabila program dihentikan dengan ralat</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq15" value="B" class="text-blue-500"><span class="text-slate-300">Hanya selepas gelung carian selesai kesemuanya</span></label>
-                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq15" value="C" class="text-blue-500"><span class="text-slate-300">Serta-merta pada waktu item yang dicari berjaya ditemui di dalam data</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq15" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Bila program henti ralat</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq15" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Serta-merta bila item dijumpai</span></label>
                                             </div>
                                         </div>
-
                                     </div>
 
-                                    <button onclick="checkUjian()" class="w-full mt-12 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-yellow-900/20 transform transition hover:-translate-y-1">Hantar Jawapan Ujian</button>
+                                    <button onclick="checkUjian()" class="w-full mt-10 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-yellow-900/20 transform transition hover:-translate-y-1">Hantar Jawapan</button>
                                 </div>
                             </div>
                         </div>
@@ -612,34 +554,32 @@
             container.innerHTML = html;
         }
 
-        // --- Logic Evaluators ---
+        // --- Evaluators ---
         function checkM1() {
             const val = document.getElementById('m1-q1').value;
             if (val === 'switch') {
                 if(!state.m1_done) { addXP(100); state.m1_done = true; }
-                showToast("Tepat!", "Bagi pilihan menu tetap (1,2,3..), penggunaan switch-case lebih kemas.");
-            } else if(val === "") {
-                showToast("Sila Pilih", "Anda belum membuat pilihan.", "error");
+                showToast("Tepat!", "Pilihan statik (1,2,3..), switch-case lebih kemas.");
             } else {
-                showToast("Salah", "Untuk siri pilihan menu yang statik dan bernilai tetap, if-else kurang efisien berbanding pilihan struktur satu lagi.", "error");
+                showToast("Salah/Pilih", "Sila semak pilihan struktur untuk menu tetap.", "error");
             }
         }
 
         function checkM2(val) {
             if (val === 'false') {
                 if(!state.m2_done) { addXP(150); state.m2_done = true; }
-                showToast("Tepat Sekali!", "Oleh kerana markah ialah 35 (bukan lebih 40), maka syarat AND (&&) tersebut terus gagal dan bernilai FALSE.");
+                showToast("Tepat!", "Syarat pertama gagal, jadi AND jadi FALSE.");
             } else {
-                showToast("Cuba Lagi", "Sila semak kembali. Jika satu bahagian dari syarat AND (&&) adalah salah, apakah hasil akhirnya?", "error");
+                showToast("Salah", "Semak logik AND.", "error");
             }
         }
 
         function checkM3(val) {
             if (val === 'dowhile') {
                 if(!state.m3_done) { addXP(150); state.m3_done = true; }
-                showToast("Betul!", "Struktur do-while akan melaksanakan kod (bertanya soalan) sekurang-kurangnya sekali sebelum menyemak syarat.");
+                showToast("Betul!", "do-while laksana sekurang-kurangnya sekali.");
             } else {
-                showToast("Kurang Tepat", "Fikir logik: Jika kita ingin ia bertanya DULU dan semak KEMUDIAN, manakah yang paling sesuai?", "error");
+                showToast("Kurang Tepat", "Fikirkan yang bertanya DULU sebelum semak.", "error");
             }
         }
 
@@ -647,54 +587,36 @@
             const val = document.getElementById('m4-q1-input').value;
             if (val === '7') {
                 if(!state.m4_done) { addXP(100); state.m4_done = true; }
-                showToast("Penyelesaian Sempurna!", "Nilai awal x=5. Ditambah 1 dua kali (x++, x++). Jawapan akhir ialah 7.");
+                showToast("Penyelesaian Sempurna!", "Nilai 5 ditambah 1 sebanyak 2 kali.");
             } else {
-                showToast("Penjejakan Tersasar", "Operator ++ bermaksud tambah satu (+1). Cuba kira semula 5 + 1 + 1.", "error");
+                showToast("Salah", "Operator ++ menambah satu.", "error");
             }
         }
 
         function checkUjian() {
-            // Skema Jawapan untuk 15 Soalan (Topik 1.4)
-            const answers = {
-                uq1: 'B', uq2: 'B', uq3: 'B', uq4: 'A', uq5: 'B',
-                uq6: 'B', uq7: 'C', uq8: 'B', uq9: 'A', uq10: 'B',
-                uq11: 'C', uq12: 'A', uq13: 'A', uq14: 'B', uq15: 'C'
-            };
-
-            let allAnswered = true;
-            let allCorrect = true;
+            const answers = { uq1: 'B', uq2: 'B', uq3: 'B', uq4: 'A', uq5: 'B', uq6: 'B', uq7: 'C', uq8: 'B', uq9: 'A', uq10: 'B', uq11: 'C', uq12: 'A', uq13: 'A', uq14: 'B', uq15: 'C' };
+            let allAnswered = true, allCorrect = true;
 
             for (let i = 1; i <= 15; i++) {
                 const q = document.querySelector(`input[name="uq${i}"]:checked`);
-                if (!q) {
-                    allAnswered = false;
-                    break;
-                }
-                if (q.value !== answers[`uq${i}`]) {
-                    allCorrect = false;
-                }
+                if (!q) { allAnswered = false; break; }
+                if (q.value !== answers[`uq${i}`]) { allCorrect = false; }
             }
 
             if (!allAnswered) {
-                showToast("Perhatian", "Sila jawab kesemua 15 soalan sebelum menekan butang hantar.", "error");
-                return;
+                showToast("Perhatian", "Sila jawab kesemua 15 soalan.", "error"); return;
             }
 
             if (allCorrect) {
-                if(!state.ujian_done) { 
-                    addXP(1000); // Ganjaran besar untuk boss battle
-                    state.ujian_done = true; 
-                }
-                
+                if(!state.ujian_done) { addXP(1000); state.ujian_done = true; }
                 document.getElementById('content-area').innerHTML = `
-                    <div class="animate-fade-in text-center pt-20 pb-20">
-                        <i class="fas fa-medal text-9xl text-yellow-400 mb-8 drop-shadow-[0_0_30px_rgba(250,204,21,0.5)]"></i>
-                        <h1 class="text-4xl font-bold text-white mb-4">Tahniah! Anda Lulus Cemerlang.</h1>
-                        <p class="text-xl text-slate-300 max-w-2xl mx-auto">Anda telah berjaya menjawab kesemua 15 soalan dengan tepat. Anda kini diiktiraf telah menguasai asas Struktur Kawalan Pilihan dan Ulangan!</p>
-                        <p class="mt-8 text-2xl font-bold text-yellow-400">Total XP: ${currentXP}</p>
-                        
+                    <div class="animate-fade-in text-center pt-10 md:pt-20 pb-20">
+                        <i class="fas fa-medal text-7xl md:text-9xl text-yellow-400 mb-8 drop-shadow-[0_0_30px_rgba(250,204,21,0.5)]"></i>
+                        <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Tahniah! Anda Lulus.</h1>
+                        <p class="text-sm md:text-xl text-slate-300 max-w-2xl mx-auto px-4">Anda telah menguasai asas Struktur Kawalan.</p>
+                        <p class="mt-8 text-xl md:text-2xl font-bold text-yellow-400">Total XP: ${currentXP}</p>
                         <div class="mt-12">
-                            <a href="index.html" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-lg shadow-blue-900/50 transform hover:-translate-y-1">
+                            <a href="index.html" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-sm md:text-lg transition-colors shadow-lg shadow-blue-900/50">
                                 <i class="fas fa-home mr-2"></i> Kembali ke Portal Utama
                             </a>
                         </div>
@@ -702,14 +624,11 @@
                 `;
                 window.scrollTo(0, 0);
             } else {
-                showToast("Gagal", "Terdapat jawapan yang salah. Sila semak semula modul dan cuba lagi.", "error");
+                showToast("Gagal", "Terdapat jawapan yang salah. Sila cuba lagi.", "error");
             }
         }
 
-        // Initialize App on load directly to Module 1
-        window.onload = () => {
-            loadModule('modul1');
-        };
+        window.onload = () => { loadModule('modul1'); };
     </script>
 </body>
 </html>

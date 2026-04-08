@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="ms">
 <head>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-VM2DF83GJ7"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-VM2DF83GJ7');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Pembelajaran: Sains Komputer KSSM</title>
@@ -55,16 +46,35 @@
         }
     </style>
 </head>
-<body class="flex h-screen overflow-hidden selection:bg-blue-500 selection:text-white">
+<body class="flex flex-col md:flex-row h-screen overflow-hidden selection:bg-blue-500 selection:text-white bg-slate-900">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-slate-800 border-b border-slate-700 p-4 flex justify-between items-center z-30">
+        <h1 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fas fa-laptop-code text-blue-400"></i> Portal SK KSSM
+        </h1>
+        <button id="mobile-menu-btn" class="text-slate-300 hover:text-white focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/80 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
 
     <!-- Sidebar Navigation -->
-    <aside class="w-72 bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-300 z-20">
-        <div class="p-6 border-b border-slate-700">
+    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 z-50 w-72 bg-slate-800 border-r border-slate-700 flex flex-col h-full shadow-2xl md:shadow-none">
+        <div class="p-6 border-b border-slate-700 hidden md:block">
             <h1 class="text-xl font-bold text-white flex items-center gap-3">
                 <i class="fas fa-laptop-code text-blue-400"></i>
                 Portal SK KSSM
             </h1>
             <p class="text-xs text-slate-400 mt-2">Silibus Tingkatan 4 & 5</p>
+        </div>
+
+        <div class="p-4 md:hidden flex justify-end border-b border-slate-700">
+            <button id="close-sidebar-btn" class="text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
         </div>
 
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
@@ -76,13 +86,13 @@
             <!-- TINGKATAN 4 -->
             <div class="pt-4 pb-2 px-4 text-xs font-semibold text-blue-400 uppercase tracking-wider">Tingkatan 4</div>
             
-            <!-- Aktif: Bab 1 (Terdapat 1.5) -->
+            <!-- Aktif: Bab 1 -->
             <button onclick="loadModule('t4_bab1')" id="nav-t4_bab1" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
                 <i class="fas fa-code w-5 text-center"></i>
                 <span>1.0 Pengaturcaraan</span>
             </button>
             
-            <!-- Aktif: Bab 2 (Terdapat 2.1) -->
+            <!-- Aktif: Bab 2 -->
             <button onclick="loadModule('t4_bab2')" id="nav-t4_bab2" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
                 <i class="fas fa-database w-5 text-center"></i>
                 <span>2.0 Pangkalan Data</span>
@@ -118,13 +128,28 @@
     </aside>
 
     <!-- Main Content Area -->
-    <main class="flex-1 bg-slate-900 relative overflow-y-auto">
-        <div id="content-area" class="max-w-6xl mx-auto p-8 pb-20">
+    <main class="flex-1 relative overflow-y-auto h-full">
+        <div id="content-area" class="max-w-6xl mx-auto p-4 md:p-8 pb-24 md:pb-20">
             <!-- Content gets injected here -->
         </div>
     </main>
 
     <script>
+        // --- Mobile Menu Logic ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleSidebar);
+        if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
         // --- Utility Functions ---
         function updateNavActive(moduleId) {
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
@@ -134,6 +159,11 @@
 
         // --- Render Functions ---
         function loadModule(moduleId) {
+            // Close mobile sidebar when navigating
+            if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) {
+                toggleSidebar();
+            }
+
             const container = document.getElementById('content-area');
             updateNavActive(moduleId);
             window.scrollTo(0, 0);
@@ -144,9 +174,9 @@
                 case 'intro':
                     html = `
                         <div class="animate-fade-in">
-                            <div class="bg-gradient-to-r from-blue-900 to-slate-800 rounded-2xl p-8 border border-blue-800/50 shadow-lg mb-10 flex items-center justify-between">
+                            <div class="bg-gradient-to-r from-blue-900 to-slate-800 rounded-2xl p-6 md:p-8 border border-blue-800/50 shadow-lg mb-8 md:mb-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
                                 <div>
-                                    <h1 class="text-4xl font-bold text-white mb-2">Selamat Datang, Pengatur Cara!</h1>
+                                    <h1 class="text-3xl md:text-4xl font-bold text-white mb-2">Selamat Datang, Pengatur Cara!</h1>
                                     <p class="text-blue-200">Pilih topik Tingkatan 4 atau Tingkatan 5 di bawah untuk mula meneroka.</p>
                                 </div>
                             </div>
@@ -159,9 +189,9 @@
                                 <p class="text-sm text-slate-400 mb-6">Modul asas Sains Komputer berdasarkan DSKP KSSM Tingkatan 4.</p>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
                                 <!-- T4: Pengaturcaraan (AKTIF) -->
-                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 relative">
+                                <div class="bg-slate-800 p-5 md:p-6 rounded-xl border border-slate-700 relative">
                                     <div class="bg-blue-500/20 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
                                         <i class="fas fa-code text-blue-400 text-xl"></i>
                                     </div>
@@ -169,11 +199,19 @@
                                     <ul class="text-slate-400 text-sm space-y-3">
                                         <li class="flex items-center opacity-50 cursor-not-allowed" title="Akan Datang"><i class="fas fa-lock text-slate-500 mr-2"></i>1.1 Strategi Penyelesaian Masalah</li>
                                         <li class="flex items-center opacity-50 cursor-not-allowed" title="Akan Datang"><i class="fas fa-lock text-slate-500 mr-2"></i>1.2 Algoritma</li>
-                                        <li class="flex items-center opacity-50 cursor-not-allowed" title="Akan Datang"><i class="fas fa-lock text-slate-500 mr-2"></i>1.3 Pemboleh Ubah & Jenis Data</li>
-                                        <li class="flex items-center opacity-50 cursor-not-allowed" title="Akan Datang"><i class="fas fa-lock text-slate-500 mr-2"></i>1.4 Struktur Kawalan</li>
+                                        <li>
+                                            <a href="1.3.html" class="flex items-center text-blue-300 font-bold bg-blue-900/40 p-2 -ml-2 rounded-lg border border-blue-500/30 hover:bg-blue-600 hover:text-white hover:translate-x-1 transition-all shadow-sm">
+                                                <i class="fas fa-play-circle text-yellow-400 mr-2"></i>1.3 Pemboleh Ubah & Data
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="1.4.html" class="flex items-center text-blue-300 font-bold bg-blue-900/40 p-2 -ml-2 rounded-lg border border-blue-500/30 hover:bg-blue-600 hover:text-white hover:translate-x-1 transition-all shadow-sm">
+                                                <i class="fas fa-play-circle text-yellow-400 mr-2"></i>1.4 Struktur Kawalan
+                                            </a>
+                                        </li>
                                         <li>
                                             <a href="1.5.html" class="flex items-center text-blue-300 font-bold bg-blue-900/40 p-2 -ml-2 rounded-lg border border-blue-500/30 hover:bg-blue-600 hover:text-white hover:translate-x-1 transition-all shadow-sm">
-                                                <i class="fas fa-play-circle text-yellow-400 mr-2"></i>1.5 Amalan Terbaik Pengaturcaraan
+                                                <i class="fas fa-play-circle text-yellow-400 mr-2"></i>1.5 Amalan Terbaik
                                             </a>
                                         </li>
                                         <li class="flex items-center opacity-50 cursor-not-allowed" title="Akan Datang"><i class="fas fa-lock text-slate-500 mr-2"></i>1.6 Struktur Data Dan Modular</li>
@@ -182,7 +220,7 @@
                                 </div>
 
                                 <!-- T4: Pangkalan Data (AKTIF) -->
-                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 relative">
+                                <div class="bg-slate-800 p-5 md:p-6 rounded-xl border border-slate-700 relative">
                                     <div class="bg-orange-500/20 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
                                         <i class="fas fa-database text-orange-400 text-xl"></i>
                                     </div>
@@ -200,10 +238,9 @@
                                 </div>
 
                                 <!-- T4: Interaksi Manusia & Komputer (TIDAK AKTIF) -->
-                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 opacity-60 cursor-not-allowed relative group overflow-hidden" title="Akan Datang">
-                                    <!-- Overlay Akan Datang -->
+                                <div class="bg-slate-800 p-5 md:p-6 rounded-xl border border-slate-700 opacity-60 cursor-not-allowed relative group overflow-hidden" title="Akan Datang">
                                     <div class="absolute inset-0 bg-slate-900/70 z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                                        <span class="bg-slate-700 border border-slate-500 text-white font-bold py-2 px-5 rounded-lg shadow-xl">
+                                        <span class="bg-slate-700 border border-slate-500 text-white font-bold py-2 px-5 rounded-lg shadow-xl text-center text-sm md:text-base">
                                             <i class="fas fa-lock mr-2 text-yellow-400"></i>Akan Datang
                                         </span>
                                     </div>
@@ -227,12 +264,11 @@
                                 <p class="text-sm text-slate-400 mb-6">Modul lanjutan Sains Komputer berdasarkan DSKP KSSM Tingkatan 5.</p>
                             </div>
 
-                            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
-                                <!-- T5: Pengkomputeran (TIDAK AKTIF) -->
-                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 opacity-60 cursor-not-allowed relative group overflow-hidden" title="Akan Datang">
-                                    <!-- Overlay Akan Datang -->
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mb-10">
+                                <!-- T5: Pengkomputeran -->
+                                <div class="bg-slate-800 p-5 md:p-6 rounded-xl border border-slate-700 opacity-60 cursor-not-allowed relative group overflow-hidden" title="Akan Datang">
                                     <div class="absolute inset-0 bg-slate-900/70 z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                                        <span class="bg-slate-700 border border-slate-500 text-white font-bold py-2 px-5 rounded-lg shadow-xl">
+                                        <span class="bg-slate-700 border border-slate-500 text-white font-bold py-2 px-5 rounded-lg shadow-xl text-center text-sm md:text-base">
                                             <i class="fas fa-lock mr-2 text-yellow-400"></i>Akan Datang
                                         </span>
                                     </div>
@@ -248,11 +284,10 @@
                                     </ul>
                                 </div>
 
-                                <!-- T5: Pangkalan Data Lanjutan (TIDAK AKTIF) -->
-                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 opacity-60 cursor-not-allowed relative group overflow-hidden" title="Akan Datang">
-                                    <!-- Overlay Akan Datang -->
+                                <!-- T5: Pangkalan Data Lanjutan -->
+                                <div class="bg-slate-800 p-5 md:p-6 rounded-xl border border-slate-700 opacity-60 cursor-not-allowed relative group overflow-hidden" title="Akan Datang">
                                     <div class="absolute inset-0 bg-slate-900/70 z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                                        <span class="bg-slate-700 border border-slate-500 text-white font-bold py-2 px-5 rounded-lg shadow-xl">
+                                        <span class="bg-slate-700 border border-slate-500 text-white font-bold py-2 px-5 rounded-lg shadow-xl text-center text-sm md:text-base">
                                             <i class="fas fa-lock mr-2 text-yellow-400"></i>Akan Datang
                                         </span>
                                     </div>
@@ -260,17 +295,16 @@
                                     <div class="bg-yellow-500/20 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
                                         <i class="fas fa-server text-yellow-400 text-xl"></i>
                                     </div>
-                                    <h3 class="text-xl font-bold text-white mb-3">2.0 Pangkalan Data Lanjutan</h3>
+                                    <h3 class="text-xl font-bold text-white mb-3">2.0 DB Lanjutan</h3>
                                     <ul class="text-slate-400 text-sm space-y-2">
                                         <li><i class="fas fa-angle-right text-yellow-500 mr-2"></i>2.1 Bahasa Pertanyaan Berstruktur (SQL)</li>
                                     </ul>
                                 </div>
 
-                                <!-- T5: Pengaturcaraan Berasaskan Web (TIDAK AKTIF) -->
-                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 opacity-60 cursor-not-allowed relative group overflow-hidden" title="Akan Datang">
-                                    <!-- Overlay Akan Datang -->
+                                <!-- T5: Pengaturcaraan Berasaskan Web -->
+                                <div class="bg-slate-800 p-5 md:p-6 rounded-xl border border-slate-700 opacity-60 cursor-not-allowed relative group overflow-hidden" title="Akan Datang">
                                     <div class="absolute inset-0 bg-slate-900/70 z-10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                                        <span class="bg-slate-700 border border-slate-500 text-white font-bold py-2 px-5 rounded-lg shadow-xl">
+                                        <span class="bg-slate-700 border border-slate-500 text-white font-bold py-2 px-5 rounded-lg shadow-xl text-center text-sm md:text-base">
                                             <i class="fas fa-lock mr-2 text-yellow-400"></i>Akan Datang
                                         </span>
                                     </div>
@@ -290,89 +324,103 @@
                     `;
                     break;
 
-                // --- KANDUNGAN UNTUK BAB 1.0 (PENGATURCARAAN) ---
+                // --- TINGKATAN 4: BAB 1 ---
                 case 't4_bab1':
                     html = `
                         <div class="animate-fade-in">
-                            <h2 class="text-3xl font-bold text-white mb-4"><i class="fas fa-code text-blue-400 mr-3"></i>Tingkatan 4: 1.0 Pengaturcaraan</h2>
-                            <p class="text-slate-300 mb-8">Pengaturcaraan membantu menterjemahkan algoritma kepada bahasa pengaturcaraan menggunakan konsep dan struktur yang teratur dan berkesan.</p>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mb-4"><i class="fas fa-code text-blue-400 mr-3"></i>1.0 Pengaturcaraan</h2>
+                            <p class="text-sm md:text-base text-slate-300 mb-8">Pilih modul subtopik di bawah untuk mula belajar dan mengumpul XP.</p>
                             
                             <div class="space-y-4">
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
-                                    <i class="fas fa-lock text-slate-500 text-xl mr-5 w-6 text-center"></i>
-                                    <h3 class="text-lg font-semibold text-slate-400">1.1 Strategi Penyelesaian Masalah</h3>
+                                <div class="bg-slate-800 p-4 md:p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
+                                    <i class="fas fa-lock text-slate-500 text-lg md:text-xl mr-4 md:mr-5 w-6 text-center"></i>
+                                    <h3 class="text-base md:text-lg font-semibold text-slate-400">1.1 Strategi Penyelesaian Masalah</h3>
                                 </div>
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
-                                    <i class="fas fa-lock text-slate-500 text-xl mr-5 w-6 text-center"></i>
-                                    <h3 class="text-lg font-semibold text-slate-400">1.2 Algoritma</h3>
-                                </div>
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
-                                    <i class="fas fa-lock text-slate-500 text-xl mr-5 w-6 text-center"></i>
-                                    <h3 class="text-lg font-semibold text-slate-400">1.3 Pemboleh Ubah & Jenis Data</h3>
-                                </div>
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
-                                    <i class="fas fa-lock text-slate-500 text-xl mr-5 w-6 text-center"></i>
-                                    <h3 class="text-lg font-semibold text-slate-400">1.4 Struktur Kawalan</h3>
+                                <div class="bg-slate-800 p-4 md:p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
+                                    <i class="fas fa-lock text-slate-500 text-lg md:text-xl mr-4 md:mr-5 w-6 text-center"></i>
+                                    <h3 class="text-base md:text-lg font-semibold text-slate-400">1.2 Algoritma</h3>
                                 </div>
                                 
-                                <!-- Modul Aktif: 1.5 -->
-                                <div class="bg-gradient-to-r from-blue-900 to-slate-800 p-6 rounded-xl border border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.2)] transform transition hover:-translate-y-1">
-                                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                                <div class="bg-gradient-to-r from-blue-900 to-slate-800 p-5 md:p-6 rounded-xl border border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.2)] transform transition hover:-translate-y-1">
+                                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6">
                                         <div>
-                                            <h3 class="text-2xl font-bold text-white mb-2"><i class="fas fa-star text-yellow-400 mr-3"></i>1.5 Amalan Terbaik Pengaturcaraan</h3>
-                                            <p class="text-blue-200 text-sm">Pelajari cara membezakan jenis ralat (sintaks, masa larian, logik), menjejak nilai pemboleh ubah, serta menghasilkan gaya pengekodan yang baik mengikut piawaian.</p>
+                                            <h3 class="text-xl md:text-2xl font-bold text-white mb-2"><i class="fas fa-star text-yellow-400 mr-3"></i>1.3 Pemboleh Ubah & Data</h3>
+                                            <p class="text-blue-200 text-xs md:text-sm">Pelajari jenis data, saiz memori, dan operasi input/output.</p>
                                         </div>
-                                        <a href="1.5.html" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-colors flex items-center flex-shrink-0 w-full md:w-auto justify-center">
-                                            Buka Modul <i class="fas fa-play-circle ml-2 text-xl"></i>
+                                        <a href="1.3.html" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 md:py-3 px-4 md:px-6 rounded-lg shadow-md transition-colors flex items-center justify-center w-full md:w-auto">
+                                            Buka Modul <i class="fas fa-play-circle ml-2"></i>
                                         </a>
                                     </div>
                                 </div>
 
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
-                                    <i class="fas fa-lock text-slate-500 text-xl mr-5 w-6 text-center"></i>
-                                    <h3 class="text-lg font-semibold text-slate-400">1.6 Struktur Data Dan Modular</h3>
+                                <div class="bg-gradient-to-r from-blue-900 to-slate-800 p-5 md:p-6 rounded-xl border border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.2)] transform transition hover:-translate-y-1">
+                                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6">
+                                        <div>
+                                            <h3 class="text-xl md:text-2xl font-bold text-white mb-2"><i class="fas fa-star text-yellow-400 mr-3"></i>1.4 Struktur Kawalan</h3>
+                                            <p class="text-blue-200 text-xs md:text-sm">Kuasai struktur kawalan pilihan (if/switch) dan ulangan (for/while).</p>
+                                        </div>
+                                        <a href="1.4.html" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 md:py-3 px-4 md:px-6 rounded-lg shadow-md transition-colors flex items-center justify-center w-full md:w-auto">
+                                            Buka Modul <i class="fas fa-play-circle ml-2"></i>
+                                        </a>
+                                    </div>
                                 </div>
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
-                                    <i class="fas fa-lock text-slate-500 text-xl mr-5 w-6 text-center"></i>
-                                    <h3 class="text-lg font-semibold text-slate-400">1.7 Pembangunan Aplikasi</h3>
+
+                                <div class="bg-gradient-to-r from-blue-900 to-slate-800 p-5 md:p-6 rounded-xl border border-blue-500 shadow-[0_0_15px_rgba(59,130,246,0.2)] transform transition hover:-translate-y-1">
+                                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6">
+                                        <div>
+                                            <h3 class="text-xl md:text-2xl font-bold text-white mb-2"><i class="fas fa-star text-yellow-400 mr-3"></i>1.5 Amalan Terbaik</h3>
+                                            <p class="text-blue-200 text-xs md:text-sm">Mengesan jenis ralat, penjejakan, dan gaya pengekodan yang bersih.</p>
+                                        </div>
+                                        <a href="1.5.html" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 md:py-3 px-4 md:px-6 rounded-lg shadow-md transition-colors flex items-center justify-center w-full md:w-auto">
+                                            Buka Modul <i class="fas fa-play-circle ml-2"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+                                <div class="bg-slate-800 p-4 md:p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
+                                    <i class="fas fa-lock text-slate-500 text-lg md:text-xl mr-4 md:mr-5 w-6 text-center"></i>
+                                    <h3 class="text-base md:text-lg font-semibold text-slate-400">1.6 Struktur Data Dan Modular</h3>
+                                </div>
+                                <div class="bg-slate-800 p-4 md:p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
+                                    <i class="fas fa-lock text-slate-500 text-lg md:text-xl mr-4 md:mr-5 w-6 text-center"></i>
+                                    <h3 class="text-base md:text-lg font-semibold text-slate-400">1.7 Pembangunan Aplikasi</h3>
                                 </div>
                             </div>
                         </div>
                     `;
                     break;
                     
-                // --- KANDUNGAN UNTUK BAB 2.0 (PANGKALAN DATA) ---
+                // --- TINGKATAN 4: BAB 2 ---
                 case 't4_bab2':
                     html = `
                         <div class="animate-fade-in">
-                            <h2 class="text-3xl font-bold text-white mb-4"><i class="fas fa-database text-orange-400 mr-3"></i>Tingkatan 4: 2.0 Pangkalan Data</h2>
-                            <p class="text-slate-300 mb-8">Memahami sistem dan persekitaran yang membentuk sebuah sistem pangkalan data, reka bentuk hubungan dan proses penormalan.</p>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mb-4"><i class="fas fa-database text-orange-400 mr-3"></i>2.0 Pangkalan Data</h2>
+                            <p class="text-sm md:text-base text-slate-300 mb-8">Pilih modul subtopik di bawah untuk mula belajar dan mengumpul XP.</p>
                             
                             <div class="space-y-4">
-                                <!-- Modul Aktif: 2.1 -->
-                                <div class="bg-gradient-to-r from-orange-900 to-slate-800 p-6 rounded-xl border border-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.2)] transform transition hover:-translate-y-1">
-                                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                                <div class="bg-gradient-to-r from-orange-900 to-slate-800 p-5 md:p-6 rounded-xl border border-orange-500 shadow-[0_0_15px_rgba(249,115,22,0.2)] transform transition hover:-translate-y-1">
+                                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-6">
                                         <div>
-                                            <h3 class="text-2xl font-bold text-white mb-2"><i class="fas fa-star text-yellow-400 mr-3"></i>2.1 Pangkalan Data Hubungan</h3>
-                                            <p class="text-orange-200 text-sm">Dalam topik ini, anda akan mendalami integriti data, kelewahan data, membezakan model-model pangkalan data, serta mengenalpasti entiti, atribut dan kekardinalan (ERD).</p>
+                                            <h3 class="text-xl md:text-2xl font-bold text-white mb-2"><i class="fas fa-star text-yellow-400 mr-3"></i>2.1 Pangkalan Data Hubungan</h3>
+                                            <p class="text-orange-200 text-xs md:text-sm">Fahami model pangkalan data, integriti, kelewahan, dan lakaran ERD.</p>
                                         </div>
-                                        <a href="2.1.html" class="bg-orange-600 hover:bg-orange-500 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-colors flex items-center flex-shrink-0 w-full md:w-auto justify-center">
-                                            Buka Modul <i class="fas fa-play-circle ml-2 text-xl"></i>
+                                        <a href="2.1.html" class="bg-orange-600 hover:bg-orange-500 text-white font-bold py-2 md:py-3 px-4 md:px-6 rounded-lg shadow-md transition-colors flex items-center justify-center w-full md:w-auto">
+                                            Buka Modul <i class="fas fa-play-circle ml-2"></i>
                                         </a>
                                     </div>
                                 </div>
 
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
-                                    <i class="fas fa-lock text-slate-500 text-xl mr-5 w-6 text-center"></i>
-                                    <h3 class="text-lg font-semibold text-slate-400">2.2 Reka Bentuk Pangkalan Data</h3>
+                                <div class="bg-slate-800 p-4 md:p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
+                                    <i class="fas fa-lock text-slate-500 text-lg md:text-xl mr-4 md:mr-5 w-6 text-center"></i>
+                                    <h3 class="text-base md:text-lg font-semibold text-slate-400">2.2 Reka Bentuk Pangkalan Data</h3>
                                 </div>
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
-                                    <i class="fas fa-lock text-slate-500 text-xl mr-5 w-6 text-center"></i>
-                                    <h3 class="text-lg font-semibold text-slate-400">2.3 Pembangunan Pangkalan Data</h3>
+                                <div class="bg-slate-800 p-4 md:p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
+                                    <i class="fas fa-lock text-slate-500 text-lg md:text-xl mr-4 md:mr-5 w-6 text-center"></i>
+                                    <h3 class="text-base md:text-lg font-semibold text-slate-400">2.3 Pembangunan Pangkalan Data</h3>
                                 </div>
-                                <div class="bg-slate-800 p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
-                                    <i class="fas fa-lock text-slate-500 text-xl mr-5 w-6 text-center"></i>
-                                    <h3 class="text-lg font-semibold text-slate-400">2.4 Sistem Pangkalan Data</h3>
+                                <div class="bg-slate-800 p-4 md:p-5 rounded-xl border border-slate-700 opacity-50 cursor-not-allowed flex items-center" title="Akan Datang">
+                                    <i class="fas fa-lock text-slate-500 text-lg md:text-xl mr-4 md:mr-5 w-6 text-center"></i>
+                                    <h3 class="text-base md:text-lg font-semibold text-slate-400">2.4 Sistem Pangkalan Data</h3>
                                 </div>
                             </div>
                         </div>
@@ -380,13 +428,13 @@
                     break;
                 
                 default:
-                    html = `<div class="text-white">Modul sedang dikemas kini...</div>`;
+                    html = `<div class="text-white">Sila pilih modul di tepi.</div>`;
             }
 
             container.innerHTML = html;
         }
 
-        // Initialize App on load
+        // Initialize
         window.onload = () => {
             loadModule('intro');
         };
