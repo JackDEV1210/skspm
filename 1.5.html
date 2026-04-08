@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akademi Pengekodan: Masteri Ralat & Penyahpepijatan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            color: #e2e8f0; /* Slate 200 */
+        }
+        
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Custom Scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b; 
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item.active {
+            background-color: #3b82f6; /* Blue 500 */
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden selection:bg-blue-500 selection:text-white">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-72 bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-300 z-20">
+        <div class="p-6 border-b border-slate-700">
+            <h1 class="text-xl font-bold text-white flex items-center gap-3">
+                <i class="fas fa-laptop-code text-blue-400"></i>
+                Akademi Kod
+            </h1>
+            <p class="text-xs text-slate-400 mt-2">Sains Komputer - Topik 1.5</p>
+        </div>
+
+        <div class="p-4 border-b border-slate-700 bg-slate-800/50">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-semibold text-slate-300">Pengalaman (XP)</span>
+                <span id="xp-counter" class="text-sm font-bold text-yellow-400">0 / 1000</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                <div id="xp-bar" class="bg-yellow-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <button onclick="loadModule('intro')" id="nav-intro" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors active">
+                <i class="fas fa-home w-5 text-center"></i>
+                <span>Menu Utama</span>
+            </button>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Modul Pembelajaran</div>
+            <button onclick="loadModule('modul1')" id="nav-modul1" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-bug w-5 text-center text-red-400"></i>
+                <span>M1: Jenis Ralat (1.5.1)</span>
+            </button>
+            <button onclick="loadModule('modul2')" id="nav-modul2" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-tools w-5 text-center text-orange-400"></i>
+                <span>M2: Makmal Baiki (1.5.2)</span>
+            </button>
+            <button onclick="loadModule('modul3')" id="nav-modul3" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-search w-5 text-center text-green-400"></i>
+                <span>M3: Penjejakan (1.5.3)</span>
+            </button>
+            <button onclick="loadModule('modul4')" id="nav-modul4" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-paint-brush w-5 text-center text-purple-400"></i>
+                <span>M4: Gaya Kod (1.5.4)</span>
+            </button>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Penilaian</div>
+            <button onclick="loadModule('ujian')" id="nav-ujian" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-trophy w-5 text-center text-yellow-400"></i>
+                <span>Ujian Akhir (Boss)</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 bg-slate-900 relative overflow-y-auto">
+        <!-- Toast Notification -->
+        <div id="toast" class="fixed top-5 right-5 z-50 transform transition-transform duration-300 translate-x-full glass-panel px-6 py-4 rounded-lg shadow-xl flex items-center gap-3">
+            <i id="toast-icon" class="fas fa-check-circle text-green-400 text-xl"></i>
+            <div>
+                <h4 id="toast-title" class="font-bold text-white">Berjaya!</h4>
+                <p id="toast-msg" class="text-sm text-slate-300">Jawapan anda tepat. +50 XP</p>
+            </div>
+        </div>
+
+        <div id="content-area" class="max-w-5xl mx-auto p-8 pb-20">
+            <!-- Content gets injected here -->
+        </div>
+    </main>
+
+    <script>
+        // --- State Management ---
+        let currentXP = 0;
+        const state = {
+            m1_q1_done: false,
+            m2_q1_done: false,
+            m2_q2_done: false,
+            m3_q1_done: false,
+            m4_q1_done: false,
+            ujian_done: false
+        };
+
+        // --- Utility Functions ---
+        function addXP(amount) {
+            currentXP += amount;
+            if (currentXP > 1000) currentXP = 1000;
+            document.getElementById('xp-counter').innerText = `${currentXP} / 1000`;
+            document.getElementById('xp-bar').style.width = `${(currentXP / 1000) * 100}%`;
+            
+            // Highlight animation
+            const counter = document.getElementById('xp-counter');
+            counter.classList.add('scale-125', 'text-white');
+            setTimeout(() => counter.classList.remove('scale-125', 'text-white'), 300);
+        }
+
+        function showToast(title, msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle text-green-400 text-xl';
+                toast.style.borderLeft = '4px solid #4ade80';
+            } else {
+                icon.className = 'fas fa-times-circle text-red-400 text-xl';
+                toast.style.borderLeft = '4px solid #f87171';
+            }
+
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+            }, 3000);
+        }
+
+        function updateNavActive(moduleId) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${moduleId}`).classList.add('active');
+        }
+
+        // --- Render Functions ---
+        function loadModule(moduleId) {
+            const container = document.getElementById('content-area');
+            updateNavActive(moduleId);
+            window.scrollTo(0, 0);
+            
+            let html = '';
+
+            switch (moduleId) {
+                case 'intro':
+                    html = `
+                        <div class="animate-fade-in">
+                            <h1 class="text-4xl font-bold text-white mb-4">Selamat Datang ke Akademi Pengekodan!</h1>
+                            <p class="text-lg text-slate-300 mb-8 leading-relaxed">Aplikasi ini direka untuk melatih anda menguasai Standard Pembelajaran 1.5: Ralat & Penyahpepijatan secara intensif. Selesaikan cabaran, kumpul XP, dan jadilah pengatur cara yang hebat.</p>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-blue-500 transition-colors cursor-pointer" onclick="loadModule('modul1')">
+                                    <div class="bg-blue-500/20 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
+                                        <i class="fas fa-bug text-blue-400 text-xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-2">Modul 1: Jenis Ralat</h3>
+                                    <p class="text-slate-400 text-sm">Pelajari perbezaan ralat sintaks, masa larian, dan logik.</p>
+                                </div>
+                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-orange-500 transition-colors cursor-pointer" onclick="loadModule('modul2')">
+                                    <div class="bg-orange-500/20 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
+                                        <i class="fas fa-tools text-orange-400 text-xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-2">Modul 2: Makmal Baiki</h3>
+                                    <p class="text-slate-400 text-sm">Amali menterjemah mesej ralat dan membaiki kod yang rosak.</p>
+                                </div>
+                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-green-500 transition-colors cursor-pointer" onclick="loadModule('modul3')">
+                                    <div class="bg-green-500/20 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
+                                        <i class="fas fa-search text-green-400 text-xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-2">Modul 3: Penjejakan Nilai</h3>
+                                    <p class="text-slate-400 text-sm">Uji keupayaan mental anda menjejaki nilai pemboleh ubah baris demi baris.</p>
+                                </div>
+                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-purple-500 transition-colors cursor-pointer" onclick="loadModule('modul4')">
+                                    <div class="bg-purple-500/20 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
+                                        <i class="fas fa-paint-brush text-purple-400 text-xl"></i>
+                                    </div>
+                                    <h3 class="text-xl font-bold text-white mb-2">Modul 4: Gaya Pengekodan</h3>
+                                    <p class="text-slate-400 text-sm">Praktikkan penulisan kod yang bersih, mempunyai komen, dan inden yang betul.</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-indigo-900/40 border border-indigo-500/30 rounded-xl p-6 flex items-center gap-6">
+                                <i class="fas fa-rocket text-4xl text-indigo-400"></i>
+                                <div>
+                                    <h3 class="text-lg font-bold text-white">Sedia untuk bermula?</h3>
+                                    <p class="text-slate-300 text-sm mt-1">Selesaikan semua modul untuk membuka Ujian Akhir (Boss Battle).</p>
+                                </div>
+                                <button onclick="loadModule('modul1')" class="ml-auto bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
+                                    Mula Sekarang
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul1':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-blue-500/20 text-blue-400 py-1 px-3 rounded-full text-sm font-bold">1.5.1</span>
+                                <h2 class="text-3xl font-bold text-white">Membezakan Jenis Ralat</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-lg">Dalam pengaturcaraan, ralat adalah perkara biasa. Seorang pakar berbeza dengan amatur berdasarkan kecekapannya mengenali jenis ralat.</p>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+                                <!-- Sintaks -->
+                                <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform">
+                                    <div class="bg-red-900/50 p-4 border-b border-red-500/30 flex items-center gap-2">
+                                        <i class="fas fa-exclamation-triangle text-red-400"></i>
+                                        <h3 class="font-bold text-red-100">Ralat Sintaks</h3>
+                                    </div>
+                                    <div class="p-5">
+                                        <p class="text-sm text-slate-300 mb-4">Kesalahan "tatabahasa" bahasa pengaturcaraan. Kod tidak akan dijalankan langsung (terhenti sebelum mula).</p>
+                                        <div class="bg-slate-900 rounded p-3 text-xs code-font text-red-300 mb-2">
+                                            print("Helo Dunia"<br>
+                                            <span class="text-slate-500"># SyntaxError: unexpected EOF while parsing</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 mt-2"><i class="fas fa-lightbulb text-yellow-400 mr-1"></i> Punca: Tertinggal kurungan, salah ejaan arahan.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Masa Larian -->
+                                <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform">
+                                    <div class="bg-orange-900/50 p-4 border-b border-orange-500/30 flex items-center gap-2">
+                                        <i class="fas fa-bolt text-orange-400"></i>
+                                        <h3 class="font-bold text-orange-100">Ralat Masa Larian</h3>
+                                    </div>
+                                    <div class="p-5">
+                                        <p class="text-sm text-slate-300 mb-4">Kod melepasi ujian sintaks dan mula berjalan, tetapi crash di pertengahan jalan kerana operasi mustahil.</p>
+                                        <div class="bg-slate-900 rounded p-3 text-xs code-font text-orange-300 mb-2">
+                                            x = 10 / 0<br>
+                                            <span class="text-slate-500"># ZeroDivisionError: division by zero</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 mt-2"><i class="fas fa-lightbulb text-yellow-400 mr-1"></i> Punca: Bahagi sifar, buka fail tak wujud, salah jenis data.</p>
+                                    </div>
+                                </div>
+
+                                <!-- Logik -->
+                                <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform">
+                                    <div class="bg-green-900/50 p-4 border-b border-green-500/30 flex items-center gap-2">
+                                        <i class="fas fa-brain text-green-400"></i>
+                                        <h3 class="font-bold text-green-100">Ralat Logik</h3>
+                                    </div>
+                                    <div class="p-5">
+                                        <p class="text-sm text-slate-300 mb-4">Kod berjalan lancar tanpa amaran error, tetapi **OUTPUT SALAH**. Ralat paling sukar dikesan.</p>
+                                        <div class="bg-slate-900 rounded p-3 text-xs code-font text-green-300 mb-2">
+                                            # Kira luas segi empat<br>
+                                            luas = panjang + lebar<br>
+                                            <span class="text-slate-500"># Output salah. Sepatutnya darab (*), bukan tambah (+)</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 mt-2"><i class="fas fa-lightbulb text-yellow-400 mr-1"></i> Punca: Kesilapan formula atau jalan kira.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Latihan -->
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+                                <h3 class="text-xl font-bold text-white mb-4"><i class="fas fa-dumbbell mr-2 text-blue-400"></i>Cabaran Kefahaman</h3>
+                                <p class="text-sm text-slate-300 mb-4">Sila padankan senario di bawah dengan jenis ralat yang betul.</p>
+                                
+                                <div class="space-y-4">
+                                    <div class="p-4 bg-slate-900 rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                        <div>
+                                            <p class="font-mono text-sm text-blue-300 bg-slate-800 p-2 rounded mb-2">if umur > 18<br>&nbsp;&nbsp;print("Dewasa")</p>
+                                            <p class="text-xs text-slate-400">Pengekod tertinggal tanda titik bertindih (:) selepas syarat if.</p>
+                                        </div>
+                                        <select id="m1-q1" class="bg-slate-700 text-white text-sm rounded border border-slate-600 focus:border-blue-500 focus:ring-blue-500 p-2.5 outline-none">
+                                            <option value="">-- Pilih Jenis Ralat --</option>
+                                            <option value="sintaks">Ralat Sintaks</option>
+                                            <option value="masa_larian">Ralat Masa Larian</option>
+                                            <option value="logik">Ralat Logik</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 flex justify-end">
+                                    <button onclick="checkM1()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">Semak Jawapan</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul2':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-orange-500/20 text-orange-400 py-1 px-3 rounded-full text-sm font-bold">1.5.2</span>
+                                <h2 class="text-3xl font-bold text-white">Makmal Membaiki Ralat (Debugging)</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-lg">Seorang pengatur cara menghabiskan 20% masa menulis kod, dan 80% masa mencari ralat. Selesaikan insiden kod rosak di bawah.</p>
+
+                            <!-- Cabaran 1: Sintaks -->
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden mb-8">
+                                <div class="bg-slate-700/50 p-4 border-b border-slate-700 flex justify-between items-center">
+                                    <h3 class="font-bold text-white">Insiden #001: Ralat Sintaks</h3>
+                                    <span class="bg-slate-900 text-slate-300 px-2 py-1 rounded text-xs">Python 3</span>
+                                </div>
+                                <div class="p-6">
+                                    <p class="text-sm text-slate-300 mb-2">Program ini sepatutnya mengira diskaun tetapi gagal dijalankan kerana ralat ejaan pada kata kunci terpelihara (reserved word).</p>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1 uppercase">Mesej Konsol (Error)</label>
+                                            <div class="bg-black/50 border border-red-900 rounded p-4 text-xs code-font text-red-400 h-32 overflow-y-auto">
+                                                File "main.py", line 2<br>
+                                                &nbsp;&nbsp;pirnt("Kira Diskaun")<br>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>
+                                                SyntaxError: invalid syntax. Perhaps you meant to call 'print'?
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1 uppercase">Penyunting Kod Anda</label>
+                                            <textarea id="m2-q1-code" class="w-full h-32 bg-slate-900 text-blue-300 code-font p-4 rounded border border-slate-600 focus:border-blue-500 outline-none resize-none">
+harga = 100
+pirnt("Harga ialah", harga)
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <p class="text-xs text-slate-400">Baiki ejaan dalam kotak editor di atas.</p>
+                                        <button onclick="checkM2Q1()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors shadow-lg shadow-green-900/20"><i class="fas fa-play mr-2"></i>Jalankan Kod</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Cabaran 2: Logik -->
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
+                                <div class="bg-slate-700/50 p-4 border-b border-slate-700 flex justify-between items-center">
+                                    <h3 class="font-bold text-white">Insiden #002: Ralat Logik Purata</h3>
+                                    <span class="bg-slate-900 text-slate-300 px-2 py-1 rounded text-xs">Python 3</span>
+                                </div>
+                                <div class="p-6">
+                                    <p class="text-sm text-slate-300 mb-2">Program ini mencari purata 3 markah. Atur cara berjalan tanpa masalah, tetapi jawapan yang keluar adalah <span class="text-red-400 font-bold text-lg">193.33</span>! Purata tidak mungkin melebihi markah maksimum (100). Sila baiki formulanya.</p>
+                                    
+                                    <div class="mt-4">
+                                        <label class="block text-xs font-bold text-slate-400 mb-1 uppercase">Penyunting Kod Anda</label>
+                                        <textarea id="m2-q2-code" class="w-full h-32 bg-slate-900 text-green-300 code-font p-4 rounded border border-slate-600 focus:border-green-500 outline-none resize-none">
+m1 = 80
+m2 = 90
+m3 = 70
+purata = m1 + m2 + m3 / 3
+print(purata)
+                                        </textarea>
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <p class="text-xs text-slate-400">Petunjuk: Ingat urutan operasi matematik (BODMAS).</p>
+                                        <button onclick="checkM2Q2()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors shadow-lg shadow-green-900/20"><i class="fas fa-play mr-2"></i>Jalankan Kod</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul3':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-green-500/20 text-green-400 py-1 px-3 rounded-full text-sm font-bold">1.5.3</span>
+                                <h2 class="text-3xl font-bold text-white">Bilik Penjejakan (Tracing)</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-lg">Mengenalpasti nilai pemboleh ubah pada bahagian tertentu atur cara (Tracing) amat penting terutamanya ketika menggunakan struktur kawalan gelung (loop).</p>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 mb-8 flex flex-col md:flex-row gap-8">
+                                <!-- Kod -->
+                                <div class="w-full md:w-1/2">
+                                    <h3 class="font-bold text-white mb-4">Kod Atur Cara:</h3>
+                                    <div class="bg-slate-900 rounded p-4 code-font text-sm text-slate-300 leading-relaxed shadow-inner">
+                                        <span class="text-slate-500 mr-4">1</span><span class="text-purple-400">jumlah</span> = <span class="text-orange-400">0</span><br>
+                                        <span class="text-slate-500 mr-4">2</span><span class="text-blue-400">for</span> <span class="text-yellow-200">i</span> <span class="text-blue-400">in</span> range(<span class="text-orange-400">1</span>, <span class="text-orange-400">4</span>):<br>
+                                        <span class="text-slate-500 mr-4">3</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">jumlah</span> = <span class="text-purple-400">jumlah</span> + <span class="text-yellow-200">i</span><br>
+                                        <span class="text-slate-500 mr-4">4</span>print(<span class="text-purple-400">jumlah</span>)
+                                    </div>
+                                </div>
+
+                                <!-- Jadual Penjejakan -->
+                                <div class="w-full md:w-1/2">
+                                    <h3 class="font-bold text-white mb-4">Jadual Penjejakan (Mental Model):</h3>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-sm text-left text-slate-300 border-collapse">
+                                            <thead class="text-xs text-slate-400 uppercase bg-slate-700">
+                                                <tr>
+                                                    <th class="px-4 py-2 border border-slate-600">Lelaran (Gelung)</th>
+                                                    <th class="px-4 py-2 border border-slate-600">Nilai 'i'</th>
+                                                    <th class="px-4 py-2 border border-slate-600">Nilai 'jumlah' (Baris 3)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="bg-slate-800 border-b border-slate-700">
+                                                    <td class="px-4 py-2 border border-slate-600">Sebelum Gelung</td>
+                                                    <td class="px-4 py-2 border border-slate-600">-</td>
+                                                    <td class="px-4 py-2 border border-slate-600 text-orange-400 font-bold">0</td>
+                                                </tr>
+                                                <tr class="bg-slate-800 border-b border-slate-700">
+                                                    <td class="px-4 py-2 border border-slate-600">Lelaran 1</td>
+                                                    <td class="px-4 py-2 border border-slate-600">1</td>
+                                                    <td class="px-4 py-2 border border-slate-600">0 + 1 = <span class="text-green-400 font-bold">1</span></td>
+                                                </tr>
+                                                <tr class="bg-slate-800 border-b border-slate-700">
+                                                    <td class="px-4 py-2 border border-slate-600">Lelaran 2</td>
+                                                    <td class="px-4 py-2 border border-slate-600">2</td>
+                                                    <td class="px-4 py-2 border border-slate-600">1 + 2 = <span class="text-green-400 font-bold">3</span></td>
+                                                </tr>
+                                                <tr class="bg-slate-800">
+                                                    <td class="px-4 py-2 border border-slate-600">Lelaran 3</td>
+                                                    <td class="px-4 py-2 border border-slate-600">3</td>
+                                                    <td class="px-4 py-2 border border-slate-600">3 + 3 = <span class="text-green-400 font-bold">?</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="mt-6 bg-slate-900 p-4 rounded-lg border border-slate-700">
+                                        <p class="text-sm font-semibold mb-3">Soalan: Apakah nilai <code class="bg-slate-800 text-purple-300 px-1 rounded">jumlah</code> yang akan dipaparkan pada Output akhir (Baris 4)?</p>
+                                        <div class="flex gap-3">
+                                            <input type="number" id="m3-q1-input" class="bg-slate-800 border border-slate-600 text-white rounded px-3 py-2 w-32 focus:border-blue-500 outline-none" placeholder="Nilai...">
+                                            <button onclick="checkM3()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold transition-colors">Jawab</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul4':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-purple-500/20 text-purple-400 py-1 px-3 rounded-full text-sm font-bold">1.5.4</span>
+                                <h2 class="text-3xl font-bold text-white">Gaya Pengekodan Berkualiti</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-lg">Kod bukan sekadar untuk dibaca oleh komputer. Ia mesti mudah dibaca oleh manusia. Gaya kod yang baik merangkumi Komen, Nama Pemboleh Ubah yang bermakna, dan Inden (Lekukan).</p>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden mb-8">
+                                <div class="flex bg-slate-700/50 border-b border-slate-700">
+                                    <button id="tab-caca" onclick="toggleCodeStyle('caca')" class="flex-1 py-3 font-bold text-slate-400 hover:text-white transition-colors bg-slate-800 border-b-2 border-transparent">Kod Caca-Marba (Bad Practice)</button>
+                                    <button id="tab-kualiti" onclick="toggleCodeStyle('kualiti')" class="flex-1 py-3 font-bold text-purple-400 border-b-2 border-purple-500 bg-slate-800/30">Kod Kualiti (Best Practice)</button>
+                                </div>
+                                
+                                <div class="p-6 relative min-h-[300px]">
+                                    <!-- Bad Code -->
+                                    <div id="code-caca" class="absolute inset-0 p-6 hidden">
+                                        <div class="bg-slate-900 rounded p-4 code-font text-sm text-red-300 shadow-inner h-full">
+a=100<br>
+b=0.1<br>
+c=a-(a*b)<br>
+if c>50:<br>
+print("Mahal")<br>
+else:<br>
+print("Murah")
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Good Code -->
+                                    <div id="code-kualiti" class="absolute inset-0 p-6 block animate-fade-in">
+                                        <div class="bg-slate-900 rounded p-4 code-font text-sm text-slate-300 shadow-inner h-full">
+<span class="text-slate-500 italic"># Program mengira harga selepas diskaun</span><br>
+<span class="text-purple-400">harga_asal</span> = <span class="text-orange-400">100</span><br>
+<span class="text-purple-400">kadar_diskaun</span> = <span class="text-orange-400">0.1</span><br>
+<span class="text-purple-400">harga_akhir</span> = <span class="text-purple-400">harga_asal</span> - (<span class="text-purple-400">harga_asal</span> * <span class="text-purple-400">kadar_diskaun</span>)<br>
+<br>
+<span class="text-slate-500 italic"># Semak sama ada harga mahal atau murah</span><br>
+<span class="text-blue-400">if</span> <span class="text-purple-400">harga_akhir</span> > <span class="text-orange-400">50</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(<span class="text-green-300">"Mahal"</span>) <span class="text-slate-500 italic"># Mempunyai Inden yang betul</span><br>
+<span class="text-blue-400">else</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(<span class="text-green-300">"Murah"</span>)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Latihan Gaya Kod -->
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+                                <h3 class="text-xl font-bold text-white mb-4">Uji Minda</h3>
+                                <p class="text-sm text-slate-300 mb-4">Pilih nama pemboleh ubah yang **PALING BERMAKNA** untuk menyimpan nilai baki akaun bank pelanggan.</p>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <button onclick="checkM4('A')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-3 text-left code-font text-sm transition-colors">A) x</button>
+                                    <button onclick="checkM4('B')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-3 text-left code-font text-sm transition-colors">B) wang</button>
+                                    <button onclick="checkM4('C')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-3 text-left code-font text-sm transition-colors">C) bakiAkaunBank</button>
+                                    <button onclick="checkM4('D')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-3 text-left code-font text-sm transition-colors">D) bk</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'ujian':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-yellow-500/20 text-yellow-400 py-1 px-3 rounded-full text-sm font-bold"><i class="fas fa-trophy mr-2"></i>BOSS</span>
+                                <h2 class="text-3xl font-bold text-white">Ujian Penilaian Akhir</h2>
+                            </div>
+                            
+                            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-8 shadow-2xl relative overflow-hidden">
+                                <div class="absolute top-0 right-0 -mr-16 -mt-16 text-slate-700 opacity-20">
+                                    <i class="fas fa-certificate" style="font-size: 200px;"></i>
+                                </div>
+                                
+                                <div class="relative z-10">
+                                    <h3 class="text-xl font-bold text-white mb-6">Jawab semua soalan berikut untuk melengkapkan kursus.</h3>
+                                    
+                                    <!-- Q1 -->
+                                    <div class="mb-8">
+                                        <p class="font-semibold text-slate-200 mb-3">1. Apakah ralat yang berlaku jika anda cuba membahagikan nombor dengan nilai teks (string)? (Contoh: <code class="bg-slate-800 px-1 rounded">10 / "Dua"</code>)</p>
+                                        <div class="space-y-2">
+                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
+                                                <input type="radio" name="uq1" value="A" class="form-radio text-blue-500">
+                                                <span class="text-slate-300">Ralat Sintaks</span>
+                                            </label>
+                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
+                                                <input type="radio" name="uq1" value="B" class="form-radio text-blue-500">
+                                                <span class="text-slate-300">Ralat Masa Larian (Type Error)</span>
+                                            </label>
+                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
+                                                <input type="radio" name="uq1" value="C" class="form-radio text-blue-500">
+                                                <span class="text-slate-300">Ralat Logik</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Q2 -->
+                                    <div class="mb-8">
+                                        <p class="font-semibold text-slate-200 mb-3">2. Apakah kepentingan meletakkan Komen (<code class="bg-slate-800 px-1 rounded">#</code>) di dalam atur cara?</p>
+                                        <div class="space-y-2">
+                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
+                                                <input type="radio" name="uq2" value="A" class="form-radio text-blue-500">
+                                                <span class="text-slate-300">Untuk menjadikan komputer berjalan lebih pantas.</span>
+                                            </label>
+                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
+                                                <input type="radio" name="uq2" value="B" class="form-radio text-blue-500">
+                                                <span class="text-slate-300">Untuk mengelakkan ralat masa larian.</span>
+                                            </label>
+                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
+                                                <input type="radio" name="uq2" value="C" class="form-radio text-blue-500">
+                                                <span class="text-slate-300">Membantu manusia (pengatur cara) memahami fungsi blok kod tersebut.</span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <button onclick="checkUjian()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-yellow-900/20 transform transition hover:-translate-y-1">Hantar Ujian</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // --- Logic Evaluators ---
+        function checkM1() {
+            const val = document.getElementById('m1-q1').value;
+            if (val === 'sintaks') {
+                if(!state.m1_q1_done) { addXP(100); state.m1_q1_done = true; }
+                showToast("Tepat!", "Tiada titik bertindih (:) adalah Ralat Sintaks.");
+            } else if(val === "") {
+                showToast("Sila Pilih", "Anda belum membuat pilihan.", "error");
+            } else {
+                showToast("Salah", "Fikir logik: Adakah kod itu boleh bermula tanpa tatabahasa yang betul?", "error");
+            }
+        }
+
+        function checkM2Q1() {
+            const code = document.getElementById('m2-q1-code').value;
+            // Clean space to make checking robust
+            const cleanCode = code.replace(/\s/g, '');
+            if (cleanCode.includes('print("Hargaialah",harga)')) {
+                if(!state.m2_q1_done) { addXP(150); state.m2_q1_done = true; }
+                showToast("Berjaya Dibaiki!", "Ejaan 'print' telah dibetulkan. Kod berjaya dijalankan.");
+            } else {
+                showToast("Ralat Masih Wujud", "Sila semak baris 2. Pastikan ejaan 'print' adalah tepat.", "error");
+            }
+        }
+
+        function checkM2Q2() {
+            const code = document.getElementById('m2-q2-code').value;
+            const cleanCode = code.replace(/\s/g, '');
+            if (cleanCode.includes('purata=(m1+m2+m3)/3')) {
+                if(!state.m2_q2_done) { addXP(150); state.m2_q2_done = true; }
+                showToast("Logik Dibetulkan!", "Penggunaan kurungan memastikan penambahan dibuat sebelum pembahagian. Output: 80.0");
+            } else {
+                showToast("Masih Ralat Logik", "Ingat hukum matematik. Anda perlu menambah semua markah DAHULU sebelum bahagi 3. Gunakan kurungan ().", "error");
+            }
+        }
+
+        function checkM3() {
+            const val = document.getElementById('m3-q1-input').value;
+            if (val === '6') {
+                if(!state.m3_q1_done) { addXP(200); state.m3_q1_done = true; }
+                showToast("Penjejakan Sempurna!", "Lelaran akhir: i=3, jumlah sebelumnya=3. 3+3 = 6.");
+            } else {
+                showToast("Penjejakan Tersasar", "Cuba kira semula. Pada lelaran ke-3, i adalah 3. Tambahkan dengan jumlah sebelumnya.", "error");
+            }
+        }
+
+        function toggleCodeStyle(type) {
+            const caca = document.getElementById('code-caca');
+            const kualiti = document.getElementById('code-kualiti');
+            const btnCaca = document.getElementById('tab-caca');
+            const btnKualiti = document.getElementById('tab-kualiti');
+
+            if (type === 'caca') {
+                caca.classList.remove('hidden');
+                kualiti.classList.add('hidden');
+                kualiti.classList.remove('animate-fade-in');
+                
+                btnCaca.classList.add('text-purple-400', 'border-purple-500', 'bg-slate-800/30');
+                btnCaca.classList.remove('text-slate-400', 'border-transparent');
+                
+                btnKualiti.classList.remove('text-purple-400', 'border-purple-500', 'bg-slate-800/30');
+                btnKualiti.classList.add('text-slate-400', 'border-transparent');
+            } else {
+                caca.classList.add('hidden');
+                kualiti.classList.remove('hidden');
+                kualiti.classList.add('animate-fade-in');
+                
+                btnKualiti.classList.add('text-purple-400', 'border-purple-500', 'bg-slate-800/30');
+                btnKualiti.classList.remove('text-slate-400', 'border-transparent');
+                
+                btnCaca.classList.remove('text-purple-400', 'border-purple-500', 'bg-slate-800/30');
+                btnCaca.classList.add('text-slate-400', 'border-transparent');
+            }
+        }
+
+        function checkM4(answer) {
+            if (answer === 'C') {
+                if(!state.m4_q1_done) { addXP(100); state.m4_q1_done = true; }
+                showToast("Pilihan Bijak!", "'bakiAkaunBank' jelas, deskriptif, dan menggunakan format camelCase.");
+            } else {
+                showToast("Kurang Sesuai", "Nama pemboleh ubah tersebut tidak menerangkan data dengan jelas.", "error");
+            }
+        }
+
+        function checkUjian() {
+            const q1 = document.querySelector('input[name="uq1"]:checked');
+            const q2 = document.querySelector('input[name="uq2"]:checked');
+
+            if (!q1 || !q2) {
+                showToast("Perhatian", "Sila jawab semua soalan sebelum hantar.", "error");
+                return;
+            }
+
+            if (q1.value === 'B' && q2.value === 'C') {
+                if(!state.ujian_done) { addXP(300); state.ujian_done = true; }
+                
+                document.getElementById('content-area').innerHTML = `
+                    <div class="animate-fade-in text-center pt-20">
+                        <i class="fas fa-medal text-9xl text-yellow-400 mb-8 drop-shadow-[0_0_30px_rgba(250,204,21,0.5)]"></i>
+                        <h1 class="text-4xl font-bold text-white mb-4">Tahniah! Anda telah Lulus.</h1>
+                        <p class="text-xl text-slate-300 max-w-2xl mx-auto">Anda kini menguasai asas Ralat, Penyahpepijatan, Penjejakan Nilai dan Gaya Kod Bersih mengikut Standard 1.5. Teruskan latihan pengekodan anda!</p>
+                        <p class="mt-8 text-2xl font-bold text-yellow-400">Total XP: ${currentXP}</p>
+                        <button onclick="loadModule('intro')" class="mt-8 bg-slate-700 hover:bg-slate-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors">Kembali ke Menu Utama</button>
+                    </div>
+                `;
+            } else {
+                showToast("Gagal", "Terdapat jawapan yang salah. Sila semak semula nota di Modul 1 dan Modul 4.", "error");
+            }
+        }
+
+        // Initialize App
+        window.onload = () => {
+            loadModule('intro');
+        };
+    </script>
+</body>
+</html>

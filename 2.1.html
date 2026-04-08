@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bootcamp: Pangkalan Data Hubungan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .highlight-red { background-color: #fee2e2; border-color: #ef4444; transition: all 0.3s; }
+        .tab-active { border-bottom-width: 4px; border-color: #3b82f6; color: #1d4ed8; font-weight: 600; }
+        
+        /* Custom scrollbar for content area */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    </style>
+</head>
+<body class="bg-gray-50 h-screen overflow-hidden flex">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-72 bg-slate-900 text-white flex flex-col h-full shadow-xl z-10">
+        <div class="p-6 border-b border-slate-700">
+            <h1 class="text-2xl font-bold text-blue-400"><i class="fas fa-database mr-2"></i>Bootcamp DB</h1>
+            <p class="text-sm text-slate-400 mt-2">Silibus: 2.1 Pangkalan Data Hubungan</p>
+        </div>
+        
+        <div class="p-4 flex-1 overflow-y-auto">
+            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Modul Pembelajaran</p>
+            <nav class="space-y-2">
+                <button onclick="navigate('modul1')" id="nav-modul1" class="nav-btn w-full flex items-center p-3 rounded-lg bg-blue-600 text-white transition-colors">
+                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-3">1</div>
+                    <span class="text-left flex-1">Konsep Asas & Isu Data</span>
+                </button>
+                <button onclick="navigate('modul2')" id="nav-modul2" class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-slate-800 text-slate-300 transition-colors">
+                    <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center mr-3">2</div>
+                    <span class="text-left flex-1">Model Pangkalan Data</span>
+                </button>
+                <button onclick="navigate('modul3')" id="nav-modul3" class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-slate-800 text-slate-300 transition-colors">
+                    <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center mr-3">3</div>
+                    <span class="text-left flex-1">ERD & Kekardinalan</span>
+                </button>
+                <button onclick="navigate('kuiz')" id="nav-kuiz" class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-slate-800 text-slate-300 transition-colors mt-6 border border-slate-700">
+                    <i class="fas fa-tasks w-8 text-center mr-1"></i>
+                    <span class="text-left flex-1 font-semibold text-emerald-400">Kuiz Penilaian</span>
+                </button>
+            </nav>
+        </div>
+        
+        <div class="p-6 border-t border-slate-700 text-xs text-slate-500">
+            <p>Sesuai untuk sesi 10 Jam Bootcamp</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 h-full overflow-y-auto bg-slate-50 p-8 relative">
+        
+        <!-- MODUL 1: Konsep Asas -->
+        <section id="modul1" class="content-section fade-in max-w-5xl mx-auto">
+            <header class="mb-8">
+                <span class="text-blue-600 font-semibold tracking-wider text-sm uppercase">Modul 2.1.1</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-1">Integriti, Ketekalan & Kelewahan Data</h2>
+                <p class="text-slate-600 mt-2">Memahami tiga konsep utama yang menentukan kualiti sesebuah pangkalan data.</p>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Integriti -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-xl mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Integriti Data</h3>
+                    <p class="text-slate-600 text-sm">Merujuk kepada kesahihan, ketepatan, dan kebolehpercayaan data. Data mestilah mematuhi peraturan (rules) yang ditetapkan.</p>
+                    <div class="mt-4 p-3 bg-slate-50 rounded text-sm text-slate-700 border-l-4 border-emerald-500">
+                        <strong>Contoh:</strong> Markah peperiksaan mesti berada dalam julat 0 hingga 100.
+                    </div>
+                </div>
+
+                <!-- Ketekalan -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xl mb-4">
+                        <i class="fas fa-sync-alt"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Ketekalan Data</h3>
+                    <p class="text-slate-600 text-sm">Keadaan di mana data yang sama disimpan di beberapa tempat memberikan nilai yang seragam (konsisten).</p>
+                    <div class="mt-4 p-3 bg-slate-50 rounded text-sm text-slate-700 border-l-4 border-blue-500">
+                        <strong>Contoh:</strong> Jika alamat pelajar ditukar di unit hal ehwal pelajar, sistem kewangan juga akan menunjukkan alamat yang baharu.
+                    </div>
+                </div>
+
+                <!-- Kelewahan -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
+                    <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center text-xl mb-4">
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Kelewahan Data</h3>
+                    <p class="text-slate-600 text-sm">Pengulangan data yang sama di beberapa fail atau jadual yang berbeza. Boleh membazirkan ruang storan.</p>
+                    <div class="mt-4 p-3 bg-slate-50 rounded text-sm text-slate-700 border-l-4 border-rose-500">
+                        <strong>Kesan:</strong> Menyebabkan ketidaktekalan data jika salah satu salinan diubah suai.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Redundancy Demo -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="text-xl font-bold text-slate-800 mb-4"><i class="fas fa-laptop-code text-blue-600 mr-2"></i>Simulasi Interaktif: Menyelesaikan Kelewahan Data</h3>
+                <p class="text-slate-600 mb-4">Perhatikan jadual di bawah. Terdapat pengulangan data (kelewahan) untuk nama guru kelas. Klik butang untuk lihat proses penormalan.</p>
+                
+                <div class="flex space-x-4 mb-4">
+                    <button onclick="highlightRedundancy()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded shadow-sm transition">1. Kenal Pasti Kelewahan</button>
+                    <button onclick="normalizeTable()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded shadow-sm transition">2. Lakukan Penormalan</button>
+                    <button onclick="resetTable()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded shadow-sm transition">Reset Ujian</button>
+                </div>
+
+                <!-- Unnormalized Table -->
+                <div id="unnormalized-view" class="overflow-x-auto transition-all duration-500">
+                    <h4 class="font-semibold text-slate-700 mb-2">Jadual Pelajar (Bermasalah)</h4>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100">
+                                <th class="p-3 border-b border-slate-200">ID Pelajar</th>
+                                <th class="p-3 border-b border-slate-200">Nama Pelajar</th>
+                                <th class="p-3 border-b border-slate-200">Kelas</th>
+                                <th class="p-3 border-b border-slate-200">Nama Guru Kelas</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td class="p-3 border-b border-slate-200">P001</td><td class="p-3 border-b border-slate-200">Ahmad Ali</td><td class="p-3 border-b border-slate-200 highlight-target">5 Sains</td><td class="p-3 border-b border-slate-200 highlight-target">Cikgu Aminah</td></tr>
+                            <tr><td class="p-3 border-b border-slate-200">P002</td><td class="p-3 border-b border-slate-200">Siti Nurhaliza</td><td class="p-3 border-b border-slate-200 highlight-target">5 Sains</td><td class="p-3 border-b border-slate-200 highlight-target">Cikgu Aminah</td></tr>
+                            <tr><td class="p-3 border-b border-slate-200">P003</td><td class="p-3 border-b border-slate-200">Muthusamy</td><td class="p-3 border-b border-slate-200 highlight-target2">5 Sastera</td><td class="p-3 border-b border-slate-200 highlight-target2">Cikgu Kamal</td></tr>
+                            <tr><td class="p-3 border-b border-slate-200">P004</td><td class="p-3 border-b border-slate-200">Wong Mei Mei</td><td class="p-3 border-b border-slate-200 highlight-target2">5 Sastera</td><td class="p-3 border-b border-slate-200 highlight-target2">Cikgu Kamal</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Normalized View (Hidden initially) -->
+                <div id="normalized-view" class="hidden flex flex-col md:flex-row gap-6 mt-4 opacity-0 transition-opacity duration-700">
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-blue-700 mb-2">Jadual Pelajar (Direka Baru)</h4>
+                        <table class="w-full text-left border-collapse border border-blue-200">
+                            <thead>
+                                <tr class="bg-blue-50">
+                                    <th class="p-2 border-b border-blue-200 text-sm">ID Pelajar</th>
+                                    <th class="p-2 border-b border-blue-200 text-sm">Nama Pelajar</th>
+                                    <th class="p-2 border-b border-blue-200 text-sm text-blue-600">ID Kelas (Kunci Asing)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="p-2 border-b border-blue-100 text-sm">P001</td><td class="p-2 border-b border-blue-100 text-sm">Ahmad Ali</td><td class="p-2 border-b border-blue-100 text-sm font-semibold">K01</td></tr>
+                                <tr><td class="p-2 border-b border-blue-100 text-sm">P002</td><td class="p-2 border-b border-blue-100 text-sm">Siti Nurhaliza</td><td class="p-2 border-b border-blue-100 text-sm font-semibold">K01</td></tr>
+                                <tr><td class="p-2 border-b border-blue-100 text-sm">P003</td><td class="p-2 border-b border-blue-100 text-sm">Muthusamy</td><td class="p-2 border-b border-blue-100 text-sm font-semibold">K02</td></tr>
+                                <tr><td class="p-2 text-sm">P004</td><td class="p-2 text-sm">Wong Mei Mei</td><td class="p-2 text-sm font-semibold">K02</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="flex items-center justify-center text-slate-400">
+                        <i class="fas fa-link text-2xl"></i>
+                    </div>
+
+                    <div class="flex-1">
+                        <h4 class="font-semibold text-emerald-700 mb-2">Jadual Kelas (Entiti Baharu)</h4>
+                        <table class="w-full text-left border-collapse border border-emerald-200">
+                            <thead>
+                                <tr class="bg-emerald-50">
+                                    <th class="p-2 border-b border-emerald-200 text-sm text-emerald-600">ID Kelas (Kunci Primer)</th>
+                                    <th class="p-2 border-b border-emerald-200 text-sm">Nama Kelas</th>
+                                    <th class="p-2 border-b border-emerald-200 text-sm">Nama Guru Kelas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td class="p-2 border-b border-emerald-100 text-sm font-semibold">K01</td><td class="p-2 border-b border-emerald-100 text-sm">5 Sains</td><td class="p-2 border-b border-emerald-100 text-sm bg-yellow-50">Cikgu Aminah</td></tr>
+                                <tr><td class="p-2 text-sm font-semibold">K02</td><td class="p-2 text-sm">5 Sastera</td><td class="p-2 text-sm bg-yellow-50">Cikgu Kamal</td></tr>
+                            </tbody>
+                        </table>
+                        <p class="text-xs text-slate-500 mt-2 italic">* Data Cikgu Aminah & Cikgu Kamal kini hanya disimpan sekali sahaja! Kelewahan diselesaikan.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 flex justify-end">
+                <button onclick="navigate('modul2')" class="px-6 py-3 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition flex items-center">
+                    Seterusnya: Model Pangkalan Data <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODUL 2: Model Pangkalan Data -->
+        <section id="modul2" class="content-section hidden fade-in max-w-5xl mx-auto">
+            <header class="mb-8">
+                <span class="text-blue-600 font-semibold tracking-wider text-sm uppercase">Modul 2.1.2</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-1">Model-Model Pangkalan Data</h2>
+                <p class="text-slate-600 mt-2">Membezakan antara model Hierarki, Rangkaian, Hubungan, dan Berorientasi Objek.</p>
+            </header>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col md:flex-row">
+                <!-- Tabs -->
+                <div class="md:w-1/3 bg-slate-50 border-r border-slate-200">
+                    <button onclick="showModel('hierarki')" class="model-tab w-full text-left p-4 border-b border-slate-200 bg-white font-semibold text-blue-700 border-l-4 border-l-blue-600 transition">
+                        <i class="fas fa-sitemap w-6 text-center"></i> Hierarki
+                    </button>
+                    <button onclick="showModel('rangkaian')" class="model-tab w-full text-left p-4 border-b border-slate-200 text-slate-600 hover:bg-slate-100 transition border-l-4 border-l-transparent">
+                        <i class="fas fa-project-diagram w-6 text-center"></i> Rangkaian
+                    </button>
+                    <button onclick="showModel('hubungan')" class="model-tab w-full text-left p-4 border-b border-slate-200 text-slate-600 hover:bg-slate-100 transition border-l-4 border-l-transparent">
+                        <i class="fas fa-table w-6 text-center"></i> Hubungan (Relational)
+                    </button>
+                    <button onclick="showModel('objek')" class="model-tab w-full text-left p-4 text-slate-600 hover:bg-slate-100 transition border-l-4 border-l-transparent">
+                        <i class="fas fa-cubes w-6 text-center"></i> Berorientasi Objek
+                    </button>
+                </div>
+
+                <!-- Content -->
+                <div class="md:w-2/3 p-8 relative min-h-[400px]">
+                    <!-- Model Hierarki -->
+                    <div id="model-hierarki" class="model-content fade-in">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Model Hierarki</h3>
+                        <p class="text-slate-600 mb-6">Menyusun data seperti struktur pokok (tree structure). Data bermula dari satu akar (root) dan bercabang ke bawah. Hubungan ialah <strong>Satu-ke-Banyak (1:M)</strong> sahaja.</p>
+                        
+                        <!-- Visual Diagram -->
+                        <div class="flex justify-center mb-6 bg-slate-50 p-6 rounded-lg">
+                            <svg width="200" height="150" viewBox="0 0 200 150">
+                                <rect x="75" y="10" width="50" height="30" rx="5" fill="#3b82f6"/>
+                                <text x="100" y="30" fill="white" font-size="12" text-anchor="middle">Syarikat</text>
+                                
+                                <path d="M 100 40 L 100 60 L 40 60 L 40 80" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                                <path d="M 100 40 L 100 60 L 160 60 L 160 80" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                                
+                                <rect x="15" y="80" width="50" height="30" rx="5" fill="#10b981"/>
+                                <text x="40" y="100" fill="white" font-size="12" text-anchor="middle">Kewangan</text>
+                                
+                                <rect x="135" y="80" width="50" height="30" rx="5" fill="#10b981"/>
+                                <text x="160" y="100" fill="white" font-size="12" text-anchor="middle">Pemasaran</text>
+
+                                <path d="M 40 110 L 40 130" fill="none" stroke="#94a3b8" stroke-width="2"/>
+                                <rect x="15" y="130" width="50" height="30" rx="5" fill="#f59e0b"/>
+                                <text x="40" y="150" fill="white" font-size="12" text-anchor="middle">Gaji</text>
+                            </svg>
+                        </div>
+                        
+                        <div class="bg-blue-50 text-blue-800 p-4 rounded text-sm">
+                            <strong>Kelemahan Utama:</strong> Sukar untuk mewakili hubungan yang kompleks seperti Banyak-ke-Banyak (M:N).
+                        </div>
+                    </div>
+
+                    <!-- Model Rangkaian -->
+                    <div id="model-rangkaian" class="model-content hidden fade-in">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Model Rangkaian</h3>
+                        <p class="text-slate-600 mb-6">Perkembangan dari model hierarki. Membenarkan satu rekod "anak" (child) mempunyai lebih dari satu rekod "ibu bapa" (parent). Mampu mengendalikan hubungan <strong>Banyak-ke-Banyak (M:N)</strong>.</p>
+                        
+                        <div class="flex justify-center mb-6 bg-slate-50 p-6 rounded-lg">
+                            <svg width="200" height="150" viewBox="0 0 200 150">
+                                <rect x="30" y="10" width="60" height="30" rx="5" fill="#3b82f6"/>
+                                <text x="60" y="30" fill="white" font-size="12" text-anchor="middle">Guru A</text>
+                                
+                                <rect x="110" y="10" width="60" height="30" rx="5" fill="#3b82f6"/>
+                                <text x="140" y="30" fill="white" font-size="12" text-anchor="middle">Guru B</text>
+                                
+                                <rect x="30" y="100" width="60" height="30" rx="5" fill="#10b981"/>
+                                <text x="60" y="120" fill="white" font-size="12" text-anchor="middle">Pelajar 1</text>
+
+                                <rect x="110" y="100" width="60" height="30" rx="5" fill="#10b981"/>
+                                <text x="140" y="120" fill="white" font-size="12" text-anchor="middle">Pelajar 2</text>
+
+                                <!-- Lines -->
+                                <line x1="60" y1="40" x2="60" y2="100" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowhead)"/>
+                                <line x1="60" y1="40" x2="140" y2="100" stroke="#94a3b8" stroke-width="2"/>
+                                <line x1="140" y1="40" x2="60" y2="100" stroke="#94a3b8" stroke-width="2"/>
+                                <line x1="140" y1="40" x2="140" y2="100" stroke="#94a3b8" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <div class="bg-blue-50 text-blue-800 p-4 rounded text-sm">
+                            <strong>Kelebihan:</strong> Lebih fleksibel berbanding Hierarki. <br>
+                            <strong>Kelemahan:</strong> Sangat kompleks untuk diurus jika sistem menjadi besar (seperti sarang labah-labah).
+                        </div>
+                    </div>
+
+                    <!-- Model Hubungan -->
+                    <div id="model-hubungan" class="model-content hidden fade-in">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Model Hubungan (Relational)</h3>
+                        <p class="text-slate-600 mb-6">Model yang <strong>paling meluas digunakan hari ini</strong> (cth: MySQL, Oracle). Data disimpan dalam bentuk jadual 2-dimensi (baris dan lajur). Dihubungkan menggunakan Kunci Primer dan Kunci Asing.</p>
+                        
+                        <div class="flex justify-center mb-6 bg-slate-50 p-6 rounded-lg">
+                             <div class="flex items-center space-x-4">
+                                <table class="text-xs bg-white border border-slate-300 shadow-sm">
+                                    <tr class="bg-blue-100 border-b"><th class="p-1 border-r">ID_Jab</th><th class="p-1">Nama Jab</th></tr>
+                                    <tr class="border-b"><td class="p-1 border-r font-bold bg-yellow-100">J01</td><td class="p-1">IT</td></tr>
+                                    <tr><td class="p-1 border-r">J02</td><td class="p-1">HR</td></tr>
+                                </table>
+                                <div class="text-blue-500 font-bold border-t-2 border-blue-500 w-12 border-dashed relative">
+                                    <i class="fas fa-caret-right absolute -right-2 -top-2 text-blue-500"></i>
+                                </div>
+                                <table class="text-xs bg-white border border-slate-300 shadow-sm">
+                                    <tr class="bg-emerald-100 border-b"><th class="p-1 border-r">ID_Pekerja</th><th class="p-1 border-r">Nama</th><th class="p-1">ID_Jab</th></tr>
+                                    <tr class="border-b"><td class="p-1 border-r">P001</td><td class="p-1 border-r">Ali</td><td class="p-1 bg-yellow-100">J01</td></tr>
+                                    <tr><td class="p-1 border-r">P002</td><td class="p-1 border-r">Abu</td><td class="p-1">J02</td></tr>
+                                </table>
+                             </div>
+                        </div>
+                        <div class="bg-emerald-50 text-emerald-800 p-4 rounded text-sm">
+                            <strong>Kelebihan:</strong> Mudah difahami, carian data sangat pantas dan menggunakan sintaks pertanyaan standard (SQL).
+                        </div>
+                    </div>
+
+                    <!-- Model Objek -->
+                    <div id="model-objek" class="model-content hidden fade-in">
+                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Model Berorientasi Objek</h3>
+                        <p class="text-slate-600 mb-6">Data, sifat (atribut), dan kaedah (method/behavior) digabungkan bersama sebagai sebuah 'Objek'. Sesuai untuk menyimpan data kompleks seperti multimedia, grafik, dan koordinat.</p>
+                        
+                        <div class="flex justify-center mb-6 bg-slate-50 p-6 rounded-lg">
+                            <div class="bg-white border-2 border-purple-300 rounded-lg shadow-sm p-3 w-48">
+                                <div class="bg-purple-100 p-2 font-bold text-center border-b-2 border-purple-200">
+                                    Kelas: Kereta
+                                </div>
+                                <div class="p-2 border-b border-slate-100 text-xs text-slate-600">
+                                    <strong>Atribut:</strong><br>
+                                    - NoPlat: String<br>
+                                    - Warna: String<br>
+                                    - Gambar: ImageFile
+                                </div>
+                                <div class="p-2 text-xs text-slate-600">
+                                    <strong>Kaedah (Methods):</strong><br>
+                                    + hidupkanEnjin()<br>
+                                    + brek()
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-purple-50 text-purple-800 p-4 rounded text-sm">
+                            <strong>Kelebihan:</strong> Menyokong kelas, warisan (inheritance) dan enkapsulasi. Mampu mengurus format data jenis baru yang tiada dalam jadual biasa.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+                <button onclick="navigate('modul1')" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i> Kembali
+                </button>
+                <button onclick="navigate('modul3')" class="px-6 py-3 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition flex items-center">
+                    Seterusnya: ERD <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- MODUL 3: ERD & Kekardinalan -->
+        <section id="modul3" class="content-section hidden fade-in max-w-5xl mx-auto">
+            <header class="mb-8">
+                <span class="text-blue-600 font-semibold tracking-wider text-sm uppercase">Modul 2.1.3</span>
+                <h2 class="text-3xl font-bold text-slate-800 mt-1">Entiti, Atribut & Kekardinalan</h2>
+                <p class="text-slate-600 mt-2">Mengenal pasti komponen penting dalam merekabentuk Entity-Relationship Diagram (ERD).</p>
+            </header>
+
+            <!-- Definitions -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 text-center">
+                    <div class="w-16 h-10 mx-auto border-2 border-blue-500 rounded bg-blue-50 mb-2 flex items-center justify-center font-bold text-xs">ENTITI</div>
+                    <h4 class="font-bold text-slate-800 text-sm">Entiti</h4>
+                    <p class="text-xs text-slate-500 mt-1">Objek/benda (Cth: Pelajar, Buku)</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 text-center">
+                    <div class="w-14 h-10 mx-auto border-2 border-amber-500 rounded-[50%] bg-amber-50 mb-2 flex items-center justify-center font-bold text-xs">ATRIBUT</div>
+                    <h4 class="font-bold text-slate-800 text-sm">Atribut</h4>
+                    <p class="text-xs text-slate-500 mt-1">Ciri entiti (Cth: Nama, Umur)</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 text-center">
+                    <div class="w-12 h-12 mx-auto border-2 border-emerald-500 rotate-45 bg-emerald-50 mb-2 flex items-center justify-center">
+                        <span class="-rotate-45 font-bold text-[10px]">HUBUNGAN</span>
+                    </div>
+                    <h4 class="font-bold text-slate-800 text-sm mt-1">Set Hubungan</h4>
+                    <p class="text-xs text-slate-500 mt-1">Perkaitan (Cth: Meminjam)</p>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 text-center">
+                    <div class="text-2xl font-black text-purple-500 mb-2 mt-2">1 : M</div>
+                    <h4 class="font-bold text-slate-800 text-sm">Kekardinalan</h4>
+                    <p class="text-xs text-slate-500 mt-1">Kuantiti perkaitan</p>
+                </div>
+            </div>
+
+            <!-- Interactive ERD Builder -->
+            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <h3 class="text-xl font-bold text-slate-800 mb-4"><i class="fas fa-project-diagram text-blue-600 mr-2"></i>Simulasi Kekardinalan</h3>
+                <p class="text-slate-600 text-sm mb-6">Pilih jenis kekardinalan untuk melihat bagaimana ia ditunjukkan dalam gambar rajah.</p>
+                
+                <div class="flex space-x-2 mb-8 border-b pb-4">
+                    <button onclick="setCardinality('1to1')" id="btn-1to1" class="card-btn px-4 py-2 bg-blue-600 text-white rounded font-medium text-sm transition">Satu ke Satu (1:1)</button>
+                    <button onclick="setCardinality('1toM')" id="btn-1toM" class="card-btn px-4 py-2 bg-slate-200 text-slate-700 hover:bg-slate-300 rounded font-medium text-sm transition">Satu ke Banyak (1:M)</button>
+                    <button onclick="setCardinality('MtoN')" id="btn-MtoN" class="card-btn px-4 py-2 bg-slate-200 text-slate-700 hover:bg-slate-300 rounded font-medium text-sm transition">Banyak ke Banyak (M:N)</button>
+                </div>
+
+                <div class="min-h-[200px] flex flex-col items-center justify-center bg-slate-50 rounded-lg p-8 relative">
+                    
+                    <!-- Dinamic Title -->
+                    <div id="card-desc" class="text-center mb-8 font-semibold text-slate-700">
+                        Contoh: Seorang Pengetua menguruskan Satu Sekolah.
+                    </div>
+
+                    <!-- Diagram Container -->
+                    <div class="flex items-center space-x-4 w-full justify-center">
+                        
+                        <!-- Entity 1 -->
+                        <div class="relative">
+                            <div id="ent1-name" class="w-32 h-16 bg-white border-2 border-blue-800 rounded flex items-center justify-center font-bold text-blue-900 shadow-sm z-10 relative">Pengetua</div>
+                            <!-- Attributes demo (floating) -->
+                            <div class="absolute -top-10 left-0 w-full flex justify-center opacity-70">
+                                <div class="w-16 h-8 border border-slate-400 rounded-[50%] bg-white text-[10px] flex items-center justify-center"><u>ID_Pengetua</u></div>
+                            </div>
+                        </div>
+
+                        <!-- Relationship Line -->
+                        <div class="flex-1 max-w-[200px] flex items-center relative">
+                            <!-- Line Left -->
+                            <div class="h-0.5 bg-slate-800 w-full"></div>
+                            
+                            <!-- Cardinality Label Left -->
+                            <span id="card-left" class="absolute -top-5 left-2 font-bold text-lg text-slate-800">1</span>
+                            
+                            <!-- Diamond -->
+                            <div class="w-16 h-16 border-2 border-slate-800 bg-white rotate-45 flex items-center justify-center flex-shrink-0 z-10 mx-[-8px]">
+                                <span id="rel-name" class="-rotate-45 font-semibold text-xs">Mengurus</span>
+                            </div>
+
+                            <!-- Line Right -->
+                            <div class="h-0.5 bg-slate-800 w-full relative">
+                                <!-- Crow's foot for 'Many' (hidden by default) -->
+                                <div id="crows-foot-right" class="hidden absolute right-0 top-1/2 transform -translate-y-1/2 w-4 h-6 border-l-2 border-t-2 border-b-2 border-slate-800 rounded-l-sm" style="clip-path: polygon(100% 0, 0 50%, 100% 100%);"></div>
+                            </div>
+                            
+                            <!-- Cardinality Label Right -->
+                            <span id="card-right" class="absolute -top-5 right-2 font-bold text-lg text-slate-800">1</span>
+                        </div>
+
+                        <!-- Entity 2 -->
+                        <div class="relative">
+                            <div id="ent2-name" class="w-32 h-16 bg-white border-2 border-emerald-800 rounded flex items-center justify-center font-bold text-emerald-900 shadow-sm z-10 relative">Sekolah</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+                <button onclick="navigate('modul2')" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition flex items-center">
+                    <i class="fas fa-arrow-left mr-2"></i> Kembali
+                </button>
+                <button onclick="navigate('kuiz')" class="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition flex items-center shadow-lg font-bold">
+                    Uji Kefahaman (Kuiz) <i class="fas fa-check-circle ml-2"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- KUIZ BOOTCAMP -->
+        <section id="kuiz" class="content-section hidden fade-in max-w-3xl mx-auto">
+            <header class="mb-8 text-center">
+                <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-slate-800">Kuiz Penilaian Modul 2.1</h2>
+                <p class="text-slate-600 mt-2">Uji kefahaman anda berdasarkan modul yang telah dipelajari.</p>
+            </header>
+
+            <div id="quiz-container" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                <!-- Question Area -->
+                <div id="question-area">
+                    <div class="flex justify-between items-center mb-6">
+                        <span class="text-sm font-bold text-slate-400 uppercase tracking-wider">Soalan <span id="q-current">1</span> / <span id="q-total">5</span></span>
+                        <div class="w-1/2 bg-slate-200 rounded-full h-2.5">
+                            <div id="q-progress" class="bg-emerald-500 h-2.5 rounded-full" style="width: 20%"></div>
+                        </div>
+                    </div>
+                    
+                    <h3 id="question-text" class="text-xl font-semibold text-slate-800 mb-6">Apabila data pelajar dikemaskini di pejabat, data di perpustakaan juga automatik berubah. Ini menunjukkan ciri...</h3>
+                    
+                    <div id="options-area" class="space-y-3">
+                        <!-- Options injected by JS -->
+                    </div>
+                </div>
+
+                <!-- Results Area (Hidden initially) -->
+                <div id="result-area" class="hidden text-center py-8">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Kuiz Selesai!</h3>
+                    <div class="text-6xl font-black mb-4" id="score-display">100%</div>
+                    <p class="text-slate-600 mb-8" id="score-message">Tahniah! Anda telah menguasai topik ini.</p>
+                    
+                    <div class="space-x-4">
+                        <button onclick="initQuiz()" class="px-6 py-2 bg-slate-200 text-slate-700 rounded hover:bg-slate-300 transition font-medium">Cuba Lagi</button>
+                        <button onclick="navigate('modul1')" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition font-medium">Kembali ke Modul 1</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // --- NAVIGATION LOGIC ---
+        function navigate(moduleId) {
+            // Hide all sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            
+            // Show targeted section
+            document.getElementById(moduleId).classList.remove('hidden');
+            
+            // Update sidebar styles
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-500');
+                btn.classList.add('hover:bg-slate-800', 'text-slate-300');
+                
+                // Reset circle inside
+                const circle = btn.querySelector('div');
+                if(circle) {
+                    circle.classList.remove('bg-white/20');
+                    circle.classList.add('bg-slate-700');
+                }
+            });
+
+            // Style active button
+            const activeBtn = document.getElementById('nav-' + moduleId);
+            activeBtn.classList.remove('hover:bg-slate-800', 'text-slate-300');
+            
+            if(moduleId === 'kuiz') {
+                activeBtn.classList.add('bg-emerald-600', 'text-white');
+            } else {
+                activeBtn.classList.add('bg-blue-600', 'text-white');
+                const activeCircle = activeBtn.querySelector('div');
+                if(activeCircle) {
+                    activeCircle.classList.remove('bg-slate-700');
+                    activeCircle.classList.add('bg-white/20');
+                }
+            }
+
+            // If navigating to quiz, initialize it
+            if(moduleId === 'kuiz') initQuiz();
+        }
+
+        // --- MODUL 1: REDUNDANCY SIMULATION ---
+        function highlightRedundancy() {
+            const targets = document.querySelectorAll('.highlight-target');
+            const targets2 = document.querySelectorAll('.highlight-target2');
+            
+            targets.forEach(el => el.classList.add('highlight-red'));
+            targets2.forEach(el => el.classList.add('bg-orange-100', 'border-orange-400'));
+            
+            setTimeout(() => {
+                alert("Perhatikan bahawa '5 Sains' dan 'Cikgu Aminah' direkod berulang kali. Ini adalah KELEWAHAN DATA.");
+            }, 500);
+        }
+
+        function normalizeTable() {
+            document.getElementById('unnormalized-view').classList.add('hidden');
+            
+            const normView = document.getElementById('normalized-view');
+            normView.classList.remove('hidden');
+            
+            // Small delay to allow display:block to apply before animating opacity
+            setTimeout(() => {
+                normView.classList.remove('opacity-0');
+                normView.classList.add('opacity-100');
+            }, 50);
+        }
+
+        function resetTable() {
+            const targets = document.querySelectorAll('.highlight-target');
+            const targets2 = document.querySelectorAll('.highlight-target2');
+            
+            targets.forEach(el => el.classList.remove('highlight-red'));
+            targets2.forEach(el => el.classList.remove('bg-orange-100', 'border-orange-400'));
+
+            const normView = document.getElementById('normalized-view');
+            normView.classList.remove('opacity-100');
+            normView.classList.add('opacity-0');
+            
+            setTimeout(() => {
+                normView.classList.add('hidden');
+                document.getElementById('unnormalized-view').classList.remove('hidden');
+            }, 300);
+        }
+
+        // --- MODUL 2: MODEL TABS ---
+        function showModel(modelId) {
+            // Hide all contents
+            document.querySelectorAll('.model-content').forEach(el => el.classList.add('hidden'));
+            
+            // Reset tab styles
+            document.querySelectorAll('.model-tab').forEach(tab => {
+                tab.classList.remove('bg-white', 'font-semibold', 'text-blue-700', 'border-l-blue-600');
+                tab.classList.add('text-slate-600', 'border-l-transparent');
+            });
+
+            // Show active content
+            document.getElementById('model-' + modelId).classList.remove('hidden');
+            
+            // Set active tab style
+            const activeTab = event.currentTarget || event.target.closest('button');
+            activeTab.classList.remove('text-slate-600', 'border-l-transparent');
+            activeTab.classList.add('bg-white', 'font-semibold', 'text-blue-700', 'border-l-blue-600');
+        }
+
+        // --- MODUL 3: CARDINALITY SIMULATION ---
+        function setCardinality(type) {
+            // Reset buttons
+            document.querySelectorAll('.card-btn').forEach(btn => {
+                btn.classList.remove('bg-blue-600', 'text-white');
+                btn.classList.add('bg-slate-200', 'text-slate-700');
+            });
+
+            // Set active button
+            const activeBtn = document.getElementById('btn-' + type);
+            activeBtn.classList.remove('bg-slate-200', 'text-slate-700');
+            activeBtn.classList.add('bg-blue-600', 'text-white');
+
+            const ent1 = document.getElementById('ent1-name');
+            const ent2 = document.getElementById('ent2-name');
+            const rel = document.getElementById('rel-name');
+            const cardLeft = document.getElementById('card-left');
+            const cardRight = document.getElementById('card-right');
+            const desc = document.getElementById('card-desc');
+            const crowsFoot = document.getElementById('crows-foot-right'); // Simplified CSS crow's foot
+
+            if(type === '1to1') {
+                ent1.innerText = 'Pengetua';
+                ent2.innerText = 'Sekolah';
+                rel.innerText = 'Urus';
+                cardLeft.innerText = '1';
+                cardRight.innerText = '1';
+                desc.innerText = 'Contoh: Seorang Pengetua menguruskan Satu Sekolah. Satu sekolah diurus oleh Satu Pengetua.';
+                cardRight.innerText = '1';
+            } 
+            else if(type === '1toM') {
+                ent1.innerText = 'Guru';
+                ent2.innerText = 'Pelajar';
+                rel.innerText = 'Ajar';
+                cardLeft.innerText = '1';
+                cardRight.innerText = 'M';
+                desc.innerText = 'Contoh: Seorang Guru mengajar Ramai (Many) Pelajar. Tetapi pelajar untuk kelas itu diajar oleh seorang guru sahaja.';
+            }
+            else if(type === 'MtoN') {
+                ent1.innerText = 'Pelajar';
+                ent2.innerText = 'Subjek';
+                rel.innerText = 'Ambil';
+                cardLeft.innerText = 'M';
+                cardRight.innerText = 'N';
+                desc.innerText = 'Contoh: Ramai Pelajar mengambil Ramai(Pelbagai) Subjek. Sesuatu subjek juga diambil oleh ramai pelajar.';
+            }
+        }
+
+        // --- KUIZ LOGIC ---
+        const quizData = [
+            {
+                question: "Apabila data pelajar dikemaskini di pejabat, data di perpustakaan juga automatik berubah. Ini menunjukkan ciri...",
+                options: ["Integriti Data", "Ketekalan Data", "Kelewahan Data", "Keselamatan Data"],
+                correct: 1
+            },
+            {
+                question: "Masalah pengulangan data yang sama di pelbagai tempat dipanggil sebagai...",
+                options: ["Ketidaktekalan Data", "Kekardinalan", "Kelewahan Data", "Atribut Redundan"],
+                correct: 2
+            },
+            {
+                question: "Model pangkalan data manakah yang menyusun rekod seperti struktur pokok?",
+                options: ["Model Rangkaian", "Model Berorientasi Objek", "Model Hierarki", "Model Hubungan"],
+                correct: 2
+            },
+            {
+                question: "Dalam Entity-Relationship Diagram (ERD), bentuk segi empat tepat mewakili apa?",
+                options: ["Atribut", "Entiti", "Set Hubungan", "Kekunci Asing"],
+                correct: 1
+            },
+            {
+                question: "Apakah jenis kekardinalan bagi hubungan antara 'Pelanggan' dan 'Produk' di sebuah pasar raya?",
+                options: ["Satu ke Satu (1:1)", "Satu ke Banyak (1:M)", "Banyak ke Satu (M:1)", "Banyak ke Banyak (M:N)"],
+                correct: 3
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function initQuiz() {
+            currentQuestion = 0;
+            score = 0;
+            document.getElementById('question-area').classList.remove('hidden');
+            document.getElementById('result-area').classList.add('hidden');
+            document.getElementById('q-total').innerText = quizData.length;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const q = quizData[currentQuestion];
+            document.getElementById('q-current').innerText = currentQuestion + 1;
+            document.getElementById('q-progress').style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+            
+            document.getElementById('question-text').innerText = q.question;
+            
+            const optionsArea = document.getElementById('options-area');
+            optionsArea.innerHTML = ''; // Clear old options
+            
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left p-4 rounded-lg border border-slate-200 hover:bg-emerald-50 hover:border-emerald-500 transition font-medium text-slate-700 bg-white';
+                btn.innerText = opt;
+                btn.onclick = () => checkAnswer(index);
+                optionsArea.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            if (selectedIndex === quizData[currentQuestion].correct) {
+                score++;
+            }
+            
+            currentQuestion++;
+            
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('question-area').classList.add('hidden');
+            const resultArea = document.getElementById('result-area');
+            resultArea.classList.remove('hidden');
+            
+            const percentage = Math.round((score / quizData.length) * 100);
+            document.getElementById('score-display').innerText = `${percentage}%`;
+            
+            const msgEl = document.getElementById('score-message');
+            if (percentage === 100) {
+                msgEl.innerText = "Cemerlang! Anda memahami semua konsep asas dengan baik.";
+                msgEl.className = "text-emerald-600 font-semibold mb-8";
+            } else if (percentage >= 60) {
+                msgEl.innerText = "Bagus! Teruskan usaha mengulangkaji bahagian yang anda kurang faham.";
+                msgEl.className = "text-blue-600 font-semibold mb-8";
+            } else {
+                msgEl.innerText = "Jangan putus asa! Sila ulangkaji modul 1, 2, dan 3 semula.";
+                msgEl.className = "text-amber-600 font-semibold mb-8";
+            }
+        }
+
+    </script>
+</body>
+</html>
