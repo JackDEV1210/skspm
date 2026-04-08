@@ -3,750 +3,772 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootcamp: Pangkalan Data Hubungan</title>
+    <title>Akademi Pengekodan: Masteri Ralat & Penyahpepijatan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            color: #e2e8f0; /* Slate 200 */
+        }
+        
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        /* Custom Scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1e293b; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #475569; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #64748b; 
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-item.active {
+            background-color: #3b82f6; /* Blue 500 */
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Animations */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .highlight-red { background-color: #fee2e2; border-color: #ef4444; transition: all 0.3s; }
-        .tab-active { border-bottom-width: 4px; border-color: #3b82f6; color: #1d4ed8; font-weight: 600; }
-        
-        /* Custom scrollbar for content area */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #f1f1f1; }
-        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
     </style>
 </head>
-<body class="bg-gray-50 h-screen overflow-hidden flex">
+<body class="flex h-screen overflow-hidden selection:bg-blue-500 selection:text-white">
 
-    <!-- Sidebar Navigation -->
-    <aside class="w-72 bg-slate-900 text-white flex flex-col h-full shadow-xl z-10">
+    <aside class="w-72 bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-300 z-20">
         <div class="p-6 border-b border-slate-700">
-            <h1 class="text-2xl font-bold text-blue-400"><i class="fas fa-database mr-2"></i>Bootcamp DB</h1>
-            <p class="text-sm text-slate-400 mt-2">Silibus: 2.1 Pangkalan Data Hubungan</p>
+            <h1 class="text-xl font-bold text-white flex items-center gap-3">
+                <i class="fas fa-laptop-code text-blue-400"></i>
+                Akademi Kod
+            </h1>
+            <p class="text-xs text-slate-400 mt-2">Sains Komputer - Topik 1.5</p>
         </div>
-        
-        <div class="p-4 flex-1 overflow-y-auto">
-            <p class="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Modul Pembelajaran</p>
-            <nav class="space-y-2">
-                <button onclick="navigate('modul1')" id="nav-modul1" class="nav-btn w-full flex items-center p-3 rounded-lg bg-blue-600 text-white transition-colors">
-                    <div class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center mr-3">1</div>
-                    <span class="text-left flex-1">Konsep Asas & Isu Data</span>
-                </button>
-                <button onclick="navigate('modul2')" id="nav-modul2" class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-slate-800 text-slate-300 transition-colors">
-                    <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center mr-3">2</div>
-                    <span class="text-left flex-1">Model Pangkalan Data</span>
-                </button>
-                <button onclick="navigate('modul3')" id="nav-modul3" class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-slate-800 text-slate-300 transition-colors">
-                    <div class="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center mr-3">3</div>
-                    <span class="text-left flex-1">ERD & Kekardinalan</span>
-                </button>
-                <button onclick="navigate('kuiz')" id="nav-kuiz" class="nav-btn w-full flex items-center p-3 rounded-lg hover:bg-slate-800 text-slate-300 transition-colors mt-6 border border-slate-700">
-                    <i class="fas fa-tasks w-8 text-center mr-1"></i>
-                    <span class="text-left flex-1 font-semibold text-emerald-400">Kuiz Penilaian</span>
-                </button>
-            </nav>
+
+        <div class="p-4 border-b border-slate-700 bg-slate-800/50">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-semibold text-slate-300">Pengalaman (XP)</span>
+                <span id="xp-counter" class="text-sm font-bold text-yellow-400">0 / 1500</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                <div id="xp-bar" class="bg-yellow-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
         </div>
-        
-        <div class="p-6 border-t border-slate-700 text-xs text-slate-500">
-            <p>Sesuai untuk sesi 10 Jam Bootcamp</p>
-        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="index.html" class="w-full flex items-center gap-3 px-4 py-3 mb-4 rounded-lg text-left text-white bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-600 shadow-md">
+                <i class="fas fa-arrow-left w-5 text-center text-rose-400"></i>
+                <span class="font-bold">Kembali ke Portal</span>
+            </a>
+
+            <div class="pt-2 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Modul Pembelajaran</div>
+            <button onclick="loadModule('modul1')" id="nav-modul1" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-bug w-5 text-center text-red-400"></i>
+                <span>M1: Jenis Ralat (1.5.1)</span>
+            </button>
+            <button onclick="loadModule('modul2')" id="nav-modul2" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-tools w-5 text-center text-orange-400"></i>
+                <span>M2: Makmal Baiki (1.5.2)</span>
+            </button>
+            <button onclick="loadModule('modul3')" id="nav-modul3" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-search w-5 text-center text-green-400"></i>
+                <span>M3: Penjejakan (1.5.3)</span>
+            </button>
+            <button onclick="loadModule('modul4')" id="nav-modul4" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-paint-brush w-5 text-center text-purple-400"></i>
+                <span>M4: Gaya Kod (1.5.4)</span>
+            </button>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Penilaian</div>
+            <button onclick="loadModule('ujian')" id="nav-ujian" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-trophy w-5 text-center text-yellow-400"></i>
+                <span>Ujian Akhir (Boss)</span>
+            </button>
+        </nav>
     </aside>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 h-full overflow-y-auto bg-slate-50 p-8 relative">
-        
-        <!-- MODUL 1: Konsep Asas -->
-        <section id="modul1" class="content-section fade-in max-w-5xl mx-auto">
-            <header class="mb-8">
-                <span class="text-blue-600 font-semibold tracking-wider text-sm uppercase">Modul 2.1.1</span>
-                <h2 class="text-3xl font-bold text-slate-800 mt-1">Integriti, Ketekalan & Kelewahan Data</h2>
-                <p class="text-slate-600 mt-2">Memahami tiga konsep utama yang menentukan kualiti sesebuah pangkalan data.</p>
-            </header>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <!-- Integriti -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-lg flex items-center justify-center text-xl mb-4">
-                        <i class="fas fa-shield-alt"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Integriti Data</h3>
-                    <p class="text-slate-600 text-sm">Merujuk kepada kesahihan, ketepatan, dan kebolehpercayaan data. Data mestilah mematuhi peraturan (rules) yang ditetapkan.</p>
-                    <div class="mt-4 p-3 bg-slate-50 rounded text-sm text-slate-700 border-l-4 border-emerald-500">
-                        <strong>Contoh:</strong> Markah peperiksaan mesti berada dalam julat 0 hingga 100.
-                    </div>
-                </div>
-
-                <!-- Ketekalan -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-xl mb-4">
-                        <i class="fas fa-sync-alt"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Ketekalan Data</h3>
-                    <p class="text-slate-600 text-sm">Keadaan di mana data yang sama disimpan di beberapa tempat memberikan nilai yang seragam (konsisten).</p>
-                    <div class="mt-4 p-3 bg-slate-50 rounded text-sm text-slate-700 border-l-4 border-blue-500">
-                        <strong>Contoh:</strong> Jika alamat pelajar ditukar di unit hal ehwal pelajar, sistem kewangan juga akan menunjukkan alamat yang baharu.
-                    </div>
-                </div>
-
-                <!-- Kelewahan -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition">
-                    <div class="w-12 h-12 bg-rose-100 text-rose-600 rounded-lg flex items-center justify-center text-xl mb-4">
-                        <i class="fas fa-copy"></i>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-800 mb-2">Kelewahan Data</h3>
-                    <p class="text-slate-600 text-sm">Pengulangan data yang sama di beberapa fail atau jadual yang berbeza. Boleh membazirkan ruang storan.</p>
-                    <div class="mt-4 p-3 bg-slate-50 rounded text-sm text-slate-700 border-l-4 border-rose-500">
-                        <strong>Kesan:</strong> Menyebabkan ketidaktekalan data jika salah satu salinan diubah suai.
-                    </div>
-                </div>
+    <main class="flex-1 bg-slate-900 relative overflow-y-auto">
+        <div id="toast" class="fixed top-5 right-5 z-50 transform transition-transform duration-300 translate-x-full glass-panel px-6 py-4 rounded-lg shadow-xl flex items-center gap-3">
+            <i id="toast-icon" class="fas fa-check-circle text-green-400 text-xl"></i>
+            <div>
+                <h4 id="toast-title" class="font-bold text-white">Berjaya!</h4>
+                <p id="toast-msg" class="text-sm text-slate-300">Jawapan anda tepat. +50 XP</p>
             </div>
+        </div>
 
-            <!-- Interactive Redundancy Demo -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-xl font-bold text-slate-800 mb-4"><i class="fas fa-laptop-code text-blue-600 mr-2"></i>Simulasi Interaktif: Menyelesaikan Kelewahan Data</h3>
-                <p class="text-slate-600 mb-4">Perhatikan jadual di bawah. Terdapat pengulangan data (kelewahan) untuk nama guru kelas. Klik butang untuk lihat proses penormalan.</p>
-                
-                <div class="flex space-x-4 mb-4">
-                    <button onclick="highlightRedundancy()" class="px-4 py-2 bg-amber-500 hover:bg-amber-600 text-white font-medium rounded shadow-sm transition">1. Kenal Pasti Kelewahan</button>
-                    <button onclick="normalizeTable()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded shadow-sm transition">2. Lakukan Penormalan</button>
-                    <button onclick="resetTable()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-medium rounded shadow-sm transition">Reset Ujian</button>
-                </div>
-
-                <!-- Unnormalized Table -->
-                <div id="unnormalized-view" class="overflow-x-auto transition-all duration-500">
-                    <h4 class="font-semibold text-slate-700 mb-2">Jadual Pelajar (Bermasalah)</h4>
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-slate-100">
-                                <th class="p-3 border-b border-slate-200">ID Pelajar</th>
-                                <th class="p-3 border-b border-slate-200">Nama Pelajar</th>
-                                <th class="p-3 border-b border-slate-200">Kelas</th>
-                                <th class="p-3 border-b border-slate-200">Nama Guru Kelas</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr><td class="p-3 border-b border-slate-200">P001</td><td class="p-3 border-b border-slate-200">Ahmad Ali</td><td class="p-3 border-b border-slate-200 highlight-target">5 Sains</td><td class="p-3 border-b border-slate-200 highlight-target">Cikgu Aminah</td></tr>
-                            <tr><td class="p-3 border-b border-slate-200">P002</td><td class="p-3 border-b border-slate-200">Siti Nurhaliza</td><td class="p-3 border-b border-slate-200 highlight-target">5 Sains</td><td class="p-3 border-b border-slate-200 highlight-target">Cikgu Aminah</td></tr>
-                            <tr><td class="p-3 border-b border-slate-200">P003</td><td class="p-3 border-b border-slate-200">Muthusamy</td><td class="p-3 border-b border-slate-200 highlight-target2">5 Sastera</td><td class="p-3 border-b border-slate-200 highlight-target2">Cikgu Kamal</td></tr>
-                            <tr><td class="p-3 border-b border-slate-200">P004</td><td class="p-3 border-b border-slate-200">Wong Mei Mei</td><td class="p-3 border-b border-slate-200 highlight-target2">5 Sastera</td><td class="p-3 border-b border-slate-200 highlight-target2">Cikgu Kamal</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Normalized View (Hidden initially) -->
-                <div id="normalized-view" class="hidden flex flex-col md:flex-row gap-6 mt-4 opacity-0 transition-opacity duration-700">
-                    <div class="flex-1">
-                        <h4 class="font-semibold text-blue-700 mb-2">Jadual Pelajar (Direka Baru)</h4>
-                        <table class="w-full text-left border-collapse border border-blue-200">
-                            <thead>
-                                <tr class="bg-blue-50">
-                                    <th class="p-2 border-b border-blue-200 text-sm">ID Pelajar</th>
-                                    <th class="p-2 border-b border-blue-200 text-sm">Nama Pelajar</th>
-                                    <th class="p-2 border-b border-blue-200 text-sm text-blue-600">ID Kelas (Kunci Asing)</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="p-2 border-b border-blue-100 text-sm">P001</td><td class="p-2 border-b border-blue-100 text-sm">Ahmad Ali</td><td class="p-2 border-b border-blue-100 text-sm font-semibold">K01</td></tr>
-                                <tr><td class="p-2 border-b border-blue-100 text-sm">P002</td><td class="p-2 border-b border-blue-100 text-sm">Siti Nurhaliza</td><td class="p-2 border-b border-blue-100 text-sm font-semibold">K01</td></tr>
-                                <tr><td class="p-2 border-b border-blue-100 text-sm">P003</td><td class="p-2 border-b border-blue-100 text-sm">Muthusamy</td><td class="p-2 border-b border-blue-100 text-sm font-semibold">K02</td></tr>
-                                <tr><td class="p-2 text-sm">P004</td><td class="p-2 text-sm">Wong Mei Mei</td><td class="p-2 text-sm font-semibold">K02</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <div class="flex items-center justify-center text-slate-400">
-                        <i class="fas fa-link text-2xl"></i>
-                    </div>
-
-                    <div class="flex-1">
-                        <h4 class="font-semibold text-emerald-700 mb-2">Jadual Kelas (Entiti Baharu)</h4>
-                        <table class="w-full text-left border-collapse border border-emerald-200">
-                            <thead>
-                                <tr class="bg-emerald-50">
-                                    <th class="p-2 border-b border-emerald-200 text-sm text-emerald-600">ID Kelas (Kunci Primer)</th>
-                                    <th class="p-2 border-b border-emerald-200 text-sm">Nama Kelas</th>
-                                    <th class="p-2 border-b border-emerald-200 text-sm">Nama Guru Kelas</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr><td class="p-2 border-b border-emerald-100 text-sm font-semibold">K01</td><td class="p-2 border-b border-emerald-100 text-sm">5 Sains</td><td class="p-2 border-b border-emerald-100 text-sm bg-yellow-50">Cikgu Aminah</td></tr>
-                                <tr><td class="p-2 text-sm font-semibold">K02</td><td class="p-2 text-sm">5 Sastera</td><td class="p-2 text-sm bg-yellow-50">Cikgu Kamal</td></tr>
-                            </tbody>
-                        </table>
-                        <p class="text-xs text-slate-500 mt-2 italic">* Data Cikgu Aminah & Cikgu Kamal kini hanya disimpan sekali sahaja! Kelewahan diselesaikan.</p>
-                    </div>
-                </div>
+        <div id="content-area" class="max-w-5xl mx-auto p-8 pb-20">
             </div>
-            
-            <div class="mt-8 flex justify-end">
-                <button onclick="navigate('modul2')" class="px-6 py-3 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition flex items-center">
-                    Seterusnya: Model Pangkalan Data <i class="fas fa-arrow-right ml-2"></i>
-                </button>
-            </div>
-        </section>
-
-        <!-- MODUL 2: Model Pangkalan Data -->
-        <section id="modul2" class="content-section hidden fade-in max-w-5xl mx-auto">
-            <header class="mb-8">
-                <span class="text-blue-600 font-semibold tracking-wider text-sm uppercase">Modul 2.1.2</span>
-                <h2 class="text-3xl font-bold text-slate-800 mt-1">Model-Model Pangkalan Data</h2>
-                <p class="text-slate-600 mt-2">Membezakan antara model Hierarki, Rangkaian, Hubungan, dan Berorientasi Objek.</p>
-            </header>
-
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col md:flex-row">
-                <!-- Tabs -->
-                <div class="md:w-1/3 bg-slate-50 border-r border-slate-200">
-                    <button onclick="showModel('hierarki')" class="model-tab w-full text-left p-4 border-b border-slate-200 bg-white font-semibold text-blue-700 border-l-4 border-l-blue-600 transition">
-                        <i class="fas fa-sitemap w-6 text-center"></i> Hierarki
-                    </button>
-                    <button onclick="showModel('rangkaian')" class="model-tab w-full text-left p-4 border-b border-slate-200 text-slate-600 hover:bg-slate-100 transition border-l-4 border-l-transparent">
-                        <i class="fas fa-project-diagram w-6 text-center"></i> Rangkaian
-                    </button>
-                    <button onclick="showModel('hubungan')" class="model-tab w-full text-left p-4 border-b border-slate-200 text-slate-600 hover:bg-slate-100 transition border-l-4 border-l-transparent">
-                        <i class="fas fa-table w-6 text-center"></i> Hubungan (Relational)
-                    </button>
-                    <button onclick="showModel('objek')" class="model-tab w-full text-left p-4 text-slate-600 hover:bg-slate-100 transition border-l-4 border-l-transparent">
-                        <i class="fas fa-cubes w-6 text-center"></i> Berorientasi Objek
-                    </button>
-                </div>
-
-                <!-- Content -->
-                <div class="md:w-2/3 p-8 relative min-h-[400px]">
-                    <!-- Model Hierarki -->
-                    <div id="model-hierarki" class="model-content fade-in">
-                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Model Hierarki</h3>
-                        <p class="text-slate-600 mb-6">Menyusun data seperti struktur pokok (tree structure). Data bermula dari satu akar (root) dan bercabang ke bawah. Hubungan ialah <strong>Satu-ke-Banyak (1:M)</strong> sahaja.</p>
-                        
-                        <!-- Visual Diagram -->
-                        <div class="flex justify-center mb-6 bg-slate-50 p-6 rounded-lg">
-                            <svg width="200" height="150" viewBox="0 0 200 150">
-                                <rect x="75" y="10" width="50" height="30" rx="5" fill="#3b82f6"/>
-                                <text x="100" y="30" fill="white" font-size="12" text-anchor="middle">Syarikat</text>
-                                
-                                <path d="M 100 40 L 100 60 L 40 60 L 40 80" fill="none" stroke="#94a3b8" stroke-width="2"/>
-                                <path d="M 100 40 L 100 60 L 160 60 L 160 80" fill="none" stroke="#94a3b8" stroke-width="2"/>
-                                
-                                <rect x="15" y="80" width="50" height="30" rx="5" fill="#10b981"/>
-                                <text x="40" y="100" fill="white" font-size="12" text-anchor="middle">Kewangan</text>
-                                
-                                <rect x="135" y="80" width="50" height="30" rx="5" fill="#10b981"/>
-                                <text x="160" y="100" fill="white" font-size="12" text-anchor="middle">Pemasaran</text>
-
-                                <path d="M 40 110 L 40 130" fill="none" stroke="#94a3b8" stroke-width="2"/>
-                                <rect x="15" y="130" width="50" height="30" rx="5" fill="#f59e0b"/>
-                                <text x="40" y="150" fill="white" font-size="12" text-anchor="middle">Gaji</text>
-                            </svg>
-                        </div>
-                        
-                        <div class="bg-blue-50 text-blue-800 p-4 rounded text-sm">
-                            <strong>Kelemahan Utama:</strong> Sukar untuk mewakili hubungan yang kompleks seperti Banyak-ke-Banyak (M:N).
-                        </div>
-                    </div>
-
-                    <!-- Model Rangkaian -->
-                    <div id="model-rangkaian" class="model-content hidden fade-in">
-                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Model Rangkaian</h3>
-                        <p class="text-slate-600 mb-6">Perkembangan dari model hierarki. Membenarkan satu rekod "anak" (child) mempunyai lebih dari satu rekod "ibu bapa" (parent). Mampu mengendalikan hubungan <strong>Banyak-ke-Banyak (M:N)</strong>.</p>
-                        
-                        <div class="flex justify-center mb-6 bg-slate-50 p-6 rounded-lg">
-                            <svg width="200" height="150" viewBox="0 0 200 150">
-                                <rect x="30" y="10" width="60" height="30" rx="5" fill="#3b82f6"/>
-                                <text x="60" y="30" fill="white" font-size="12" text-anchor="middle">Guru A</text>
-                                
-                                <rect x="110" y="10" width="60" height="30" rx="5" fill="#3b82f6"/>
-                                <text x="140" y="30" fill="white" font-size="12" text-anchor="middle">Guru B</text>
-                                
-                                <rect x="30" y="100" width="60" height="30" rx="5" fill="#10b981"/>
-                                <text x="60" y="120" fill="white" font-size="12" text-anchor="middle">Pelajar 1</text>
-
-                                <rect x="110" y="100" width="60" height="30" rx="5" fill="#10b981"/>
-                                <text x="140" y="120" fill="white" font-size="12" text-anchor="middle">Pelajar 2</text>
-
-                                <!-- Lines -->
-                                <line x1="60" y1="40" x2="60" y2="100" stroke="#94a3b8" stroke-width="2" marker-end="url(#arrowhead)"/>
-                                <line x1="60" y1="40" x2="140" y2="100" stroke="#94a3b8" stroke-width="2"/>
-                                <line x1="140" y1="40" x2="60" y2="100" stroke="#94a3b8" stroke-width="2"/>
-                                <line x1="140" y1="40" x2="140" y2="100" stroke="#94a3b8" stroke-width="2"/>
-                            </svg>
-                        </div>
-                        <div class="bg-blue-50 text-blue-800 p-4 rounded text-sm">
-                            <strong>Kelebihan:</strong> Lebih fleksibel berbanding Hierarki. <br>
-                            <strong>Kelemahan:</strong> Sangat kompleks untuk diurus jika sistem menjadi besar (seperti sarang labah-labah).
-                        </div>
-                    </div>
-
-                    <!-- Model Hubungan -->
-                    <div id="model-hubungan" class="model-content hidden fade-in">
-                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Model Hubungan (Relational)</h3>
-                        <p class="text-slate-600 mb-6">Model yang <strong>paling meluas digunakan hari ini</strong> (cth: MySQL, Oracle). Data disimpan dalam bentuk jadual 2-dimensi (baris dan lajur). Dihubungkan menggunakan Kunci Primer dan Kunci Asing.</p>
-                        
-                        <div class="flex justify-center mb-6 bg-slate-50 p-6 rounded-lg">
-                             <div class="flex items-center space-x-4">
-                                <table class="text-xs bg-white border border-slate-300 shadow-sm">
-                                    <tr class="bg-blue-100 border-b"><th class="p-1 border-r">ID_Jab</th><th class="p-1">Nama Jab</th></tr>
-                                    <tr class="border-b"><td class="p-1 border-r font-bold bg-yellow-100">J01</td><td class="p-1">IT</td></tr>
-                                    <tr><td class="p-1 border-r">J02</td><td class="p-1">HR</td></tr>
-                                </table>
-                                <div class="text-blue-500 font-bold border-t-2 border-blue-500 w-12 border-dashed relative">
-                                    <i class="fas fa-caret-right absolute -right-2 -top-2 text-blue-500"></i>
-                                </div>
-                                <table class="text-xs bg-white border border-slate-300 shadow-sm">
-                                    <tr class="bg-emerald-100 border-b"><th class="p-1 border-r">ID_Pekerja</th><th class="p-1 border-r">Nama</th><th class="p-1">ID_Jab</th></tr>
-                                    <tr class="border-b"><td class="p-1 border-r">P001</td><td class="p-1 border-r">Ali</td><td class="p-1 bg-yellow-100">J01</td></tr>
-                                    <tr><td class="p-1 border-r">P002</td><td class="p-1 border-r">Abu</td><td class="p-1">J02</td></tr>
-                                </table>
-                             </div>
-                        </div>
-                        <div class="bg-emerald-50 text-emerald-800 p-4 rounded text-sm">
-                            <strong>Kelebihan:</strong> Mudah difahami, carian data sangat pantas dan menggunakan sintaks pertanyaan standard (SQL).
-                        </div>
-                    </div>
-
-                    <!-- Model Objek -->
-                    <div id="model-objek" class="model-content hidden fade-in">
-                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Model Berorientasi Objek</h3>
-                        <p class="text-slate-600 mb-6">Data, sifat (atribut), dan kaedah (method/behavior) digabungkan bersama sebagai sebuah 'Objek'. Sesuai untuk menyimpan data kompleks seperti multimedia, grafik, dan koordinat.</p>
-                        
-                        <div class="flex justify-center mb-6 bg-slate-50 p-6 rounded-lg">
-                            <div class="bg-white border-2 border-purple-300 rounded-lg shadow-sm p-3 w-48">
-                                <div class="bg-purple-100 p-2 font-bold text-center border-b-2 border-purple-200">
-                                    Kelas: Kereta
-                                </div>
-                                <div class="p-2 border-b border-slate-100 text-xs text-slate-600">
-                                    <strong>Atribut:</strong><br>
-                                    - NoPlat: String<br>
-                                    - Warna: String<br>
-                                    - Gambar: ImageFile
-                                </div>
-                                <div class="p-2 text-xs text-slate-600">
-                                    <strong>Kaedah (Methods):</strong><br>
-                                    + hidupkanEnjin()<br>
-                                    + brek()
-                                </div>
-                            </div>
-                        </div>
-                        <div class="bg-purple-50 text-purple-800 p-4 rounded text-sm">
-                            <strong>Kelebihan:</strong> Menyokong kelas, warisan (inheritance) dan enkapsulasi. Mampu mengurus format data jenis baru yang tiada dalam jadual biasa.
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-8 flex justify-between">
-                <button onclick="navigate('modul1')" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition flex items-center">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali
-                </button>
-                <button onclick="navigate('modul3')" class="px-6 py-3 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition flex items-center">
-                    Seterusnya: ERD <i class="fas fa-arrow-right ml-2"></i>
-                </button>
-            </div>
-        </section>
-
-        <!-- MODUL 3: ERD & Kekardinalan -->
-        <section id="modul3" class="content-section hidden fade-in max-w-5xl mx-auto">
-            <header class="mb-8">
-                <span class="text-blue-600 font-semibold tracking-wider text-sm uppercase">Modul 2.1.3</span>
-                <h2 class="text-3xl font-bold text-slate-800 mt-1">Entiti, Atribut & Kekardinalan</h2>
-                <p class="text-slate-600 mt-2">Mengenal pasti komponen penting dalam merekabentuk Entity-Relationship Diagram (ERD).</p>
-            </header>
-
-            <!-- Definitions -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 text-center">
-                    <div class="w-16 h-10 mx-auto border-2 border-blue-500 rounded bg-blue-50 mb-2 flex items-center justify-center font-bold text-xs">ENTITI</div>
-                    <h4 class="font-bold text-slate-800 text-sm">Entiti</h4>
-                    <p class="text-xs text-slate-500 mt-1">Objek/benda (Cth: Pelajar, Buku)</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 text-center">
-                    <div class="w-14 h-10 mx-auto border-2 border-amber-500 rounded-[50%] bg-amber-50 mb-2 flex items-center justify-center font-bold text-xs">ATRIBUT</div>
-                    <h4 class="font-bold text-slate-800 text-sm">Atribut</h4>
-                    <p class="text-xs text-slate-500 mt-1">Ciri entiti (Cth: Nama, Umur)</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 text-center">
-                    <div class="w-12 h-12 mx-auto border-2 border-emerald-500 rotate-45 bg-emerald-50 mb-2 flex items-center justify-center">
-                        <span class="-rotate-45 font-bold text-[10px]">HUBUNGAN</span>
-                    </div>
-                    <h4 class="font-bold text-slate-800 text-sm mt-1">Set Hubungan</h4>
-                    <p class="text-xs text-slate-500 mt-1">Perkaitan (Cth: Meminjam)</p>
-                </div>
-                <div class="bg-white p-4 rounded-lg shadow-sm border border-slate-200 text-center">
-                    <div class="text-2xl font-black text-purple-500 mb-2 mt-2">1 : M</div>
-                    <h4 class="font-bold text-slate-800 text-sm">Kekardinalan</h4>
-                    <p class="text-xs text-slate-500 mt-1">Kuantiti perkaitan</p>
-                </div>
-            </div>
-
-            <!-- Interactive ERD Builder -->
-            <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-                <h3 class="text-xl font-bold text-slate-800 mb-4"><i class="fas fa-project-diagram text-blue-600 mr-2"></i>Simulasi Kekardinalan</h3>
-                <p class="text-slate-600 text-sm mb-6">Pilih jenis kekardinalan untuk melihat bagaimana ia ditunjukkan dalam gambar rajah.</p>
-                
-                <div class="flex space-x-2 mb-8 border-b pb-4">
-                    <button onclick="setCardinality('1to1')" id="btn-1to1" class="card-btn px-4 py-2 bg-blue-600 text-white rounded font-medium text-sm transition">Satu ke Satu (1:1)</button>
-                    <button onclick="setCardinality('1toM')" id="btn-1toM" class="card-btn px-4 py-2 bg-slate-200 text-slate-700 hover:bg-slate-300 rounded font-medium text-sm transition">Satu ke Banyak (1:M)</button>
-                    <button onclick="setCardinality('MtoN')" id="btn-MtoN" class="card-btn px-4 py-2 bg-slate-200 text-slate-700 hover:bg-slate-300 rounded font-medium text-sm transition">Banyak ke Banyak (M:N)</button>
-                </div>
-
-                <div class="min-h-[200px] flex flex-col items-center justify-center bg-slate-50 rounded-lg p-8 relative">
-                    
-                    <!-- Dinamic Title -->
-                    <div id="card-desc" class="text-center mb-8 font-semibold text-slate-700">
-                        Contoh: Seorang Pengetua menguruskan Satu Sekolah.
-                    </div>
-
-                    <!-- Diagram Container -->
-                    <div class="flex items-center space-x-4 w-full justify-center">
-                        
-                        <!-- Entity 1 -->
-                        <div class="relative">
-                            <div id="ent1-name" class="w-32 h-16 bg-white border-2 border-blue-800 rounded flex items-center justify-center font-bold text-blue-900 shadow-sm z-10 relative">Pengetua</div>
-                            <!-- Attributes demo (floating) -->
-                            <div class="absolute -top-10 left-0 w-full flex justify-center opacity-70">
-                                <div class="w-16 h-8 border border-slate-400 rounded-[50%] bg-white text-[10px] flex items-center justify-center"><u>ID_Pengetua</u></div>
-                            </div>
-                        </div>
-
-                        <!-- Relationship Line -->
-                        <div class="flex-1 max-w-[200px] flex items-center relative">
-                            <!-- Line Left -->
-                            <div class="h-0.5 bg-slate-800 w-full"></div>
-                            
-                            <!-- Cardinality Label Left -->
-                            <span id="card-left" class="absolute -top-5 left-2 font-bold text-lg text-slate-800">1</span>
-                            
-                            <!-- Diamond -->
-                            <div class="w-16 h-16 border-2 border-slate-800 bg-white rotate-45 flex items-center justify-center flex-shrink-0 z-10 mx-[-8px]">
-                                <span id="rel-name" class="-rotate-45 font-semibold text-xs">Mengurus</span>
-                            </div>
-
-                            <!-- Line Right -->
-                            <div class="h-0.5 bg-slate-800 w-full relative">
-                                <!-- Crow's foot for 'Many' (hidden by default) -->
-                                <div id="crows-foot-right" class="hidden absolute right-0 top-1/2 transform -translate-y-1/2 w-4 h-6 border-l-2 border-t-2 border-b-2 border-slate-800 rounded-l-sm" style="clip-path: polygon(100% 0, 0 50%, 100% 100%);"></div>
-                            </div>
-                            
-                            <!-- Cardinality Label Right -->
-                            <span id="card-right" class="absolute -top-5 right-2 font-bold text-lg text-slate-800">1</span>
-                        </div>
-
-                        <!-- Entity 2 -->
-                        <div class="relative">
-                            <div id="ent2-name" class="w-32 h-16 bg-white border-2 border-emerald-800 rounded flex items-center justify-center font-bold text-emerald-900 shadow-sm z-10 relative">Sekolah</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-8 flex justify-between">
-                <button onclick="navigate('modul2')" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition flex items-center">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali
-                </button>
-                <button onclick="navigate('kuiz')" class="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition flex items-center shadow-lg font-bold">
-                    Uji Kefahaman (Kuiz) <i class="fas fa-check-circle ml-2"></i>
-                </button>
-            </div>
-        </section>
-
-        <!-- KUIZ BOOTCAMP -->
-        <section id="kuiz" class="content-section hidden fade-in max-w-3xl mx-auto">
-            <header class="mb-8 text-center">
-                <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center text-4xl mx-auto mb-4">
-                    <i class="fas fa-graduation-cap"></i>
-                </div>
-                <h2 class="text-3xl font-bold text-slate-800">Kuiz Penilaian Modul 2.1</h2>
-                <p class="text-slate-600 mt-2">Uji kefahaman anda berdasarkan modul yang telah dipelajari.</p>
-            </header>
-
-            <div id="quiz-container" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200">
-                <!-- Question Area -->
-                <div id="question-area">
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-sm font-bold text-slate-400 uppercase tracking-wider">Soalan <span id="q-current">1</span> / <span id="q-total">5</span></span>
-                        <div class="w-1/2 bg-slate-200 rounded-full h-2.5">
-                            <div id="q-progress" class="bg-emerald-500 h-2.5 rounded-full" style="width: 20%"></div>
-                        </div>
-                    </div>
-                    
-                    <h3 id="question-text" class="text-xl font-semibold text-slate-800 mb-6">Apabila data pelajar dikemaskini di pejabat, data di perpustakaan juga automatik berubah. Ini menunjukkan ciri...</h3>
-                    
-                    <div id="options-area" class="space-y-3">
-                        <!-- Options injected by JS -->
-                    </div>
-                </div>
-
-                <!-- Results Area (Hidden initially) -->
-                <div id="result-area" class="hidden text-center py-8">
-                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Kuiz Selesai!</h3>
-                    <div class="text-6xl font-black mb-4" id="score-display">100%</div>
-                    <p class="text-slate-600 mb-8" id="score-message">Tahniah! Anda telah menguasai topik ini.</p>
-                    
-                    <div class="space-x-4">
-                        <button onclick="initQuiz()" class="px-6 py-2 bg-slate-200 text-slate-700 rounded hover:bg-slate-300 transition font-medium">Cuba Lagi</button>
-                        <button onclick="navigate('modul1')" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition font-medium">Kembali ke Modul 1</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
     </main>
 
     <script>
-        // --- NAVIGATION LOGIC ---
-        function navigate(moduleId) {
-            // Hide all sections
-            document.querySelectorAll('.content-section').forEach(section => {
-                section.classList.add('hidden');
-            });
+        // --- State Management ---
+        let currentXP = 0;
+        const state = {
+            m1_q1_done: false,
+            m2_q1_done: false,
+            m2_q2_done: false,
+            m3_q1_done: false,
+            m4_q1_done: false,
+            ujian_done: false
+        };
+
+        // --- Utility Functions ---
+        function addXP(amount) {
+            currentXP += amount;
+            if (currentXP > 1500) currentXP = 1500;
+            document.getElementById('xp-counter').innerText = `${currentXP} / 1500`;
+            document.getElementById('xp-bar').style.width = `${(currentXP / 1500) * 100}%`;
             
-            // Show targeted section
-            document.getElementById(moduleId).classList.remove('hidden');
+            // Highlight animation
+            const counter = document.getElementById('xp-counter');
+            counter.classList.add('scale-125', 'text-white');
+            setTimeout(() => counter.classList.remove('scale-125', 'text-white'), 300);
+        }
+
+        function showToast(title, msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
             
-            // Update sidebar styles
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-600', 'text-white', 'border-blue-500');
-                btn.classList.add('hover:bg-slate-800', 'text-slate-300');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle text-green-400 text-xl';
+                toast.style.borderLeft = '4px solid #4ade80';
+            } else {
+                icon.className = 'fas fa-times-circle text-red-400 text-xl';
+                toast.style.borderLeft = '4px solid #f87171';
+            }
+
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => {
+                toast.classList.add('translate-x-full');
+            }, 3000);
+        }
+
+        function updateNavActive(moduleId) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(`nav-${moduleId}`).classList.add('active');
+        }
+
+        // --- Render Functions ---
+        function loadModule(moduleId) {
+            const container = document.getElementById('content-area');
+            updateNavActive(moduleId);
+            window.scrollTo(0, 0);
+            
+            let html = '';
+
+            switch (moduleId) {
+                case 'modul1':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-blue-500/20 text-blue-400 py-1 px-3 rounded-full text-sm font-bold">1.5.1</span>
+                                <h2 class="text-3xl font-bold text-white">Membezakan Jenis Ralat</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-lg">Dalam pengaturcaraan, ralat adalah perkara biasa. Seorang pakar berbeza dengan amatur berdasarkan kecekapannya mengenali jenis ralat.</p>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+                                <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform">
+                                    <div class="bg-red-900/50 p-4 border-b border-red-500/30 flex items-center gap-2">
+                                        <i class="fas fa-exclamation-triangle text-red-400"></i>
+                                        <h3 class="font-bold text-red-100">Ralat Sintaks</h3>
+                                    </div>
+                                    <div class="p-5">
+                                        <p class="text-sm text-slate-300 mb-4">Kesalahan "tatabahasa" bahasa pengaturcaraan. Kod tidak akan dijalankan langsung (terhenti sebelum mula).</p>
+                                        <div class="bg-slate-900 rounded p-3 text-xs code-font text-red-300 mb-2">
+                                            print("Helo Dunia"<br>
+                                            <span class="text-slate-500"># SyntaxError: unexpected EOF while parsing</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 mt-2"><i class="fas fa-lightbulb text-yellow-400 mr-1"></i> Punca: Tertinggal kurungan, salah ejaan arahan.</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform">
+                                    <div class="bg-orange-900/50 p-4 border-b border-orange-500/30 flex items-center gap-2">
+                                        <i class="fas fa-bolt text-orange-400"></i>
+                                        <h3 class="font-bold text-orange-100">Ralat Masa Larian</h3>
+                                    </div>
+                                    <div class="p-5">
+                                        <p class="text-sm text-slate-300 mb-4">Kod melepasi ujian sintaks dan mula berjalan, tetapi crash di pertengahan jalan kerana operasi mustahil.</p>
+                                        <div class="bg-slate-900 rounded p-3 text-xs code-font text-orange-300 mb-2">
+                                            x = 10 / 0<br>
+                                            <span class="text-slate-500"># ZeroDivisionError: division by zero</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 mt-2"><i class="fas fa-lightbulb text-yellow-400 mr-1"></i> Punca: Bahagi sifar, buka fail tak wujud, salah jenis data.</p>
+                                    </div>
+                                </div>
+
+                                <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform">
+                                    <div class="bg-green-900/50 p-4 border-b border-green-500/30 flex items-center gap-2">
+                                        <i class="fas fa-brain text-green-400"></i>
+                                        <h3 class="font-bold text-green-100">Ralat Logik</h3>
+                                    </div>
+                                    <div class="p-5">
+                                        <p class="text-sm text-slate-300 mb-4">Kod berjalan lancar tanpa amaran error, tetapi **OUTPUT SALAH**. Ralat paling sukar dikesan.</p>
+                                        <div class="bg-slate-900 rounded p-3 text-xs code-font text-green-300 mb-2">
+                                            # Kira luas segi empat<br>
+                                            luas = panjang + lebar<br>
+                                            <span class="text-slate-500"># Output salah. Sepatutnya darab (*), bukan tambah (+)</span>
+                                        </div>
+                                        <p class="text-xs text-slate-400 mt-2"><i class="fas fa-lightbulb text-yellow-400 mr-1"></i> Punca: Kesilapan formula atau jalan kira.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+                                <h3 class="text-xl font-bold text-white mb-4"><i class="fas fa-dumbbell mr-2 text-blue-400"></i>Cabaran Kefahaman</h3>
+                                <p class="text-sm text-slate-300 mb-4">Sila padankan senario di bawah dengan jenis ralat yang betul.</p>
+                                
+                                <div class="space-y-4">
+                                    <div class="p-4 bg-slate-900 rounded-lg flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                        <div>
+                                            <p class="font-mono text-sm text-blue-300 bg-slate-800 p-2 rounded mb-2">if umur > 18<br>&nbsp;&nbsp;print("Dewasa")</p>
+                                            <p class="text-xs text-slate-400">Pengekod tertinggal tanda titik bertindih (:) selepas syarat if.</p>
+                                        </div>
+                                        <select id="m1-q1" class="bg-slate-700 text-white text-sm rounded border border-slate-600 focus:border-blue-500 focus:ring-blue-500 p-2.5 outline-none">
+                                            <option value="">-- Pilih Jenis Ralat --</option>
+                                            <option value="sintaks">Ralat Sintaks</option>
+                                            <option value="masa_larian">Ralat Masa Larian</option>
+                                            <option value="logik">Ralat Logik</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 flex justify-end">
+                                    <button onclick="checkM1()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors">Semak Jawapan</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul2':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-orange-500/20 text-orange-400 py-1 px-3 rounded-full text-sm font-bold">1.5.2</span>
+                                <h2 class="text-3xl font-bold text-white">Makmal Membaiki Ralat (Debugging)</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-lg">Seorang pengatur cara menghabiskan 20% masa menulis kod, dan 80% masa mencari ralat. Selesaikan insiden kod rosak di bawah.</p>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden mb-8">
+                                <div class="bg-slate-700/50 p-4 border-b border-slate-700 flex justify-between items-center">
+                                    <h3 class="font-bold text-white">Insiden #001: Ralat Sintaks</h3>
+                                    <span class="bg-slate-900 text-slate-300 px-2 py-1 rounded text-xs">Python 3</span>
+                                </div>
+                                <div class="p-6">
+                                    <p class="text-sm text-slate-300 mb-2">Program ini sepatutnya mengira diskaun tetapi gagal dijalankan kerana ralat ejaan pada kata kunci terpelihara (reserved word).</p>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1 uppercase">Mesej Konsol (Error)</label>
+                                            <div class="bg-black/50 border border-red-900 rounded p-4 text-xs code-font text-red-400 h-32 overflow-y-auto">
+                                                File "main.py", line 2<br>
+                                                &nbsp;&nbsp;pirnt("Kira Diskaun")<br>
+                                                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^<br>
+                                                SyntaxError: invalid syntax. Perhaps you meant to call 'print'?
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <label class="block text-xs font-bold text-slate-400 mb-1 uppercase">Penyunting Kod Anda</label>
+                                            <textarea id="m2-q1-code" class="w-full h-32 bg-slate-900 text-blue-300 code-font p-4 rounded border border-slate-600 focus:border-blue-500 outline-none resize-none">
+harga = 100
+pirnt("Harga ialah", harga)
+                                            </textarea>
+                                        </div>
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <p class="text-xs text-slate-400">Baiki ejaan dalam kotak editor di atas.</p>
+                                        <button onclick="checkM2Q1()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors shadow-lg shadow-green-900/20"><i class="fas fa-play mr-2"></i>Jalankan Kod</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
+                                <div class="bg-slate-700/50 p-4 border-b border-slate-700 flex justify-between items-center">
+                                    <h3 class="font-bold text-white">Insiden #002: Ralat Logik Purata</h3>
+                                    <span class="bg-slate-900 text-slate-300 px-2 py-1 rounded text-xs">Python 3</span>
+                                </div>
+                                <div class="p-6">
+                                    <p class="text-sm text-slate-300 mb-2">Program ini mencari purata 3 markah. Atur cara berjalan tanpa masalah, tetapi jawapan yang keluar adalah <span class="text-red-400 font-bold text-lg">193.33</span>! Purata tidak mungkin melebihi markah maksimum (100). Sila baiki formulanya.</p>
+                                    
+                                    <div class="mt-4">
+                                        <label class="block text-xs font-bold text-slate-400 mb-1 uppercase">Penyunting Kod Anda</label>
+                                        <textarea id="m2-q2-code" class="w-full h-32 bg-slate-900 text-green-300 code-font p-4 rounded border border-slate-600 focus:border-green-500 outline-none resize-none">
+m1 = 80
+m2 = 90
+m3 = 70
+purata = m1 + m2 + m3 / 3
+print(purata)
+                                        </textarea>
+                                    </div>
+                                    <div class="mt-4 flex justify-between items-center">
+                                        <p class="text-xs text-slate-400">Petunjuk: Ingat urutan operasi matematik (BODMAS).</p>
+                                        <button onclick="checkM2Q2()" class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold transition-colors shadow-lg shadow-green-900/20"><i class="fas fa-play mr-2"></i>Jalankan Kod</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul3':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-green-500/20 text-green-400 py-1 px-3 rounded-full text-sm font-bold">1.5.3</span>
+                                <h2 class="text-3xl font-bold text-white">Bilik Penjejakan (Tracing)</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-lg">Mengenalpasti nilai pemboleh ubah pada bahagian tertentu atur cara (Tracing) amat penting terutamanya ketika menggunakan struktur kawalan gelung (loop).</p>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 mb-8 flex flex-col md:flex-row gap-8">
+                                <div class="w-full md:w-1/2">
+                                    <h3 class="font-bold text-white mb-4">Kod Atur Cara:</h3>
+                                    <div class="bg-slate-900 rounded p-4 code-font text-sm text-slate-300 leading-relaxed shadow-inner">
+                                        <span class="text-slate-500 mr-4">1</span><span class="text-purple-400">jumlah</span> = <span class="text-orange-400">0</span><br>
+                                        <span class="text-slate-500 mr-4">2</span><span class="text-blue-400">for</span> <span class="text-yellow-200">i</span> <span class="text-blue-400">in</span> range(<span class="text-orange-400">1</span>, <span class="text-orange-400">4</span>):<br>
+                                        <span class="text-slate-500 mr-4">3</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class="text-purple-400">jumlah</span> = <span class="text-purple-400">jumlah</span> + <span class="text-yellow-200">i</span><br>
+                                        <span class="text-slate-500 mr-4">4</span>print(<span class="text-purple-400">jumlah</span>)
+                                    </div>
+                                </div>
+
+                                <div class="w-full md:w-1/2">
+                                    <h3 class="font-bold text-white mb-4">Jadual Penjejakan (Mental Model):</h3>
+                                    <div class="overflow-x-auto">
+                                        <table class="w-full text-sm text-left text-slate-300 border-collapse">
+                                            <thead class="text-xs text-slate-400 uppercase bg-slate-700">
+                                                <tr>
+                                                    <th class="px-4 py-2 border border-slate-600">Lelaran (Gelung)</th>
+                                                    <th class="px-4 py-2 border border-slate-600">Nilai 'i'</th>
+                                                    <th class="px-4 py-2 border border-slate-600">Nilai 'jumlah' (Baris 3)</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="bg-slate-800 border-b border-slate-700">
+                                                    <td class="px-4 py-2 border border-slate-600">Sebelum Gelung</td>
+                                                    <td class="px-4 py-2 border border-slate-600">-</td>
+                                                    <td class="px-4 py-2 border border-slate-600 text-orange-400 font-bold">0</td>
+                                                </tr>
+                                                <tr class="bg-slate-800 border-b border-slate-700">
+                                                    <td class="px-4 py-2 border border-slate-600">Lelaran 1</td>
+                                                    <td class="px-4 py-2 border border-slate-600">1</td>
+                                                    <td class="px-4 py-2 border border-slate-600">0 + 1 = <span class="text-green-400 font-bold">1</span></td>
+                                                </tr>
+                                                <tr class="bg-slate-800 border-b border-slate-700">
+                                                    <td class="px-4 py-2 border border-slate-600">Lelaran 2</td>
+                                                    <td class="px-4 py-2 border border-slate-600">2</td>
+                                                    <td class="px-4 py-2 border border-slate-600">1 + 2 = <span class="text-green-400 font-bold">3</span></td>
+                                                </tr>
+                                                <tr class="bg-slate-800">
+                                                    <td class="px-4 py-2 border border-slate-600">Lelaran 3</td>
+                                                    <td class="px-4 py-2 border border-slate-600">3</td>
+                                                    <td class="px-4 py-2 border border-slate-600">3 + 3 = <span class="text-green-400 font-bold">?</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="mt-6 bg-slate-900 p-4 rounded-lg border border-slate-700">
+                                        <p class="text-sm font-semibold mb-3">Soalan: Apakah nilai <code class="bg-slate-800 text-purple-300 px-1 rounded">jumlah</code> yang akan dipaparkan pada Output akhir (Baris 4)?</p>
+                                        <div class="flex gap-3">
+                                            <input type="number" id="m3-q1-input" class="bg-slate-800 border border-slate-600 text-white rounded px-3 py-2 w-32 focus:border-blue-500 outline-none" placeholder="Nilai...">
+                                            <button onclick="checkM3()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded font-semibold transition-colors">Jawab</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul4':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-purple-500/20 text-purple-400 py-1 px-3 rounded-full text-sm font-bold">1.5.4</span>
+                                <h2 class="text-3xl font-bold text-white">Gaya Pengekodan Berkualiti</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-lg">Kod bukan sekadar untuk dibaca oleh komputer. Ia mesti mudah dibaca oleh manusia. Gaya kod yang baik merangkumi Komen, Nama Pemboleh Ubah yang bermakna, dan Inden (Lekukan).</p>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden mb-8">
+                                <div class="flex bg-slate-700/50 border-b border-slate-700">
+                                    <button id="tab-caca" onclick="toggleCodeStyle('caca')" class="flex-1 py-3 font-bold text-slate-400 hover:text-white transition-colors bg-slate-800 border-b-2 border-transparent">Kod Caca-Marba (Bad Practice)</button>
+                                    <button id="tab-kualiti" onclick="toggleCodeStyle('kualiti')" class="flex-1 py-3 font-bold text-purple-400 border-b-2 border-purple-500 bg-slate-800/30">Kod Kualiti (Best Practice)</button>
+                                </div>
+                                
+                                <div class="p-6 relative min-h-[300px]">
+                                    <div id="code-caca" class="absolute inset-0 p-6 hidden">
+                                        <div class="bg-slate-900 rounded p-4 code-font text-sm text-red-300 shadow-inner h-full">
+a=100<br>
+b=0.1<br>
+c=a-(a*b)<br>
+if c>50:<br>
+print("Mahal")<br>
+else:<br>
+print("Murah")
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="code-kualiti" class="absolute inset-0 p-6 block animate-fade-in">
+                                        <div class="bg-slate-900 rounded p-4 code-font text-sm text-slate-300 shadow-inner h-full">
+<span class="text-slate-500 italic"># Program mengira harga selepas diskaun</span><br>
+<span class="text-purple-400">harga_asal</span> = <span class="text-orange-400">100</span><br>
+<span class="text-purple-400">kadar_diskaun</span> = <span class="text-orange-400">0.1</span><br>
+<span class="text-purple-400">harga_akhir</span> = <span class="text-purple-400">harga_asal</span> - (<span class="text-purple-400">harga_asal</span> * <span class="text-purple-400">kadar_diskaun</span>)<br>
+<br>
+<span class="text-slate-500 italic"># Semak sama ada harga mahal atau murah</span><br>
+<span class="text-blue-400">if</span> <span class="text-purple-400">harga_akhir</span> > <span class="text-orange-400">50</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(<span class="text-green-300">"Mahal"</span>) <span class="text-slate-500 italic"># Mempunyai Inden yang betul</span><br>
+<span class="text-blue-400">else</span>:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;print(<span class="text-green-300">"Murah"</span>)
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
+                                <h3 class="text-xl font-bold text-white mb-4">Uji Minda</h3>
+                                <p class="text-sm text-slate-300 mb-4">Pilih nama pemboleh ubah yang **PALING BERMAKNA** untuk menyimpan nilai baki akaun bank pelanggan.</p>
+                                
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                    <button onclick="checkM4('A')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-3 text-left code-font text-sm transition-colors">A) x</button>
+                                    <button onclick="checkM4('B')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-3 text-left code-font text-sm transition-colors">B) wang</button>
+                                    <button onclick="checkM4('C')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-3 text-left code-font text-sm transition-colors">C) bakiAkaunBank</button>
+                                    <button onclick="checkM4('D')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 rounded p-3 text-left code-font text-sm transition-colors">D) bk</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'ujian':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-yellow-500/20 text-yellow-400 py-1 px-3 rounded-full text-sm font-bold"><i class="fas fa-trophy mr-2"></i>BOSS</span>
+                                <h2 class="text-3xl font-bold text-white">Ujian Penilaian Akhir (15 Soalan)</h2>
+                            </div>
+                            
+                            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-8 shadow-2xl relative overflow-hidden">
+                                <div class="relative z-10">
+                                    <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4">Jawab semua soalan berikut dengan tepat untuk melengkapkan kursus.</h3>
+                                    
+                                    <div class="space-y-10">
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">1. Ralat sintaks berlaku apabila...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq1" value="A" class="text-blue-500"><span class="text-slate-300">Pengekod melanggar tatabahasa bahasa pengaturcaraan</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq1" value="B" class="text-blue-500"><span class="text-slate-300">Terdapat kesilapan pada formula matematik</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq1" value="C" class="text-blue-500"><span class="text-slate-300">Sistem cuba membahagikan nombor dengan sifar</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">2. Apakah jenis ralat bagi kod ini: <code class="bg-slate-800 px-2 py-1 rounded text-red-300">print("Helo Dunia"</code> (Tanpa kurungan penutup)?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq2" value="A" class="text-blue-500"><span class="text-slate-300">Ralat Masa Larian</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq2" value="B" class="text-blue-500"><span class="text-slate-300">Ralat Logik</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq2" value="C" class="text-blue-500"><span class="text-slate-300">Ralat Sintaks</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">3. Ralat masa larian (runtime error) biasanya menyebabkan...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq3" value="A" class="text-blue-500"><span class="text-slate-300">Output yang dihasilkan sentiasa salah</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq3" value="B" class="text-blue-500"><span class="text-slate-300">Program terhenti secara tiba-tiba ketika sedang berjalan</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq3" value="C" class="text-blue-500"><span class="text-slate-300">Program tidak boleh di-compile langsung</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">4. Apakah jenis ralat jika anda membahagikan suatu nombor dengan sifar (cth: <code class="bg-slate-800 px-2 py-1 rounded">x = 10 / 0</code>)?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq4" value="A" class="text-blue-500"><span class="text-slate-300">Ralat Sintaks</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq4" value="B" class="text-blue-500"><span class="text-slate-300">Ralat Masa Larian</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq4" value="C" class="text-blue-500"><span class="text-slate-300">Ralat Logik</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">5. Ralat logik adalah ralat yang...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq5" value="A" class="text-blue-500"><span class="text-slate-300">Paling mudah dikesan kerana ditandakan merah</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq5" value="B" class="text-blue-500"><span class="text-slate-300">Berlaku akibat tertinggal tanda kurungan</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq5" value="C" class="text-blue-500"><span class="text-slate-300">Mengeluarkan output yang salah tanpa sebarang amaran error</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">6. Jika anda ingin mengira luas segi empat (panjang × lebar), tetapi anda menaip <code class="bg-slate-800 px-2 py-1 rounded">luas = panjang + lebar</code>. Ini adalah contoh...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq6" value="A" class="text-blue-500"><span class="text-slate-300">Ralat Sintaks</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq6" value="B" class="text-blue-500"><span class="text-slate-300">Ralat Masa Larian</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq6" value="C" class="text-blue-500"><span class="text-slate-300">Ralat Logik</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">7. Apakah tujuan utama teknik penjejakan (tracing) kod?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq7" value="A" class="text-blue-500"><span class="text-slate-300">Untuk memadam kod yang tidak digunakan</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq7" value="B" class="text-blue-500"><span class="text-slate-300">Untuk memantau perubahan nilai pemboleh ubah baris demi baris</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq7" value="C" class="text-blue-500"><span class="text-slate-300">Untuk mencantikkan paparan antaramuka</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">8. Dalam penjejakan mental: nilai awal <code class="bg-slate-800 px-1 rounded">x=5</code>, kemudian pada baris seterusnya <code class="bg-slate-800 px-1 rounded">x=x+2</code>. Apakah nilai akhir bagi <code class="bg-slate-800 px-1 rounded">x</code>?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq8" value="A" class="text-blue-500"><span class="text-slate-300">5</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq8" value="B" class="text-blue-500"><span class="text-slate-300">2</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq8" value="C" class="text-blue-500"><span class="text-slate-300">7</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">9. Gaya pengekodan yang baik merangkumi perkara berikut, KECUALI...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq9" value="A" class="text-blue-500"><span class="text-slate-300">Menyusun lekukan (indentation) dengan teratur</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq9" value="B" class="text-blue-500"><span class="text-slate-300">Menggunakan singkatan rawak seperti x, y, z untuk semua benda</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq9" value="C" class="text-blue-500"><span class="text-slate-300">Meletakkan komen yang menerangkan fungsi kod</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">10. Mengapakah penggunaan komen (comments) sangat penting dalam penulisan atur cara?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq10" value="A" class="text-blue-500"><span class="text-slate-300">Untuk menjadikan sistem berjalan dengan lebih pantas</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq10" value="B" class="text-blue-500"><span class="text-slate-300">Membantu pengatur cara (manusia) memahami logik blok kod tersebut</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq10" value="C" class="text-blue-500"><span class="text-slate-300">Untuk mengelakkan komputer dari terkena virus</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">11. Dalam bahasa Python, simbol apakah yang lazim digunakan untuk menulis komen satu baris?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq11" value="A" class="text-blue-500"><span class="text-slate-300">//</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq11" value="B" class="text-blue-500"><span class="text-slate-300">#</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq11" value="C" class="text-blue-500"><span class="text-slate-300">&lt;!-- --&gt;</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">12. Apakah fungsi inden (lekukan/indentation) dalam bahasa pengaturcaraan seperti Python?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq12" value="A" class="text-blue-500"><span class="text-slate-300">Sekadar untuk mencantikkan paparan sahaja</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq12" value="B" class="text-blue-500"><span class="text-slate-300">Menentukan blok kod yang tergolong dalam struktur kawalan tertentu (cth: if/for)</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq12" value="C" class="text-blue-500"><span class="text-slate-300">Mempercepatkan proses kompilasi fail</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">13. Antara nama pemboleh ubah berikut, yang manakah PALING bermakna untuk menyimpan data harga barang?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq13" value="A" class="text-blue-500"><span class="text-slate-300">h</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq13" value="B" class="text-blue-500"><span class="text-slate-300">x1</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq13" value="C" class="text-blue-500"><span class="text-slate-300">harga_barang</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">14. Apakah output bagi kod berikut jika dijalankan tanpa ralat: <br><code class="bg-slate-800 px-2 py-1 rounded text-green-300 block mt-2">a = 3<br>b = 4<br>print(a * b)</code></p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq14" value="A" class="text-blue-500"><span class="text-slate-300">7</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq14" value="B" class="text-blue-500"><span class="text-slate-300">12</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq14" value="C" class="text-blue-500"><span class="text-slate-300">34</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">15. Jika anda menjalankan program dan menerima mesej ralat <code class="bg-red-900/50 px-2 rounded text-red-300">NameError: name 'pirnt' is not defined</code>, apakah tindakan penyelesaian anda?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq15" value="A" class="text-blue-500"><span class="text-slate-300">Menyemak formula matematik kerana mungkin ada salah darab/bahagi</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq15" value="B" class="text-blue-500"><span class="text-slate-300">Membetulkan ejaan arahan kepada 'print' (Ralat Sintaks)</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq15" value="C" class="text-blue-500"><span class="text-slate-300">Membuang kesemua komen di dalam kod tersebut</span></label>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <button onclick="checkUjian()" class="w-full mt-12 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-yellow-900/20 transform transition hover:-translate-y-1">Hantar Jawapan Ujian</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // --- Logic Evaluators ---
+        function checkM1() {
+            const val = document.getElementById('m1-q1').value;
+            if (val === 'sintaks') {
+                if(!state.m1_q1_done) { addXP(100); state.m1_q1_done = true; }
+                showToast("Tepat!", "Tiada titik bertindih (:) adalah Ralat Sintaks.");
+            } else if(val === "") {
+                showToast("Sila Pilih", "Anda belum membuat pilihan.", "error");
+            } else {
+                showToast("Salah", "Fikir logik: Adakah kod itu boleh bermula tanpa tatabahasa yang betul?", "error");
+            }
+        }
+
+        function checkM2Q1() {
+            const code = document.getElementById('m2-q1-code').value;
+            const cleanCode = code.replace(/\s/g, '');
+            if (cleanCode.includes('print("Hargaialah",harga)')) {
+                if(!state.m2_q1_done) { addXP(150); state.m2_q1_done = true; }
+                showToast("Berjaya Dibaiki!", "Ejaan 'print' telah dibetulkan. Kod berjaya dijalankan.");
+            } else {
+                showToast("Ralat Masih Wujud", "Sila semak baris 2. Pastikan ejaan 'print' adalah tepat.", "error");
+            }
+        }
+
+        function checkM2Q2() {
+            const code = document.getElementById('m2-q2-code').value;
+            const cleanCode = code.replace(/\s/g, '');
+            if (cleanCode.includes('purata=(m1+m2+m3)/3')) {
+                if(!state.m2_q2_done) { addXP(150); state.m2_q2_done = true; }
+                showToast("Logik Dibetulkan!", "Penggunaan kurungan memastikan penambahan dibuat sebelum pembahagian. Output: 80.0");
+            } else {
+                showToast("Masih Ralat Logik", "Ingat hukum matematik. Anda perlu menambah semua markah DAHULU sebelum bahagi 3. Gunakan kurungan ().", "error");
+            }
+        }
+
+        function checkM3() {
+            const val = document.getElementById('m3-q1-input').value;
+            if (val === '6') {
+                if(!state.m3_q1_done) { addXP(200); state.m3_q1_done = true; }
+                showToast("Penjejakan Sempurna!", "Lelaran akhir: i=3, jumlah sebelumnya=3. 3+3 = 6.");
+            } else {
+                showToast("Penjejakan Tersasar", "Cuba kira semula. Pada lelaran ke-3, i adalah 3. Tambahkan dengan jumlah sebelumnya.", "error");
+            }
+        }
+
+        function toggleCodeStyle(type) {
+            const caca = document.getElementById('code-caca');
+            const kualiti = document.getElementById('code-kualiti');
+            const btnCaca = document.getElementById('tab-caca');
+            const btnKualiti = document.getElementById('tab-kualiti');
+
+            if (type === 'caca') {
+                caca.classList.remove('hidden');
+                kualiti.classList.add('hidden');
+                kualiti.classList.remove('animate-fade-in');
                 
-                // Reset circle inside
-                const circle = btn.querySelector('div');
-                if(circle) {
-                    circle.classList.remove('bg-white/20');
-                    circle.classList.add('bg-slate-700');
+                btnCaca.classList.add('text-purple-400', 'border-purple-500', 'bg-slate-800/30');
+                btnCaca.classList.remove('text-slate-400', 'border-transparent');
+                
+                btnKualiti.classList.remove('text-purple-400', 'border-purple-500', 'bg-slate-800/30');
+                btnKualiti.classList.add('text-slate-400', 'border-transparent');
+            } else {
+                caca.classList.add('hidden');
+                kualiti.classList.remove('hidden');
+                kualiti.classList.add('animate-fade-in');
+                
+                btnKualiti.classList.add('text-purple-400', 'border-purple-500', 'bg-slate-800/30');
+                btnKualiti.classList.remove('text-slate-400', 'border-transparent');
+                
+                btnCaca.classList.remove('text-purple-400', 'border-purple-500', 'bg-slate-800/30');
+                btnCaca.classList.add('text-slate-400', 'border-transparent');
+            }
+        }
+
+        function checkM4(answer) {
+            if (answer === 'C') {
+                if(!state.m4_q1_done) { addXP(100); state.m4_q1_done = true; }
+                showToast("Pilihan Bijak!", "'bakiAkaunBank' jelas, deskriptif, dan menggunakan format camelCase.");
+            } else {
+                showToast("Kurang Sesuai", "Nama pemboleh ubah tersebut tidak menerangkan data dengan jelas.", "error");
+            }
+        }
+
+        function checkUjian() {
+            // Skema Jawapan untuk 15 Soalan
+            const answers = {
+                uq1: 'A', uq2: 'C', uq3: 'B', uq4: 'B', uq5: 'C',
+                uq6: 'C', uq7: 'B', uq8: 'C', uq9: 'B', uq10: 'B',
+                uq11: 'B', uq12: 'B', uq13: 'C', uq14: 'B', uq15: 'B'
+            };
+
+            let allAnswered = true;
+            let allCorrect = true;
+
+            for (let i = 1; i <= 15; i++) {
+                const q = document.querySelector(`input[name="uq${i}"]:checked`);
+                if (!q) {
+                    allAnswered = false;
+                    break;
                 }
-            });
-
-            // Style active button
-            const activeBtn = document.getElementById('nav-' + moduleId);
-            activeBtn.classList.remove('hover:bg-slate-800', 'text-slate-300');
-            
-            if(moduleId === 'kuiz') {
-                activeBtn.classList.add('bg-emerald-600', 'text-white');
-            } else {
-                activeBtn.classList.add('bg-blue-600', 'text-white');
-                const activeCircle = activeBtn.querySelector('div');
-                if(activeCircle) {
-                    activeCircle.classList.remove('bg-slate-700');
-                    activeCircle.classList.add('bg-white/20');
+                if (q.value !== answers[`uq${i}`]) {
+                    allCorrect = false;
                 }
             }
 
-            // If navigating to quiz, initialize it
-            if(moduleId === 'kuiz') initQuiz();
-        }
-
-        // --- MODUL 1: REDUNDANCY SIMULATION ---
-        function highlightRedundancy() {
-            const targets = document.querySelectorAll('.highlight-target');
-            const targets2 = document.querySelectorAll('.highlight-target2');
-            
-            targets.forEach(el => el.classList.add('highlight-red'));
-            targets2.forEach(el => el.classList.add('bg-orange-100', 'border-orange-400'));
-            
-            setTimeout(() => {
-                alert("Perhatikan bahawa '5 Sains' dan 'Cikgu Aminah' direkod berulang kali. Ini adalah KELEWAHAN DATA.");
-            }, 500);
-        }
-
-        function normalizeTable() {
-            document.getElementById('unnormalized-view').classList.add('hidden');
-            
-            const normView = document.getElementById('normalized-view');
-            normView.classList.remove('hidden');
-            
-            // Small delay to allow display:block to apply before animating opacity
-            setTimeout(() => {
-                normView.classList.remove('opacity-0');
-                normView.classList.add('opacity-100');
-            }, 50);
-        }
-
-        function resetTable() {
-            const targets = document.querySelectorAll('.highlight-target');
-            const targets2 = document.querySelectorAll('.highlight-target2');
-            
-            targets.forEach(el => el.classList.remove('highlight-red'));
-            targets2.forEach(el => el.classList.remove('bg-orange-100', 'border-orange-400'));
-
-            const normView = document.getElementById('normalized-view');
-            normView.classList.remove('opacity-100');
-            normView.classList.add('opacity-0');
-            
-            setTimeout(() => {
-                normView.classList.add('hidden');
-                document.getElementById('unnormalized-view').classList.remove('hidden');
-            }, 300);
-        }
-
-        // --- MODUL 2: MODEL TABS ---
-        function showModel(modelId) {
-            // Hide all contents
-            document.querySelectorAll('.model-content').forEach(el => el.classList.add('hidden'));
-            
-            // Reset tab styles
-            document.querySelectorAll('.model-tab').forEach(tab => {
-                tab.classList.remove('bg-white', 'font-semibold', 'text-blue-700', 'border-l-blue-600');
-                tab.classList.add('text-slate-600', 'border-l-transparent');
-            });
-
-            // Show active content
-            document.getElementById('model-' + modelId).classList.remove('hidden');
-            
-            // Set active tab style
-            const activeTab = event.currentTarget || event.target.closest('button');
-            activeTab.classList.remove('text-slate-600', 'border-l-transparent');
-            activeTab.classList.add('bg-white', 'font-semibold', 'text-blue-700', 'border-l-blue-600');
-        }
-
-        // --- MODUL 3: CARDINALITY SIMULATION ---
-        function setCardinality(type) {
-            // Reset buttons
-            document.querySelectorAll('.card-btn').forEach(btn => {
-                btn.classList.remove('bg-blue-600', 'text-white');
-                btn.classList.add('bg-slate-200', 'text-slate-700');
-            });
-
-            // Set active button
-            const activeBtn = document.getElementById('btn-' + type);
-            activeBtn.classList.remove('bg-slate-200', 'text-slate-700');
-            activeBtn.classList.add('bg-blue-600', 'text-white');
-
-            const ent1 = document.getElementById('ent1-name');
-            const ent2 = document.getElementById('ent2-name');
-            const rel = document.getElementById('rel-name');
-            const cardLeft = document.getElementById('card-left');
-            const cardRight = document.getElementById('card-right');
-            const desc = document.getElementById('card-desc');
-            const crowsFoot = document.getElementById('crows-foot-right'); // Simplified CSS crow's foot
-
-            if(type === '1to1') {
-                ent1.innerText = 'Pengetua';
-                ent2.innerText = 'Sekolah';
-                rel.innerText = 'Urus';
-                cardLeft.innerText = '1';
-                cardRight.innerText = '1';
-                desc.innerText = 'Contoh: Seorang Pengetua menguruskan Satu Sekolah. Satu sekolah diurus oleh Satu Pengetua.';
-                cardRight.innerText = '1';
-            } 
-            else if(type === '1toM') {
-                ent1.innerText = 'Guru';
-                ent2.innerText = 'Pelajar';
-                rel.innerText = 'Ajar';
-                cardLeft.innerText = '1';
-                cardRight.innerText = 'M';
-                desc.innerText = 'Contoh: Seorang Guru mengajar Ramai (Many) Pelajar. Tetapi pelajar untuk kelas itu diajar oleh seorang guru sahaja.';
+            if (!allAnswered) {
+                showToast("Perhatian", "Sila jawab kesemua 15 soalan sebelum menekan butang hantar.", "error");
+                return;
             }
-            else if(type === 'MtoN') {
-                ent1.innerText = 'Pelajar';
-                ent2.innerText = 'Subjek';
-                rel.innerText = 'Ambil';
-                cardLeft.innerText = 'M';
-                cardRight.innerText = 'N';
-                desc.innerText = 'Contoh: Ramai Pelajar mengambil Ramai(Pelbagai) Subjek. Sesuatu subjek juga diambil oleh ramai pelajar.';
-            }
-        }
 
-        // --- KUIZ LOGIC ---
-        const quizData = [
-            {
-                question: "Apabila data pelajar dikemaskini di pejabat, data di perpustakaan juga automatik berubah. Ini menunjukkan ciri...",
-                options: ["Integriti Data", "Ketekalan Data", "Kelewahan Data", "Keselamatan Data"],
-                correct: 1
-            },
-            {
-                question: "Masalah pengulangan data yang sama di pelbagai tempat dipanggil sebagai...",
-                options: ["Ketidaktekalan Data", "Kekardinalan", "Kelewahan Data", "Atribut Redundan"],
-                correct: 2
-            },
-            {
-                question: "Model pangkalan data manakah yang menyusun rekod seperti struktur pokok?",
-                options: ["Model Rangkaian", "Model Berorientasi Objek", "Model Hierarki", "Model Hubungan"],
-                correct: 2
-            },
-            {
-                question: "Dalam Entity-Relationship Diagram (ERD), bentuk segi empat tepat mewakili apa?",
-                options: ["Atribut", "Entiti", "Set Hubungan", "Kekunci Asing"],
-                correct: 1
-            },
-            {
-                question: "Apakah jenis kekardinalan bagi hubungan antara 'Pelanggan' dan 'Produk' di sebuah pasar raya?",
-                options: ["Satu ke Satu (1:1)", "Satu ke Banyak (1:M)", "Banyak ke Satu (M:1)", "Banyak ke Banyak (M:N)"],
-                correct: 3
-            }
-        ];
-
-        let currentQuestion = 0;
-        let score = 0;
-
-        function initQuiz() {
-            currentQuestion = 0;
-            score = 0;
-            document.getElementById('question-area').classList.remove('hidden');
-            document.getElementById('result-area').classList.add('hidden');
-            document.getElementById('q-total').innerText = quizData.length;
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            const q = quizData[currentQuestion];
-            document.getElementById('q-current').innerText = currentQuestion + 1;
-            document.getElementById('q-progress').style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
-            
-            document.getElementById('question-text').innerText = q.question;
-            
-            const optionsArea = document.getElementById('options-area');
-            optionsArea.innerHTML = ''; // Clear old options
-            
-            q.options.forEach((opt, index) => {
-                const btn = document.createElement('button');
-                btn.className = 'w-full text-left p-4 rounded-lg border border-slate-200 hover:bg-emerald-50 hover:border-emerald-500 transition font-medium text-slate-700 bg-white';
-                btn.innerText = opt;
-                btn.onclick = () => checkAnswer(index);
-                optionsArea.appendChild(btn);
-            });
-        }
-
-        function checkAnswer(selectedIndex) {
-            if (selectedIndex === quizData[currentQuestion].correct) {
-                score++;
-            }
-            
-            currentQuestion++;
-            
-            if (currentQuestion < quizData.length) {
-                loadQuestion();
+            if (allCorrect) {
+                if(!state.ujian_done) { 
+                    addXP(1000); // Ganjaran besar untuk boss battle
+                    state.ujian_done = true; 
+                }
+                
+                document.getElementById('content-area').innerHTML = `
+                    <div class="animate-fade-in text-center pt-20 pb-20">
+                        <i class="fas fa-medal text-9xl text-yellow-400 mb-8 drop-shadow-[0_0_30px_rgba(250,204,21,0.5)]"></i>
+                        <h1 class="text-4xl font-bold text-white mb-4">Tahniah! Anda Lulus Cemerlang.</h1>
+                        <p class="text-xl text-slate-300 max-w-2xl mx-auto">Anda telah berjaya menjawab kesemua 15 soalan dengan tepat. Anda kini diiktiraf telah menguasai asas Ralat, Penyahpepijatan, Penjejakan Nilai dan Gaya Pengekodan yang baik!</p>
+                        <p class="mt-8 text-2xl font-bold text-yellow-400">Total XP: ${currentXP}</p>
+                        
+                        <div class="mt-12">
+                            <a href="index.html" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-lg shadow-blue-900/50 transform hover:-translate-y-1">
+                                <i class="fas fa-home mr-2"></i> Kembali ke Portal Utama
+                            </a>
+                        </div>
+                    </div>
+                `;
+                window.scrollTo(0, 0);
             } else {
-                showResults();
+                showToast("Gagal", "Terdapat jawapan yang salah. Sila semak semula modul dan cuba lagi.", "error");
             }
         }
 
-        function showResults() {
-            document.getElementById('question-area').classList.add('hidden');
-            const resultArea = document.getElementById('result-area');
-            resultArea.classList.remove('hidden');
-            
-            const percentage = Math.round((score / quizData.length) * 100);
-            document.getElementById('score-display').innerText = `${percentage}%`;
-            
-            const msgEl = document.getElementById('score-message');
-            if (percentage === 100) {
-                msgEl.innerText = "Cemerlang! Anda memahami semua konsep asas dengan baik.";
-                msgEl.className = "text-emerald-600 font-semibold mb-8";
-            } else if (percentage >= 60) {
-                msgEl.innerText = "Bagus! Teruskan usaha mengulangkaji bahagian yang anda kurang faham.";
-                msgEl.className = "text-blue-600 font-semibold mb-8";
-            } else {
-                msgEl.innerText = "Jangan putus asa! Sila ulangkaji modul 1, 2, dan 3 semula.";
-                msgEl.className = "text-amber-600 font-semibold mb-8";
-            }
-        }
-
+        // Initialize App on load directly to Module 1
+        window.onload = () => {
+            loadModule('modul1');
+        };
     </script>
 </body>
 </html>
