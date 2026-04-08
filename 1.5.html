@@ -58,7 +58,6 @@
 </head>
 <body class="flex h-screen overflow-hidden selection:bg-blue-500 selection:text-white">
 
-    <!-- Sidebar Navigation -->
     <aside class="w-72 bg-slate-800 border-r border-slate-700 flex flex-col transition-all duration-300 z-20">
         <div class="p-6 border-b border-slate-700">
             <h1 class="text-xl font-bold text-white flex items-center gap-3">
@@ -71,7 +70,7 @@
         <div class="p-4 border-b border-slate-700 bg-slate-800/50">
             <div class="flex justify-between items-center mb-2">
                 <span class="text-sm font-semibold text-slate-300">Pengalaman (XP)</span>
-                <span id="xp-counter" class="text-sm font-bold text-yellow-400">0 / 1000</span>
+                <span id="xp-counter" class="text-sm font-bold text-yellow-400">0 / 1500</span>
             </div>
             <div class="w-full bg-slate-700 rounded-full h-2.5">
                 <div id="xp-bar" class="bg-yellow-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
@@ -79,11 +78,12 @@
         </div>
 
         <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-            <button onclick="loadModule('intro')" id="nav-intro" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors active">
-                <i class="fas fa-home w-5 text-center"></i>
-                <span>Menu Utama</span>
-            </button>
-            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Modul Pembelajaran</div>
+            <a href="index.html" class="w-full flex items-center gap-3 px-4 py-3 mb-4 rounded-lg text-left text-white bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-600 shadow-md">
+                <i class="fas fa-arrow-left w-5 text-center text-rose-400"></i>
+                <span class="font-bold">Kembali ke Portal</span>
+            </a>
+
+            <div class="pt-2 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Modul Pembelajaran</div>
             <button onclick="loadModule('modul1')" id="nav-modul1" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
                 <i class="fas fa-bug w-5 text-center text-red-400"></i>
                 <span>M1: Jenis Ralat (1.5.1)</span>
@@ -108,9 +108,7 @@
         </nav>
     </aside>
 
-    <!-- Main Content Area -->
     <main class="flex-1 bg-slate-900 relative overflow-y-auto">
-        <!-- Toast Notification -->
         <div id="toast" class="fixed top-5 right-5 z-50 transform transition-transform duration-300 translate-x-full glass-panel px-6 py-4 rounded-lg shadow-xl flex items-center gap-3">
             <i id="toast-icon" class="fas fa-check-circle text-green-400 text-xl"></i>
             <div>
@@ -120,8 +118,7 @@
         </div>
 
         <div id="content-area" class="max-w-5xl mx-auto p-8 pb-20">
-            <!-- Content gets injected here -->
-        </div>
+            </div>
     </main>
 
     <script>
@@ -139,9 +136,9 @@
         // --- Utility Functions ---
         function addXP(amount) {
             currentXP += amount;
-            if (currentXP > 1000) currentXP = 1000;
-            document.getElementById('xp-counter').innerText = `${currentXP} / 1000`;
-            document.getElementById('xp-bar').style.width = `${(currentXP / 1000) * 100}%`;
+            if (currentXP > 1500) currentXP = 1500;
+            document.getElementById('xp-counter').innerText = `${currentXP} / 1500`;
+            document.getElementById('xp-bar').style.width = `${(currentXP / 1500) * 100}%`;
             
             // Highlight animation
             const counter = document.getElementById('xp-counter');
@@ -184,57 +181,6 @@
             let html = '';
 
             switch (moduleId) {
-                case 'intro':
-                    html = `
-                        <div class="animate-fade-in">
-                            <h1 class="text-4xl font-bold text-white mb-4">Selamat Datang ke Akademi Pengekodan!</h1>
-                            <p class="text-lg text-slate-300 mb-8 leading-relaxed">Aplikasi ini direka untuk melatih anda menguasai Standard Pembelajaran 1.5: Ralat & Penyahpepijatan secara intensif. Selesaikan cabaran, kumpul XP, dan jadilah pengatur cara yang hebat.</p>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-blue-500 transition-colors cursor-pointer" onclick="loadModule('modul1')">
-                                    <div class="bg-blue-500/20 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
-                                        <i class="fas fa-bug text-blue-400 text-xl"></i>
-                                    </div>
-                                    <h3 class="text-xl font-bold text-white mb-2">Modul 1: Jenis Ralat</h3>
-                                    <p class="text-slate-400 text-sm">Pelajari perbezaan ralat sintaks, masa larian, dan logik.</p>
-                                </div>
-                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-orange-500 transition-colors cursor-pointer" onclick="loadModule('modul2')">
-                                    <div class="bg-orange-500/20 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
-                                        <i class="fas fa-tools text-orange-400 text-xl"></i>
-                                    </div>
-                                    <h3 class="text-xl font-bold text-white mb-2">Modul 2: Makmal Baiki</h3>
-                                    <p class="text-slate-400 text-sm">Amali menterjemah mesej ralat dan membaiki kod yang rosak.</p>
-                                </div>
-                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-green-500 transition-colors cursor-pointer" onclick="loadModule('modul3')">
-                                    <div class="bg-green-500/20 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
-                                        <i class="fas fa-search text-green-400 text-xl"></i>
-                                    </div>
-                                    <h3 class="text-xl font-bold text-white mb-2">Modul 3: Penjejakan Nilai</h3>
-                                    <p class="text-slate-400 text-sm">Uji keupayaan mental anda menjejaki nilai pemboleh ubah baris demi baris.</p>
-                                </div>
-                                <div class="bg-slate-800 p-6 rounded-xl border border-slate-700 hover:border-purple-500 transition-colors cursor-pointer" onclick="loadModule('modul4')">
-                                    <div class="bg-purple-500/20 w-12 h-12 flex items-center justify-center rounded-lg mb-4">
-                                        <i class="fas fa-paint-brush text-purple-400 text-xl"></i>
-                                    </div>
-                                    <h3 class="text-xl font-bold text-white mb-2">Modul 4: Gaya Pengekodan</h3>
-                                    <p class="text-slate-400 text-sm">Praktikkan penulisan kod yang bersih, mempunyai komen, dan inden yang betul.</p>
-                                </div>
-                            </div>
-
-                            <div class="bg-indigo-900/40 border border-indigo-500/30 rounded-xl p-6 flex items-center gap-6">
-                                <i class="fas fa-rocket text-4xl text-indigo-400"></i>
-                                <div>
-                                    <h3 class="text-lg font-bold text-white">Sedia untuk bermula?</h3>
-                                    <p class="text-slate-300 text-sm mt-1">Selesaikan semua modul untuk membuka Ujian Akhir (Boss Battle).</p>
-                                </div>
-                                <button onclick="loadModule('modul1')" class="ml-auto bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors">
-                                    Mula Sekarang
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                    break;
-
                 case 'modul1':
                     html = `
                         <div class="animate-fade-in">
@@ -246,7 +192,6 @@
                             <p class="text-slate-300 mb-6 text-lg">Dalam pengaturcaraan, ralat adalah perkara biasa. Seorang pakar berbeza dengan amatur berdasarkan kecekapannya mengenali jenis ralat.</p>
 
                             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
-                                <!-- Sintaks -->
                                 <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform">
                                     <div class="bg-red-900/50 p-4 border-b border-red-500/30 flex items-center gap-2">
                                         <i class="fas fa-exclamation-triangle text-red-400"></i>
@@ -262,7 +207,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Masa Larian -->
                                 <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform">
                                     <div class="bg-orange-900/50 p-4 border-b border-orange-500/30 flex items-center gap-2">
                                         <i class="fas fa-bolt text-orange-400"></i>
@@ -278,7 +222,6 @@
                                     </div>
                                 </div>
 
-                                <!-- Logik -->
                                 <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden hover:-translate-y-1 transition-transform">
                                     <div class="bg-green-900/50 p-4 border-b border-green-500/30 flex items-center gap-2">
                                         <i class="fas fa-brain text-green-400"></i>
@@ -296,7 +239,6 @@
                                 </div>
                             </div>
 
-                            <!-- Latihan -->
                             <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
                                 <h3 class="text-xl font-bold text-white mb-4"><i class="fas fa-dumbbell mr-2 text-blue-400"></i>Cabaran Kefahaman</h3>
                                 <p class="text-sm text-slate-300 mb-4">Sila padankan senario di bawah dengan jenis ralat yang betul.</p>
@@ -334,7 +276,6 @@
                             
                             <p class="text-slate-300 mb-6 text-lg">Seorang pengatur cara menghabiskan 20% masa menulis kod, dan 80% masa mencari ralat. Selesaikan insiden kod rosak di bawah.</p>
 
-                            <!-- Cabaran 1: Sintaks -->
                             <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden mb-8">
                                 <div class="bg-slate-700/50 p-4 border-b border-slate-700 flex justify-between items-center">
                                     <h3 class="font-bold text-white">Insiden #001: Ralat Sintaks</h3>
@@ -368,7 +309,6 @@ pirnt("Harga ialah", harga)
                                 </div>
                             </div>
 
-                            <!-- Cabaran 2: Logik -->
                             <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden">
                                 <div class="bg-slate-700/50 p-4 border-b border-slate-700 flex justify-between items-center">
                                     <h3 class="font-bold text-white">Insiden #002: Ralat Logik Purata</h3>
@@ -408,7 +348,6 @@ print(purata)
                             <p class="text-slate-300 mb-6 text-lg">Mengenalpasti nilai pemboleh ubah pada bahagian tertentu atur cara (Tracing) amat penting terutamanya ketika menggunakan struktur kawalan gelung (loop).</p>
 
                             <div class="bg-slate-800 border border-slate-700 rounded-xl p-6 mb-8 flex flex-col md:flex-row gap-8">
-                                <!-- Kod -->
                                 <div class="w-full md:w-1/2">
                                     <h3 class="font-bold text-white mb-4">Kod Atur Cara:</h3>
                                     <div class="bg-slate-900 rounded p-4 code-font text-sm text-slate-300 leading-relaxed shadow-inner">
@@ -419,7 +358,6 @@ print(purata)
                                     </div>
                                 </div>
 
-                                <!-- Jadual Penjejakan -->
                                 <div class="w-full md:w-1/2">
                                     <h3 class="font-bold text-white mb-4">Jadual Penjejakan (Mental Model):</h3>
                                     <div class="overflow-x-auto">
@@ -486,7 +424,6 @@ print(purata)
                                 </div>
                                 
                                 <div class="p-6 relative min-h-[300px]">
-                                    <!-- Bad Code -->
                                     <div id="code-caca" class="absolute inset-0 p-6 hidden">
                                         <div class="bg-slate-900 rounded p-4 code-font text-sm text-red-300 shadow-inner h-full">
 a=100<br>
@@ -499,7 +436,6 @@ print("Murah")
                                         </div>
                                     </div>
                                     
-                                    <!-- Good Code -->
                                     <div id="code-kualiti" class="absolute inset-0 p-6 block animate-fade-in">
                                         <div class="bg-slate-900 rounded p-4 code-font text-sm text-slate-300 shadow-inner h-full">
 <span class="text-slate-500 italic"># Program mengira harga selepas diskaun</span><br>
@@ -517,7 +453,6 @@ print("Murah")
                                 </div>
                             </div>
 
-                            <!-- Latihan Gaya Kod -->
                             <div class="bg-slate-800 border border-slate-700 rounded-xl p-6">
                                 <h3 class="text-xl font-bold text-white mb-4">Uji Minda</h3>
                                 <p class="text-sm text-slate-300 mb-4">Pilih nama pemboleh ubah yang **PALING BERMAKNA** untuk menyimpan nilai baki akaun bank pelanggan.</p>
@@ -538,56 +473,152 @@ print("Murah")
                         <div class="animate-fade-in">
                             <div class="flex items-center gap-3 mb-6">
                                 <span class="bg-yellow-500/20 text-yellow-400 py-1 px-3 rounded-full text-sm font-bold"><i class="fas fa-trophy mr-2"></i>BOSS</span>
-                                <h2 class="text-3xl font-bold text-white">Ujian Penilaian Akhir</h2>
+                                <h2 class="text-3xl font-bold text-white">Ujian Penilaian Akhir (15 Soalan)</h2>
                             </div>
                             
                             <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-8 shadow-2xl relative overflow-hidden">
-                                <div class="absolute top-0 right-0 -mr-16 -mt-16 text-slate-700 opacity-20">
-                                    <i class="fas fa-certificate" style="font-size: 200px;"></i>
-                                </div>
-                                
                                 <div class="relative z-10">
-                                    <h3 class="text-xl font-bold text-white mb-6">Jawab semua soalan berikut untuk melengkapkan kursus.</h3>
+                                    <h3 class="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4">Jawab semua soalan berikut dengan tepat untuk melengkapkan kursus.</h3>
                                     
-                                    <!-- Q1 -->
-                                    <div class="mb-8">
-                                        <p class="font-semibold text-slate-200 mb-3">1. Apakah ralat yang berlaku jika anda cuba membahagikan nombor dengan nilai teks (string)? (Contoh: <code class="bg-slate-800 px-1 rounded">10 / "Dua"</code>)</p>
-                                        <div class="space-y-2">
-                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
-                                                <input type="radio" name="uq1" value="A" class="form-radio text-blue-500">
-                                                <span class="text-slate-300">Ralat Sintaks</span>
-                                            </label>
-                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
-                                                <input type="radio" name="uq1" value="B" class="form-radio text-blue-500">
-                                                <span class="text-slate-300">Ralat Masa Larian (Type Error)</span>
-                                            </label>
-                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
-                                                <input type="radio" name="uq1" value="C" class="form-radio text-blue-500">
-                                                <span class="text-slate-300">Ralat Logik</span>
-                                            </label>
+                                    <div class="space-y-10">
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">1. Ralat sintaks berlaku apabila...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq1" value="A" class="text-blue-500"><span class="text-slate-300">Pengekod melanggar tatabahasa bahasa pengaturcaraan</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq1" value="B" class="text-blue-500"><span class="text-slate-300">Terdapat kesilapan pada formula matematik</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq1" value="C" class="text-blue-500"><span class="text-slate-300">Sistem cuba membahagikan nombor dengan sifar</span></label>
+                                            </div>
                                         </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">2. Apakah jenis ralat bagi kod ini: <code class="bg-slate-800 px-2 py-1 rounded text-red-300">print("Helo Dunia"</code> (Tanpa kurungan penutup)?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq2" value="A" class="text-blue-500"><span class="text-slate-300">Ralat Masa Larian</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq2" value="B" class="text-blue-500"><span class="text-slate-300">Ralat Logik</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq2" value="C" class="text-blue-500"><span class="text-slate-300">Ralat Sintaks</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">3. Ralat masa larian (runtime error) biasanya menyebabkan...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq3" value="A" class="text-blue-500"><span class="text-slate-300">Output yang dihasilkan sentiasa salah</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq3" value="B" class="text-blue-500"><span class="text-slate-300">Program terhenti secara tiba-tiba ketika sedang berjalan</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq3" value="C" class="text-blue-500"><span class="text-slate-300">Program tidak boleh di-compile langsung</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">4. Apakah jenis ralat jika anda membahagikan suatu nombor dengan sifar (cth: <code class="bg-slate-800 px-2 py-1 rounded">x = 10 / 0</code>)?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq4" value="A" class="text-blue-500"><span class="text-slate-300">Ralat Sintaks</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq4" value="B" class="text-blue-500"><span class="text-slate-300">Ralat Masa Larian</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq4" value="C" class="text-blue-500"><span class="text-slate-300">Ralat Logik</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">5. Ralat logik adalah ralat yang...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq5" value="A" class="text-blue-500"><span class="text-slate-300">Paling mudah dikesan kerana ditandakan merah</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq5" value="B" class="text-blue-500"><span class="text-slate-300">Berlaku akibat tertinggal tanda kurungan</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq5" value="C" class="text-blue-500"><span class="text-slate-300">Mengeluarkan output yang salah tanpa sebarang amaran error</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">6. Jika anda ingin mengira luas segi empat (panjang × lebar), tetapi anda menaip <code class="bg-slate-800 px-2 py-1 rounded">luas = panjang + lebar</code>. Ini adalah contoh...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq6" value="A" class="text-blue-500"><span class="text-slate-300">Ralat Sintaks</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq6" value="B" class="text-blue-500"><span class="text-slate-300">Ralat Masa Larian</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq6" value="C" class="text-blue-500"><span class="text-slate-300">Ralat Logik</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">7. Apakah tujuan utama teknik penjejakan (tracing) kod?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq7" value="A" class="text-blue-500"><span class="text-slate-300">Untuk memadam kod yang tidak digunakan</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq7" value="B" class="text-blue-500"><span class="text-slate-300">Untuk memantau perubahan nilai pemboleh ubah baris demi baris</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq7" value="C" class="text-blue-500"><span class="text-slate-300">Untuk mencantikkan paparan antaramuka</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">8. Dalam penjejakan mental: nilai awal <code class="bg-slate-800 px-1 rounded">x=5</code>, kemudian pada baris seterusnya <code class="bg-slate-800 px-1 rounded">x=x+2</code>. Apakah nilai akhir bagi <code class="bg-slate-800 px-1 rounded">x</code>?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq8" value="A" class="text-blue-500"><span class="text-slate-300">5</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq8" value="B" class="text-blue-500"><span class="text-slate-300">2</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq8" value="C" class="text-blue-500"><span class="text-slate-300">7</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">9. Gaya pengekodan yang baik merangkumi perkara berikut, KECUALI...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq9" value="A" class="text-blue-500"><span class="text-slate-300">Menyusun lekukan (indentation) dengan teratur</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq9" value="B" class="text-blue-500"><span class="text-slate-300">Menggunakan singkatan rawak seperti x, y, z untuk semua benda</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq9" value="C" class="text-blue-500"><span class="text-slate-300">Meletakkan komen yang menerangkan fungsi kod</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">10. Mengapakah penggunaan komen (comments) sangat penting dalam penulisan atur cara?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq10" value="A" class="text-blue-500"><span class="text-slate-300">Untuk menjadikan sistem berjalan dengan lebih pantas</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq10" value="B" class="text-blue-500"><span class="text-slate-300">Membantu pengatur cara (manusia) memahami logik blok kod tersebut</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq10" value="C" class="text-blue-500"><span class="text-slate-300">Untuk mengelakkan komputer dari terkena virus</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">11. Dalam bahasa Python, simbol apakah yang lazim digunakan untuk menulis komen satu baris?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq11" value="A" class="text-blue-500"><span class="text-slate-300">//</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq11" value="B" class="text-blue-500"><span class="text-slate-300">#</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq11" value="C" class="text-blue-500"><span class="text-slate-300">&lt;!-- --&gt;</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">12. Apakah fungsi inden (lekukan/indentation) dalam bahasa pengaturcaraan seperti Python?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq12" value="A" class="text-blue-500"><span class="text-slate-300">Sekadar untuk mencantikkan paparan sahaja</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq12" value="B" class="text-blue-500"><span class="text-slate-300">Menentukan blok kod yang tergolong dalam struktur kawalan tertentu (cth: if/for)</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq12" value="C" class="text-blue-500"><span class="text-slate-300">Mempercepatkan proses kompilasi fail</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">13. Antara nama pemboleh ubah berikut, yang manakah PALING bermakna untuk menyimpan data harga barang?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq13" value="A" class="text-blue-500"><span class="text-slate-300">h</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq13" value="B" class="text-blue-500"><span class="text-slate-300">x1</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq13" value="C" class="text-blue-500"><span class="text-slate-300">harga_barang</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">14. Apakah output bagi kod berikut jika dijalankan tanpa ralat: <br><code class="bg-slate-800 px-2 py-1 rounded text-green-300 block mt-2">a = 3<br>b = 4<br>print(a * b)</code></p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq14" value="A" class="text-blue-500"><span class="text-slate-300">7</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq14" value="B" class="text-blue-500"><span class="text-slate-300">12</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq14" value="C" class="text-blue-500"><span class="text-slate-300">34</span></label>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3">15. Jika anda menjalankan program dan menerima mesej ralat <code class="bg-red-900/50 px-2 rounded text-red-300">NameError: name 'pirnt' is not defined</code>, apakah tindakan penyelesaian anda?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq15" value="A" class="text-blue-500"><span class="text-slate-300">Menyemak formula matematik kerana mungkin ada salah darab/bahagi</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq15" value="B" class="text-blue-500"><span class="text-slate-300">Membetulkan ejaan arahan kepada 'print' (Ralat Sintaks)</span></label>
+                                                <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700"><input type="radio" name="uq15" value="C" class="text-blue-500"><span class="text-slate-300">Membuang kesemua komen di dalam kod tersebut</span></label>
+                                            </div>
+                                        </div>
+
                                     </div>
 
-                                    <!-- Q2 -->
-                                    <div class="mb-8">
-                                        <p class="font-semibold text-slate-200 mb-3">2. Apakah kepentingan meletakkan Komen (<code class="bg-slate-800 px-1 rounded">#</code>) di dalam atur cara?</p>
-                                        <div class="space-y-2">
-                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
-                                                <input type="radio" name="uq2" value="A" class="form-radio text-blue-500">
-                                                <span class="text-slate-300">Untuk menjadikan komputer berjalan lebih pantas.</span>
-                                            </label>
-                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
-                                                <input type="radio" name="uq2" value="B" class="form-radio text-blue-500">
-                                                <span class="text-slate-300">Untuk mengelakkan ralat masa larian.</span>
-                                            </label>
-                                            <label class="flex items-center gap-3 p-3 rounded bg-slate-800/50 hover:bg-slate-700/50 cursor-pointer border border-slate-700">
-                                                <input type="radio" name="uq2" value="C" class="form-radio text-blue-500">
-                                                <span class="text-slate-300">Membantu manusia (pengatur cara) memahami fungsi blok kod tersebut.</span>
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    <button onclick="checkUjian()" class="w-full bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-yellow-900/20 transform transition hover:-translate-y-1">Hantar Ujian</button>
+                                    <button onclick="checkUjian()" class="w-full mt-12 bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-yellow-900/20 transform transition hover:-translate-y-1">Hantar Jawapan Ujian</button>
                                 </div>
                             </div>
                         </div>
@@ -613,7 +644,6 @@ print("Murah")
 
         function checkM2Q1() {
             const code = document.getElementById('m2-q1-code').value;
-            // Clean space to make checking robust
             const cleanCode = code.replace(/\s/g, '');
             if (cleanCode.includes('print("Hargaialah",harga)')) {
                 if(!state.m2_q1_done) { addXP(150); state.m2_q1_done = true; }
@@ -683,34 +713,61 @@ print("Murah")
         }
 
         function checkUjian() {
-            const q1 = document.querySelector('input[name="uq1"]:checked');
-            const q2 = document.querySelector('input[name="uq2"]:checked');
+            // Skema Jawapan untuk 15 Soalan
+            const answers = {
+                uq1: 'A', uq2: 'C', uq3: 'B', uq4: 'B', uq5: 'C',
+                uq6: 'C', uq7: 'B', uq8: 'C', uq9: 'B', uq10: 'B',
+                uq11: 'B', uq12: 'B', uq13: 'C', uq14: 'B', uq15: 'B'
+            };
 
-            if (!q1 || !q2) {
-                showToast("Perhatian", "Sila jawab semua soalan sebelum hantar.", "error");
+            let allAnswered = true;
+            let allCorrect = true;
+
+            for (let i = 1; i <= 15; i++) {
+                const q = document.querySelector(`input[name="uq${i}"]:checked`);
+                if (!q) {
+                    allAnswered = false;
+                    break;
+                }
+                if (q.value !== answers[`uq${i}`]) {
+                    allCorrect = false;
+                }
+            }
+
+            if (!allAnswered) {
+                showToast("Perhatian", "Sila jawab kesemua 15 soalan sebelum menekan butang hantar.", "error");
                 return;
             }
 
-            if (q1.value === 'B' && q2.value === 'C') {
-                if(!state.ujian_done) { addXP(300); state.ujian_done = true; }
+            if (allCorrect) {
+                if(!state.ujian_done) { 
+                    addXP(1000); // Ganjaran besar untuk boss battle
+                    state.ujian_done = true; 
+                }
                 
                 document.getElementById('content-area').innerHTML = `
-                    <div class="animate-fade-in text-center pt-20">
+                    <div class="animate-fade-in text-center pt-20 pb-20">
                         <i class="fas fa-medal text-9xl text-yellow-400 mb-8 drop-shadow-[0_0_30px_rgba(250,204,21,0.5)]"></i>
-                        <h1 class="text-4xl font-bold text-white mb-4">Tahniah! Anda telah Lulus.</h1>
-                        <p class="text-xl text-slate-300 max-w-2xl mx-auto">Anda kini menguasai asas Ralat, Penyahpepijatan, Penjejakan Nilai dan Gaya Kod Bersih mengikut Standard 1.5. Teruskan latihan pengekodan anda!</p>
+                        <h1 class="text-4xl font-bold text-white mb-4">Tahniah! Anda Lulus Cemerlang.</h1>
+                        <p class="text-xl text-slate-300 max-w-2xl mx-auto">Anda telah berjaya menjawab kesemua 15 soalan dengan tepat. Anda kini diiktiraf telah menguasai asas Ralat, Penyahpepijatan, Penjejakan Nilai dan Gaya Pengekodan yang baik!</p>
                         <p class="mt-8 text-2xl font-bold text-yellow-400">Total XP: ${currentXP}</p>
-                        <button onclick="loadModule('intro')" class="mt-8 bg-slate-700 hover:bg-slate-600 text-white px-6 py-2 rounded-lg font-semibold transition-colors">Kembali ke Menu Utama</button>
+                        
+                        <div class="mt-12">
+                            <a href="index.html" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-xl font-bold text-lg transition-colors shadow-lg shadow-blue-900/50 transform hover:-translate-y-1">
+                                <i class="fas fa-home mr-2"></i> Kembali ke Portal Utama
+                            </a>
+                        </div>
                     </div>
                 `;
+                window.scrollTo(0, 0);
             } else {
-                showToast("Gagal", "Terdapat jawapan yang salah. Sila semak semula nota di Modul 1 dan Modul 4.", "error");
+                showToast("Gagal", "Terdapat jawapan yang salah. Sila semak semula modul dan cuba lagi.", "error");
             }
         }
 
-        // Initialize App
+        // Initialize App on load directly to Module 1
         window.onload = () => {
-            loadModule('intro');
+            loadModule('modul1');
         };
     </script>
 </body>
