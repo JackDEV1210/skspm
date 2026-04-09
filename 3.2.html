@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akademi Pengekodan: Paparan & Reka Bentuk Skrin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+        
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        .nav-item.active {
+            background-color: #a855f7; /* Purple 500 */
+            color: white;
+            font-weight: 600;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row h-screen overflow-hidden selection:bg-purple-500 selection:text-white bg-slate-900">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-slate-800 border-b border-slate-700 p-4 flex justify-between items-center z-30">
+        <h1 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fas fa-layer-group text-purple-500"></i> Akademi Kod (3.2)
+        </h1>
+        <button id="mobile-menu-btn" class="text-slate-300 hover:text-white focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/80 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 z-50 w-72 bg-slate-800 border-r border-slate-700 flex flex-col h-full shadow-2xl md:shadow-none">
+        <div class="p-6 border-b border-slate-700 hidden md:block">
+            <h1 class="text-xl font-bold text-white flex items-center gap-3">
+                <i class="fas fa-layer-group text-purple-500"></i>
+                Akademi Kod
+            </h1>
+            <p class="text-xs text-slate-400 mt-2">Sains Komputer - Topik 3.2</p>
+        </div>
+        
+        <div class="p-4 md:hidden flex justify-between items-center border-b border-slate-700">
+            <span class="text-white font-bold text-lg">Menu Navigasi</span>
+            <button id="close-sidebar-btn" class="text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <div class="p-4 border-b border-slate-700 bg-slate-800/50">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-semibold text-slate-300">Pengalaman (XP)</span>
+                <span id="xp-counter" class="text-sm font-bold text-yellow-400">0 / 2500</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                <div id="xp-bar" class="bg-yellow-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="index.html" class="w-full flex items-center gap-3 px-4 py-3 mb-4 rounded-lg text-left text-white bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-600 shadow-md">
+                <i class="fas fa-arrow-left w-5 text-center text-rose-400"></i>
+                <span class="font-bold">Kembali ke Portal</span>
+            </a>
+
+            <div class="pt-2 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Modul Pembelajaran</div>
+            <button onclick="loadModule('modul1')" id="nav-modul1" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-search text-blue-400 w-5 text-center"></i>
+                <span class="text-sm md:text-base">M1: Kumpul Data & Lakaran</span>
+            </button>
+            <button onclick="loadModule('modul2')" id="nav-modul2" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-drafting-compass text-emerald-400 w-5 text-center"></i>
+                <span class="text-sm md:text-base">M2: Membina Prototaip</span>
+            </button>
+            <button onclick="loadModule('modul3')" id="nav-modul3" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-clipboard-check text-amber-400 w-5 text-center"></i>
+                <span class="text-sm md:text-base">M3: Membuat Penilaian</span>
+            </button>
+
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Penilaian</div>
+            <button onclick="loadModule('ujian')" id="nav-ujian" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-trophy w-5 text-center text-yellow-400"></i>
+                <span class="text-sm md:text-base">Ujian Akhir (Boss)</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 relative overflow-y-auto h-full">
+        <!-- Toast Notification -->
+        <div id="toast" class="fixed top-5 right-5 z-50 transform transition-transform duration-300 translate-x-full bg-slate-800 border border-slate-600 px-4 py-3 md:px-6 md:py-4 rounded-lg shadow-xl flex items-center gap-3">
+            <i id="toast-icon" class="fas fa-check-circle text-green-400 text-lg md:text-xl"></i>
+            <div>
+                <h4 id="toast-title" class="font-bold text-white text-sm md:text-base">Berjaya!</h4>
+                <p id="toast-msg" class="text-xs md:text-sm text-slate-300">Jawapan anda tepat.</p>
+            </div>
+        </div>
+
+        <div id="content-area" class="max-w-5xl mx-auto p-4 md:p-8 pb-24 md:pb-20">
+            <!-- Content gets injected here -->
+        </div>
+    </main>
+
+    <script>
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleSidebar);
+        if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- State Management ---
+        let currentXP = 0;
+        const state = { m1_done: false, m2_done: false, m3_done: false, ujian_done: false };
+
+        function addXP(amount) {
+            currentXP += amount;
+            if (currentXP > 2500) currentXP = 2500;
+            document.getElementById('xp-counter').innerText = `${currentXP} / 2500`;
+            document.getElementById('xp-bar').style.width = `${(currentXP / 2500) * 100}%`;
+            
+            const counter = document.getElementById('xp-counter');
+            counter.classList.add('scale-125', 'text-white');
+            setTimeout(() => counter.classList.remove('scale-125', 'text-white'), 300);
+        }
+
+        function showToast(title, msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle text-green-400 text-xl';
+                toast.style.borderLeft = '4px solid #4ade80';
+            } else {
+                icon.className = 'fas fa-times-circle text-red-400 text-xl';
+                toast.style.borderLeft = '4px solid #f87171';
+            }
+
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => { toast.classList.add('translate-x-full'); }, 3000);
+        }
+
+        function updateNavActive(moduleId) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const activeBtn = document.getElementById(`nav-${moduleId}`);
+            if(activeBtn) activeBtn.classList.add('active');
+        }
+
+        function loadModule(moduleId) {
+            if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) {
+                toggleSidebar();
+            }
+
+            const container = document.getElementById('content-area');
+            updateNavActive(moduleId);
+            window.scrollTo(0, 0);
+            
+            let html = '';
+
+            switch (moduleId) {
+                case 'modul1':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-blue-500/20 text-blue-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">Langkah 1 & 2</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Mengenal Pasti Keperluan & Alternatif</h2>
+                            </div>
+                            
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-8 mb-8 text-slate-300 text-sm md:text-base leading-relaxed shadow-lg">
+                                <p class="mb-4">Berdasarkan Buku Teks KSSM, proses reka bentuk interaksi merangkumi <strong>4 langkah berurutan</strong>. Kita tidak terus mengekod aplikasi, sebaliknya kita mematuhi kitaran ini bagi mengelakkan kerugian kos dan masa.</p>
+
+                                <div class="space-y-6 mt-6">
+                                    <!-- Langkah 1 -->
+                                    <div class="bg-slate-900 border-l-4 border-blue-500 p-5 rounded-lg shadow-md">
+                                        <h4 class="text-blue-400 font-bold mb-2 text-lg">Langkah 1: Mengenal Pasti Keperluan Pengguna</h4>
+                                        <p class="text-sm text-slate-300 mb-3">Langkah pertama ialah kita mesti faham <strong>siapa</strong> pengguna kita dan <strong>apakah masalah</strong> yang mereka ingin selesaikan. Proses ini memerlukan kutipan data yang sahih.</p>
+                                        <ul class="text-xs text-slate-400 pl-8 list-disc space-y-1 mb-3">
+                                            <li><strong>Temu bual:</strong> Bersoal jawab secara bersemuka dengan sasaran pengguna.</li>
+                                            <li><strong>Borang soal selidik:</strong> Mengedar borang untuk mendapatkan respons dari kumpulan yang besar (kuantitatif).</li>
+                                            <li><strong>Pemerhatian:</strong> Memerhati cara pengguna melakukan tugas harian mereka secara fizikal untuk mengenal pasti kelemahan sistem sedia ada.</li>
+                                        </ul>
+                                    </div>
+
+                                    <!-- Langkah 2 -->
+                                    <div class="bg-slate-900 border-l-4 border-emerald-500 p-5 rounded-lg shadow-md">
+                                        <h4 class="text-emerald-400 font-bold mb-2 text-lg">Langkah 2: Membangunkan Reka Bentuk Alternatif</h4>
+                                        <p class="text-sm text-slate-300 mb-3">Selepas mendapat data (masalah), pereka perlu menjana cadangan idea bagi menyelesaikan masalah tersebut. Pada fasa ini, lebih dari satu idea (alternatif) dilakar.</p>
+                                        <ul class="text-xs text-slate-400 pl-8 list-disc space-y-1 mb-3">
+                                            <li>Pereka melukis <strong>Lakaran Kasar (Sketches)</strong> antaramuka menggunakan pensel dan kertas.</li>
+                                            <li>Membina <strong>Papan Cerita (Storyboard)</strong>: Satu siri lukisan berurutan yang menunjukkan aliran (flow) bagaimana pengguna bergerak dari satu skrin ke skrin yang lain. Ia seperti komik yang bercerita tentang penggunaan sistem.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6 shadow-lg">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4"><i class="fas fa-tasks text-blue-400 mr-2"></i>Uji Kefahaman (TP3)</h3>
+                                <p class="text-sm text-slate-300 mb-4">"Siti melukis beberapa siri kotak yang menunjukkan paparan skrin dari mula mendaftar (Login) sehinggalah ke skrin pembayaran resit berjaya, berserta anak panah aliran pergerakannya."<br><br>Apakah alat / instrumen reka bentuk yang sedang dihasilkan oleh Siti?</p>
+                                
+                                <div class="flex flex-col md:flex-row gap-3 mt-4">
+                                    <button onclick="checkM1('A')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded px-6 py-4 transition-colors text-sm font-semibold text-left shadow-sm">A) Papan Cerita (Storyboard)</button>
+                                    <button onclick="checkM1('B')" class="bg-slate-700 hover:bg-purple-600 hover:border-purple-500 border border-slate-600 text-white rounded px-6 py-4 transition-colors text-sm font-semibold shadow-sm text-left border-purple-500/30">B) Temu Bual Pemerhatian</button>
+                                    <button onclick="checkM1('C')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded px-6 py-4 transition-colors text-sm font-semibold text-left shadow-sm">C) Pengekodan Java</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul2':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-emerald-500/20 text-emerald-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">Langkah 3</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Membina Prototaip Interaktif</h2>
+                            </div>
+                            
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-8 mb-8 text-slate-300 text-sm md:text-base leading-relaxed shadow-lg">
+                                <p class="mb-4"><strong>Langkah 3: Membina Prototaip.</strong> Prototaip ialah model awal bagi antaramuka aplikasi sebelum ia diprogramkan secara sebenar. Ia membenarkan pihak klien merasai dan menekan antaramuka (secara lakonan/simulasi) untuk melihat logik navigasinya.</p>
+                                
+                                <h3 class="font-bold text-white text-xl mt-8 mb-4 border-b border-slate-700 pb-2">Dua Jenis Prototaip (Buku Teks)</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                                    <div class="bg-slate-900 border border-slate-700 p-5 rounded-lg">
+                                        <h4 class="text-amber-400 font-bold mb-2 text-lg">1. Prototaip Fideliti Rendah (Low-Fidelity)</h4>
+                                        <p class="text-xs text-slate-400 mb-3">Model asas yang pantas dibina tanpa menggunakan perisian komputer.</p>
+                                        <ul class="text-xs text-slate-300 list-disc pl-4 space-y-2">
+                                            <li>Dihasilkan menggunakan lakaran di atas <strong>kertas, papan putih, atau kadbod</strong>.</li>
+                                            <li><strong>Kelebihan:</strong> Sangat murah, pantas disediakan, dan mudah dipadam/diubah jika idea pelanggan sering berubah-ubah di peringkat awal.</li>
+                                            <li><strong>Kelemahan:</strong> Tidak nampak rupa sebenar aplikasi (tiada warna, tiada butang interaktif sebenar).</li>
+                                        </ul>
+                                    </div>
+                                    <div class="bg-slate-900 border border-slate-700 p-5 rounded-lg">
+                                        <h4 class="text-emerald-400 font-bold mb-2 text-lg">2. Prototaip Fideliti Tinggi (High-Fidelity)</h4>
+                                        <p class="text-xs text-slate-400 mb-3">Model interaktif yang dibangunkan menggunakan perisian aplikasi reka bentuk antaramuka komputer (cth: Figma, Adobe XD, HTML Mockup).</p>
+                                        <ul class="text-xs text-slate-300 list-disc pl-4 space-y-2">
+                                            <li>Kelihatan <strong>sama seperti produk akhir</strong> (ada warna, imej, font sebenar, dan butang boleh ditekan berpindah skrin).</li>
+                                            <li><strong>Kelebihan:</strong> Menjelaskan secara terperinci setiap elemen fungsi. Klien dapat gambaran penuh Pengalaman Pengguna (UX).</li>
+                                            <li><strong>Kelemahan:</strong> Memakan kos yang tinggi dan mengambil masa yang sangat lama untuk dibangunkan. Sukar dirombak jika klien tiba-tiba mahu menukar idea asas.</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6 shadow-lg">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4"><i class="fas fa-question-circle text-emerald-400 mr-2"></i>Uji Kefahaman Prototaip</h3>
+                                <p class="text-sm text-slate-300 mb-4">Syarikat X baru sahaja berjumpa dengan pelanggan untuk mesyuarat pertama. Idea pelanggan tersebut masih kabur dan mungkin akan berubah berkali-kali pada minggu ini. Apakah pendekatan prototaip yang PALING WAJAR digunakan oleh Syarikat X bagi menjimatkan kerugian wang?</p>
+                                
+                                <div class="flex flex-col gap-3 mt-4">
+                                    <button onclick="checkM2('A')" class="bg-slate-700 hover:bg-emerald-600 hover:border-emerald-500 border border-slate-600 text-white rounded px-4 py-4 transition-colors text-sm text-left shadow-sm font-semibold border-emerald-500/30">A) Menggunakan lakaran Kertas (Low-Fidelity) kerana ia murah dan mudah diubah serta-merta mengikut idea pelanggan semasa mesyuarat.</button>
+                                    <button onclick="checkM2('B')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded px-4 py-4 transition-colors text-sm text-left shadow-sm">B) Membina sistem penuh menggunakan perisian komputer (High-Fidelity) supaya pelanggan terus kagum.</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul3':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-amber-500/20 text-amber-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">Langkah 4</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Membuat Penilaian Reka Bentuk</h2>
+                            </div>
+                            
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-8 mb-8 text-slate-300 text-sm md:text-base leading-relaxed shadow-lg">
+                                <p class="mb-4"><strong>Langkah 4: Membuat Penilaian.</strong> Apabila prototaip siap dibina, ia perlu dinilai. Ini adalah fasa terakhir dalam proses reka bentuk interaksi sebelum rekaan itu diserahkan kepada jurutera perisian untuk dikodkan (coding) sepenuhnya.</p>
+                                
+                                <div class="bg-slate-900 border-l-4 border-amber-500 p-5 rounded-lg mb-6">
+                                    <h4 class="text-amber-400 font-bold mb-2">Tujuan Penilaian (Usability Testing):</h4>
+                                    <ul class="text-sm text-slate-400 list-disc pl-5 space-y-2">
+                                        <li>Mengenal pasti sebarang masalah <strong>sebelum sistem sebenar dibangunkan</strong> (lebih jimat membaiki lakaran berbanding membaiki kod yang sudah ditaip berbulan lamanya).</li>
+                                        <li>Memastikan reka bentuk memenuhi <strong>keperluan pengguna asal</strong>.</li>
+                                        <li>Menilai kepatuhan prototaip terhadap 5 prinsip asas IMK (Konsistensi, Maklum Balas, dll).</li>
+                                    </ul>
+                                </div>
+
+                                <h3 class="font-bold text-white text-lg mb-3">Siapakah yang melakukan Penilaian?</h3>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div class="bg-slate-800 border border-slate-600 p-4 rounded text-sm">
+                                        <span class="text-purple-400 font-bold block mb-1">1. Pengguna Akhir (End-Users)</span>
+                                        Kumpulan sasaran sebenar. Mereka diberi tugas tertentu (cth: "Sila cari borang daftar") dan pihak penilai akan memerhatikan sejauh mana kelancaran mereka.
+                                    </div>
+                                    <div class="bg-slate-800 border border-slate-600 p-4 rounded text-sm">
+                                        <span class="text-blue-400 font-bold block mb-1">2. Pakar IMK (Heuristics)</span>
+                                        Pakar reka bentuk akan meneliti prototaip tersebut bagi memastikan setiap inci antaramuka mematuhi prinsip standard reka bentuk komputer.
+                                    </div>
+                                </div>
+                                <p class="text-xs text-slate-500 mt-4 italic">*Nota Kitaran Berulang (Iterative): Jika hasil penilaian mendapati masih terdapat kelemahan, proses ini akan berpatah balik ke Langkah 2 (Alternatif) sehinggalah prototaip tersebut menjadi sempurna.</p>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6 shadow-lg">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4"><i class="fas fa-brain text-amber-400 mr-2"></i>Uji Analisis (KBAT)</h3>
+                                <p class="text-sm text-slate-300 mb-4">Mengapakah ujian kebolehgunaan (Usability Testing) wajib dilakukan ke atas <strong>Prototaip</strong> berbanding menunggu sistem perisian (coding) siap sepenuhnya baru dinilai?</p>
+                                
+                                <div class="flex flex-col gap-3 mt-4">
+                                    <button onclick="checkM3('A')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded px-5 py-4 transition-colors text-sm text-left shadow-sm">A) Kerana pengekodan komputer tiada kaitan dengan reka bentuk visual.</button>
+                                    <button onclick="checkM3('B')" class="bg-slate-700 hover:bg-amber-600 hover:border-amber-500 border border-slate-600 text-white rounded px-5 py-4 transition-colors text-sm text-left shadow-sm font-semibold border-amber-500/30">B) Kerana membaiki ralat antaramuka pada fasa prototaip (kertas/Figma) adalah sangat murah dan pantas berbanding membuang dan menaip semula ribuan baris kod komputer yang telah dibina.</button>
+                                    <button onclick="checkM3('C')" class="bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded px-5 py-4 transition-colors text-sm text-left shadow-sm">C) Kerana pengguna tidak reti menggunakan perisian kod sebenar.</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'ujian':
+                    // Generating 30 robust textbook-oriented questions for Topic 3.2
+                    let quizQuestions = ``;
+                    
+                    const qs = [
+                        // Proses 1 & 2 (1-10)
+                        {q: "Apakah 4 langkah utama dalam proses reka bentuk interaksi mengikut urutan yang betul?", opts: ["A|Kumpul Data -> Kod -> Lakar -> Jual", "B|Mengenal pasti keperluan -> Bangun alternatif -> Bina prototaip -> Buat penilaian"], ans: "B"},
+                        {q: "Langkah pertama, 'Mengenal pasti keperluan pengguna', sangat penting supaya...", opts: ["A|Pembangun mengetahui siapa pengguna sasaran dan apa masalah sebenar yang perlu diselesaikan", "B|Pembangun dapat memilih warna font yang cantik"], ans: "A"},
+                        {q: "Kaedah manakah yang BUKAN sebahagian daripada proses mengumpul data keperluan pengguna (Langkah 1)?", opts: ["A|Temu bual dan Pemerhatian", "B|Mengekod pangkalan data SQL"], ans: "B"},
+                        {q: "Selepas data dan keperluan diketahui, pereka akan beralih ke Langkah 2 iaitu...", opts: ["A|Membangunkan reka bentuk alternatif", "B|Melancarkan sistem ke pasaran"], ans: "A"},
+                        {q: "Mengapakah kita perlu membangunkan 'alternatif' (beberapa pilihan idea) dan bukannya berpuas hati dengan satu idea sahaja?", opts: ["A|Untuk mendapatkan perbandingan penyelesaian yang terbaik sebelum membuat keputusan", "B|Untuk memanjangkan masa bekerja"], ans: "A"},
+                        {q: "Apakah yang dimaksudkan dengan Papan Cerita (Storyboard) dalam konteks antaramuka aplikasi?", opts: ["A|Satu siri lakaran berurutan yang menunjukkan aliran (flow) bagaimana pengguna bergerak dari skrin ke skrin semasa menyelesaikan tugasan", "B|Sebuah buku cerita kanak-kanak yang dianimasikan"], ans: "A"},
+                        {q: "Papan Cerita (Storyboard) amat berkesan untuk menyampaikan...", opts: ["A|Pengalaman logik navigasi dan tindakan interaktif pengguna dalam sistem", "B|Jumlah baris kod Java yang akan ditulis"], ans: "A"},
+                        {q: "Siti menemu bual pekerja pejabat untuk mengetahui kesukaran mereka mendaftar cuti. Siti berada di fasa...", opts: ["A|Langkah 1 (Keperluan pengguna)", "B|Langkah 4 (Penilaian)"], ans: "A"},
+                        {q: "Ahmad sedang melukis 3 pilihan rupa bentuk berbeza bagi aplikasi Kalkulator. Ahmad berada di fasa...", opts: ["A|Langkah 2 (Alternatif)", "B|Langkah 3 (Prototaip)"], ans: "A"},
+                        {q: "Kegagalan mengutip data dengan betul pada Langkah 1 akan menyebabkan...", opts: ["A|Sistem yang dibina nanti (walaupun canggih) tidak menyelesaikan masalah pengguna sebenar (Syok sendiri)", "B|Bateri komputer menjadi cepat habis"], ans: "A"},
+
+                        // Proses 3: Prototaip (11-20)
+                        {q: "Apakah itu Prototaip (Prototype)?", opts: ["A|Model awal atau replika interaktif bagi produk akhir yang digunakan untuk tujuan pengujian", "B|Perisian antivirus komputer"], ans: "A"},
+                        {q: "Prototaip Fideliti Rendah (Low-Fidelity) kebiasaannya dibina menggunakan...", opts: ["A|Kertas, pensel, kadbod, dan nota pelekat (sticky notes)", "B|Perisian enjin permainan 3D yang mahal"], ans: "A"},
+                        {q: "Kebaikan utama menggunakan Prototaip Fideliti Rendah (Kertas) ialah...", opts: ["A|Ia sangat murah, pantas disediakan, dan sangat mudah untuk dipadam atau diubah suai sekiranya pelanggan ingin menukar idea", "B|Ia kelihatan 100% sama dengan produk siap dengan kod berwarna"], ans: "A"},
+                        {q: "Apabila idea klien sering berubah-ubah di peringkat awal perbincangan, jenis prototaip manakah yang paling sesuai?", opts: ["A|Fideliti Rendah (Kertas)", "B|Fideliti Tinggi (Perisian Canggih)"], ans: "A"},
+                        {q: "Prototaip Fideliti Tinggi (High-Fidelity) pula bermaksud...", opts: ["A|Model interaktif yang dibangunkan menggunakan perisian (software), mempunyai warna, butang yang boleh diklik dan kelihatan hampir mirip dengan produk siap", "B|Lakaran ringkas di papan putih kelas"], ans: "A"},
+                        {q: "Kelemahan utama Prototaip Fideliti Tinggi (High-Fidelity) adalah...", opts: ["A|Ia memakan masa yang lama untuk dibina dan menelan kos pembangunan yang tinggi", "B|Ia tidak boleh memaparkan warna dan teks"], ans: "A"},
+                        {q: "Perisian manakah yang popular digunakan oleh pereka antaramuka untuk membina Prototaip Fideliti Tinggi (Mockup/Wireframing)?", opts: ["A|Figma, Adobe XD, atau Balsamiq", "B|Notepad dan Microsoft Word"], ans: "A"},
+                        {q: "Apakah perbezaan utama antara 'Prototaip Perisian (Hi-Fi)' dengan 'Produk Siap'?", opts: ["A|Prototaip Perisian hanya 'lakonan' antaramuka grafik yang boleh diklik, tetapi ia tidak mempunyai pangkalan data atau kod pelayan (backend) sebenar di belakangnya", "B|Produk siap dibuat dari kertas, prototaip dari besi"], ans: "A"},
+                        {q: "Bagi mendapat maklum balas mengenai 'rasa dan warna' (look and feel) akhir dari pelabur (investor), prototaip manakah yang sesuai dipaparkan?", opts: ["A|Fideliti Tinggi (Perisian)", "B|Fideliti Rendah (Kertas)"], ans: "A"},
+                        {q: "Proses membina prototaip adalah penting dalam kitaran pembangunan perisian untuk mematuhi prinsip...", opts: ["A|Reka Bentuk Berpusatkan Pengguna (User-Centered Design) yang memerlukan maklum balas pengujian awal", "B|Bentuk Normal Pertama (1NF) pangkalan data"], ans: "A"},
+
+                        // Proses 4: Penilaian & KBAT Aplikasi Reka Bentuk (21-30)
+                        {q: "Apakah tujuan utama Langkah 4: Membuat Penilaian?", opts: ["A|Untuk menguji prototaip, mengenal pasti isu kebolehgunaan, dan memastikan ia mematuhi 5 prinsip asas reka bentuk", "B|Untuk meletakkan harga pada perisian tersebut"], ans: "A"},
+                        {q: "Siapakah yang paling ideal untuk melakukan Penilaian Kebolehgunaan (Usability Testing)?", opts: ["A|Pengguna akhir sasaran (End-Users) dan Pakar Reka Bentuk (Heuristic Evaluators)", "B|Hanya jurutera pangkalan data yang mahir komputer"], ans: "A"},
+                        {q: "Mengapakah proses Reka Bentuk Interaksi dipanggil proses 'Kitaran Berulang' (Iterative Process)?", opts: ["A|Kerana jika penilaian mendapati masalah, proses akan berpatah balik (ulang) ke fasa merombak prototaip sehinggalah produk itu lulus ujian sepenuhnya", "B|Kerana pengguna menggunakan perisian tersebut setiap hari secara berulang-ulang"], ans: "A"},
+                        {q: "KBAT (TP4): Mengapakah Penilaian dijalankan di peringkat PROTOTAIP, dan tidak ditangguhkan sehingga sistem siap dikodkan sepenuhnya oleh programmer?", opts: ["A|Mengenal pasti dan membaiki ralat lakaran skrin adalah jauh lebih murah berbanding merombak keseluruhan ribuan kod pangkalan data yang telah siap ditulis", "B|Kerana programmer tidak tahu cara menilai antaramuka"], ans: "A"},
+                        {q: "Semasa penilaian antaramuka, pengguna dikesan asyik terlepas pandang butang 'Checkout'. Pereka mendapati saiz butang itu terlalu kecil dan warnanya pudar. Prinsip apakah yang dinilai gagal di sini?", opts: ["A|Kebolehan Memerhati (Visibility)", "B|Konsistensi (Consistency)"], ans: "A"},
+                        {q: "KBAT (TP5): Bagi membina aplikasi maklumat farmasi untuk golongan warga emas, pemilihan prototaip harus menekankan aspek antaramuka (UI) yang...", opts: ["A|Mempunyai teks bersaiz besar, kontras yang sangat tinggi, dan mengelakkan ikon kecil yang rumit", "B|Mempunyai animasi bergerak laju dan warna neon berkelip-kelip"], ans: "A"},
+                        {q: "Reka letak skrin (Screen Layout) yang berkesan haruslah menitikberatkan elemen 'Ruang Putih' (White space / Negative space). Apakah fungsi ruang putih ini?", opts: ["A|Memberikan ruang rehat pada mata dan mengelakkan paparan menjadi terlalu padat (cluttered) lantas meningkatkan prinsip Visibility", "B|Untuk menjimatkan dakwat semasa pengguna mencetak skrin tersebut"], ans: "A"},
+                        {q: "KBAT (TP6): Anda dapati susunan borang log masuk (Login) aplikasi anda berselerak: Kotak ID di atas kiri, kotak Password di bawah kanan. Apakah cadangan reka bentuk anda?", opts: ["A|Mengumpulkan (Grouping) label dan kotak teks menggunakan penjajaran (Alignment) secara menegak yang rapi dan logik di tengah skrin", "B|Menukarkan warna kotak tersebut kepada hitam"], ans: "A"},
+                        {q: "Semasa ujian penilaian, pengguna tidak menyedari skrin telah berpindah ke halaman seterusnya kerana tiada perubahan tajuk yang jelas. Ralat maklumat status ini menjejaskan prinsip...", opts: ["A|Maklum Balas (Feedback)", "B|Boleh Dipelajari (Learnability)"], ans: "A"},
+                        {q: "Secara rumusannya, 4 Proses Reka Bentuk Interaksi memastikan bahawa produk komputer yang dihasilkan...", opts: ["A|Bukan sekadar berfungsi secara teknikal, tetapi memberikan Pengalaman Pengguna (UX) yang optimum, relevan dengan keperluan sebenar dan bebas dari isu kebolehgunaan", "B|Boleh dijual di luar negara tanpa membayar lesen perisian"], ans: "A"}
+                    ];
+
+                    qs.forEach((item, index) => {
+                        let optHTML = '';
+                        item.opts.forEach(opt => {
+                            let val = opt.split('|')[0];
+                            let text = opt.split('|')[1];
+                            optHTML += `<label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer hover:bg-slate-700/50 transition-colors"><input type="radio" name="uq${index+1}" value="${val}" class="mt-1 flex-shrink-0 cursor-pointer focus:ring-purple-500 text-purple-500"><span class="text-slate-300 text-sm md:text-base">${text}</span></label>`;
+                        });
+
+                        quizQuestions += `
+                        <div class="bg-slate-900/50 p-4 rounded-xl border border-slate-700/50">
+                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base"><span class="text-purple-400 mr-2">${index+1}.</span> ${item.q}</p>
+                            <div class="space-y-2 pl-4">
+                                ${optHTML}
+                            </div>
+                        </div>`;
+                    });
+
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-yellow-500/20 text-yellow-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold"><i class="fas fa-trophy mr-2"></i>BOSS</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white">Ujian Akhir (Boss)</h2>
+                            </div>
+                            
+                            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-5 md:p-8 shadow-2xl relative overflow-hidden">
+                                <div class="relative z-10">
+                                    <h3 class="text-lg md:text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4 flex justify-between items-center">
+                                        <span>Ujian Penilaian Akhir Topik 3.2</span>
+                                        <span class="text-sm font-normal text-purple-400 bg-purple-900/30 px-3 py-1 rounded-full">30 Soalan KBAT</span>
+                                    </h3>
+                                    
+                                    <div class="space-y-6">
+                                        ${quizQuestions}
+                                    </div>
+
+                                    <div class="mt-10 pt-6 border-t border-slate-700">
+                                        <button onclick="checkUjian()" class="w-full bg-gradient-to-r from-purple-500 to-fuchsia-500 hover:from-purple-600 hover:to-fuchsia-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-purple-900/20 transform transition hover:-translate-y-1"><i class="fas fa-paper-plane mr-2"></i> Hantar Jawapan Akhir</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // --- Evaluators ---
+        function checkM1(val) {
+            if (val === 'A') {
+                if(!state.m1_done) { addXP(250); state.m1_done = true; }
+                showToast("Tepat!", "Melukis kotak skrin secara berurutan bersama aliran tindakan dipanggil Papan Cerita (Storyboard), ia sangat berguna dalam menjana reka bentuk alternatif.");
+            } else {
+                showToast("Salah", "Pengekodan tidak berlaku di fasa perancangan idea. Sila cuba lagi.", "error");
+            }
+        }
+
+        function checkM2(val) {
+            if (val === 'A') {
+                if(!state.m2_done) { addXP(250); state.m2_done = true; }
+                showToast("Tepat Sekali (TP4)!", "Prototaip Kertas (Low-Fi) sangat sesuai jika idea sentiasa berubah kerana kita boleh memadam dan membuang lakaran kertas dengan pantas tanpa kerugian ribuan ringgit kos pembinaan perisian.");
+            } else {
+                showToast("Tidak Tepat", "Membina sistem penuh memakan masa berminggu-minggu lamanya dan sangat mahal untuk diubah kembali. Pilih kaedah yang murah untuk peringkat draf.", "error");
+            }
+        }
+
+        function checkM3(val) {
+            if (val === 'B') {
+                if(!state.m3_done) { addXP(250); state.m3_done = true; }
+                showToast("Cemerlang (TP5)!", "Kos untuk membetulkan rekaan kotak lakaran adalah 'Sifar' berbanding jika kita sedar ralat itu wujud setelah sistem pangkalan data SQL disiapkan. Inilah tujuan penilaian prototaip!");
+            } else {
+                showToast("Salah", "Sila pertimbangkan dari segi pengurusan masa dan kos pembinaan sistem komputer.", "error");
+            }
+        }
+
+        function checkUjian() {
+            // Skema 30 Soalan Berpusatkan Buku Teks KSSM Topik 3.2
+            const masterAnswers = [
+                'B','A','B','A','A','A','A','A','A','A', // 1-10
+                'A','A','A','A','A','A','A','A','A','A', // 11-20
+                'A','A','A','A','A','A','A','A','A','A'  // 21-30
+            ]; 
+
+            let allAnswered = true, allCorrect = true;
+
+            for (let i = 1; i <= 30; i++) {
+                const q = document.querySelector(`input[name="uq${i}"]:checked`);
+                if (!q) { allAnswered = false; break; }
+                if (q.value !== masterAnswers[i-1]) { allCorrect = false; }
+            }
+
+            if (!allAnswered) {
+                showToast("Perhatian", "Sila jawab kesemua 30 soalan Ujian Akhir (Boss) untuk pengesahan markah.", "error"); 
+                return;
+            }
+
+            if (allCorrect) {
+                if(!state.ujian_done) { addXP(1750); state.ujian_done = true; }
+                document.getElementById('content-area').innerHTML = `
+                    <div class="animate-fade-in text-center pt-10 md:pt-20 pb-20">
+                        <i class="fas fa-medal text-7xl md:text-9xl text-purple-500 mb-8 drop-shadow-[0_0_30px_rgba(168,85,247,0.5)]"></i>
+                        <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Tahniah! Anda Lulus Cemerlang 30 Soalan!</h1>
+                        <p class="text-sm md:text-xl text-slate-300 max-w-2xl mx-auto px-4 leading-relaxed">Syabas! Anda telah menguasai 4 Langkah Proses Reka Bentuk Interaksi dan Prototaip secara profesional. Dengan ini, anda telah melengkapkan Bab Interaksi Manusia dan Komputer (IMK) Tingkatan 4!</p>
+                        <p class="mt-8 text-xl md:text-2xl font-bold text-purple-400">Total XP: ${currentXP}</p>
+                        <div class="mt-12">
+                            <a href="index.html" class="inline-block bg-purple-600 hover:bg-purple-500 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-sm md:text-lg transition-colors shadow-lg shadow-purple-900/50">
+                                <i class="fas fa-home mr-2"></i> Kembali ke Portal Utama
+                            </a>
+                        </div>
+                    </div>
+                `;
+                window.scrollTo(0, 0);
+            } else {
+                showToast("Gagal", "Terdapat jawapan yang salah di dalam 30 soalan tersebut. Sila semak nota di modul dan cuba lagi.", "error");
+            }
+        }
+
+        window.onload = () => { loadModule('modul1'); };
+    </script>
+</body>
+</html>
