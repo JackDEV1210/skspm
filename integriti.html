@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografik: Integriti Data KSSM Sains Komputer</title>
+    <!-- Palette: Energetic & Playful (Orange #FF6B35, Navy #004E89, Azure #00B4D8, Yellow #F7C59F, White #F7F7F7) -->
+    <!-- CONFIRMATION: NEITHER Mermaid JS NOR SVG were used anywhere in the output. -->
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #F7F7F7; color: #1a1a1a; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        .card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); padding: 1.5rem; transition: all 0.3s ease; break-inside: avoid; }
+        .accent-gradient { background: linear-gradient(135deg, #FF6B35 0%, #004E89 100%); }
+        .data-chip { padding: 2px 8px; border-radius: 4px; font-family: monospace; font-size: 0.7rem; font-weight: bold; }
+
+        /* Konfigurasi Cetakan Poster A2 - Satu Muka Surat */
+        @media print {
+            @page {
+                size: A2 landscape;
+                margin: 1cm;
+            }
+            html, body { 
+                height: 100%;
+                background-color: white !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact;
+            }
+            .no-print { display: none !important; }
+            main { 
+                margin-top: 0 !important; 
+                padding-bottom: 0 !important; 
+                max-width: 100% !important; 
+                width: 100% !important;
+            }
+            header { 
+                padding-top: 2rem !important; 
+                padding-bottom: 2rem !important; 
+            }
+            .card { 
+                box-shadow: none !important; 
+                border: 1px solid #e2e8f0 !important; 
+            }
+            /* Memastikan grid kekal dalam satu muka surat */
+            .grid { gap: 1rem !important; }
+            .lg\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+            footer { display: none !important; }
+        }
+
+        .print-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 100;
+            background: #FF6B35;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.4);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .print-btn:hover { transform: scale(1.1); background: #e85a2a; }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Butang Cetak -->
+    <div class="print-btn no-print" onclick="window.print()" title="Cetak Format Poster A2">
+        <span class="text-2xl">&#128424;</span>
+    </div>
+
+    <nav class="sticky top-0 z-50 bg-[#004E89] text-white p-4 shadow-md no-print">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <span class="font-extrabold tracking-tighter text-xl uppercase">Sains Komputer KSSM T5</span>
+            <div class="px-4 py-1 rounded-full border border-[#00B4D8] text-[#00B4D8] text-xs font-bold uppercase tracking-widest">Integriti Data</div>
+        </div>
+    </nav>
+
+    <header class="accent-gradient text-white py-16 px-6 text-center shadow-lg">
+        <h1 class="text-5xl md:text-7xl font-extrabold mb-4 tracking-tight uppercase">Integriti Data</h1>
+        <p class="text-xl md:text-2xl font-light max-w-4xl mx-auto opacity-90 italic">
+            Panduan Visual Komprehensif Berdasarkan Sukatan KSSM Sains Komputer Tingkatan 5
+        </p>
+    </header>
+
+    <main class="max-w-[1400px] mx-auto px-6 -mt-10 pb-12">
+
+        <!-- Definisi Teras -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <div class="card border-t-8 border-[#FF6B35]">
+                <div class="text-5xl mb-4">&#9989;</div>
+                <h3 class="text-2xl font-bold text-[#004E89] mb-2">Ketepatan</h3>
+                <p class="text-sm text-gray-600 leading-relaxed">Memastikan data yang dimasukkan adalah betul, sah, dan bebas daripada ralat manusia atau sistem.</p>
+            </div>
+            <div class="card border-t-8 border-[#00B4D8]">
+                <div class="text-5xl mb-4">&#128260;</div>
+                <h3 class="text-2xl font-bold text-[#004E89]">Kekalan</h3>
+                <p class="text-sm text-gray-600 leading-relaxed">Data mestilah konsisten (tetap) dan tidak berubah secara rawak tanpa kawalan keselamatan yang betul.</p>
+            </div>
+            <div class="card border-t-8 border-[#F7C59F]">
+                <div class="text-5xl mb-4">&#128721;</div>
+                <h3 class="text-2xl font-bold text-[#004E89]">Kebolehpercayaan</h3>
+                <p class="text-sm text-gray-600 leading-relaxed">Menjamin data sentiasa sedia untuk digunakan bagi menghasilkan laporan yang boleh dipercayai.</p>
+            </div>
+        </section>
+
+        <!-- 3 Jenis Integriti Utama -->
+        <section class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-extrabold text-[#004E89] uppercase tracking-wide">3 Komponen Integriti Utama</h2>
+                <div class="h-1 w-24 bg-[#FF6B35] mx-auto mt-2"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div class="card bg-gray-50/50">
+                    <h4 class="text-center font-bold text-gray-700 mb-6 uppercase text-sm tracking-widest">Pecahan Mekanisme Kawalan</h4>
+                    <div class="chart-container">
+                        <canvas id="integrityDonut"></canvas>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 gap-4">
+                    <div class="p-6 rounded-2xl bg-[#FF6B35]/10 border-l-8 border-[#FF6B35] shadow-sm">
+                        <h4 class="font-extrabold text-[#FF6B35] text-lg uppercase">1. Integriti Entiti</h4>
+                        <p class="text-sm text-gray-700 mt-2">Menggunakan **Kunci Utama (Primary Key)** yang unik. Menjamin setiap rekod dalam jadual boleh dikenal pasti secara spesifik dan tidak boleh bernilai NULL.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-[#004E89]/10 border-l-8 border-[#004E89] shadow-sm">
+                        <h4 class="font-extrabold text-[#004E89] text-lg uppercase">2. Integriti Rujukan</h4>
+                        <p class="text-sm text-gray-700 mt-2">Menggunakan **Kunci Asing (Foreign Key)**. Memastikan hubungan antara dua jadual adalah sah; nilai kunci asing mesti wujud dalam kunci utama jadual induk.</p>
+                    </div>
+                    <div class="p-6 rounded-2xl bg-[#00B4D8]/10 border-l-8 border-[#00B4D8] shadow-sm">
+                        <h4 class="font-extrabold text-[#00B4D8] text-lg uppercase">3. Integriti Domain</h4>
+                        <p class="text-sm text-gray-700 mt-2">Menetapkan had atau **Jenis Data** pada setiap medan. Menjamin input mematuhi julat, format, dan kriteria yang sah (Contoh: Jantina L/P sahaja).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Katalog Contoh: Integriti Domain (16 Contoh) -->
+        <section class="mb-12">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-extrabold text-[#004E89] uppercase tracking-wide">Katalog Contoh: Integriti Domain</h2>
+                <p class="text-gray-500 mt-2">Penerapan kawalan input dalam pelbagai sektor industri dunia sebenar.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <!-- Row 1 -->
+                <div class="card border border-gray-100 flex flex-col hover:border-[#FF6B35]">
+                    <h4 class="font-bold text-[#004E89] mb-1">1. Perbankan</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Baki akaun tidak boleh negatif bagi akaun simpanan.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">RM 15.00</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">RM -10.00</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#FF6B35]">
+                    <h4 class="font-bold text-[#004E89] mb-1">2. Pendidikan</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Markah peperiksaan mestilah dalam julat 0 hingga 100.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">88</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">105</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#FF6B35]">
+                    <h4 class="font-bold text-[#004E89] mb-1">3. Kesihatan</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Suhu badan manusia mestilah antara 35°C - 45°C.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">36.8°C</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">25.0°C</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#FF6B35]">
+                    <h4 class="font-bold text-[#004E89] mb-1">4. Pendaftaran</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Medan jantina hanya menerima aksara 'L' atau 'P'.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">L</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">X</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+
+                <!-- Row 2 -->
+                <div class="card border border-gray-100 flex flex-col hover:border-[#004E89]">
+                    <h4 class="font-bold text-[#004E89] mb-1">5. Pos Malaysia</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Poskod di Malaysia mestilah tepat mengandungi 5 digit.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">50480</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">5048</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#004E89]">
+                    <h4 class="font-bold text-[#004E89] mb-1">6. Komunikasi</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">E-mel mestilah mengandungi simbol '@' dan domain sah.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">ali@gmail.com</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">ali_gmail.com</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#004E89]">
+                    <h4 class="font-bold text-[#004E89] mb-1">7. Perpustakaan</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Tarikh pulangan buku mestilah selepas tarikh pinjam.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">2026-04-10</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">2026-03-01</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#004E89]">
+                    <h4 class="font-bold text-[#004E89] mb-1">8. Inventori</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Kuantiti stok barangan tidak boleh kurang daripada 0.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">50 Unit</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">-5 Unit</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+
+                <!-- Row 3 -->
+                <div class="card border border-gray-100 flex flex-col hover:border-[#00B4D8]">
+                    <h4 class="font-bold text-[#004E89] mb-1">9. JPN (MyKad)</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Nombor kad pengenalan mestilah mengandungi 12 digit.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">080512101234</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">08051210123</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#00B4D8]">
+                    <h4 class="font-bold text-[#004E89] mb-1">10. Pengurusan Masa</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Waktu bekerja mestilah dalam format 24 jam (00:00-23:59).</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">08:30</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">25:00</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#00B4D8]">
+                    <h4 class="font-bold text-[#004E89] mb-1">11. E-Marketplace</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Rating produk hanya boleh diberikan nilai antara 1 hingga 5.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">5</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">0</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#00B4D8]">
+                    <h4 class="font-bold text-[#004E89] mb-1">12. Sains Data</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Nilai peratusan (%) mestilah tidak melebihi nilai 100.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">99%</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">120%</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+
+                <!-- Row 4 -->
+                <div class="card border border-gray-100 flex flex-col hover:border-[#F7C59F]">
+                    <h4 class="font-bold text-[#004E89] mb-1">13. Perkhidmatan Kecemasan</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Hanya menerima kod kecemasan 999 atau 112.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">999</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">911</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#F7C59F]">
+                    <h4 class="font-bold text-[#004E89] mb-1">14. Retail</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Harga barangan (Price) mestilah lebih tinggi daripada RM 0.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">RM 1.50</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">RM 0.00</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#F7C59F]">
+                    <h4 class="font-bold text-[#004E89] mb-1">15. Media Sosial</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Kata laluan mestilah mengandungi minimum 8 aksara.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">P@ssword123</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">12345</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+                <div class="card border border-gray-100 flex flex-col hover:border-[#F7C59F]">
+                    <h4 class="font-bold text-[#004E89] mb-1">16. Perfileman</h4>
+                    <p class="text-[11px] text-gray-500 mb-4 leading-snug">Umur penonton bagi klasifikasi 18+ mestilah ≥ 18 tahun.</p>
+                    <div class="mt-auto space-y-1">
+                        <div class="flex justify-between text-[10px]"><span class="bg-green-100 text-green-700 data-chip">20 Tahun</span><span class="text-green-600 font-bold">&#10004; SAH</span></div>
+                        <div class="flex justify-between text-[10px]"><span class="bg-red-100 text-red-700 data-chip">15 Tahun</span><span class="text-red-600 font-bold">&#10008; RALAT</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Integriti Rujukan: Visualisasi PK & FK -->
+        <section class="mb-12">
+            <div class="card bg-[#004E89] text-white p-10 border-none shadow-2xl">
+                <h2 class="text-3xl font-extrabold mb-6 text-center uppercase tracking-widest">Visualisasi Integriti Rujukan</h2>
+                <p class="text-center text-blue-100 text-sm mb-10 max-w-3xl mx-auto italic">Mekanisme Kunci Asing (FK) memastikan setiap rujukan dalam pangkalan data hubungan adalah sah dan konsisten mengikut Kunci Utama (PK) jadual induk.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+                    <div class="bg-white rounded-2xl p-6 text-gray-800 shadow-inner">
+                        <div class="bg-[#004E89] text-white text-xs font-bold p-2 rounded-lg mb-4 text-center tracking-widest uppercase">Jadual KELAS (Induk)</div>
+                        <table class="w-full text-xs text-left">
+                            <thead class="bg-gray-100 border-b">
+                                <tr><th class="p-3 font-bold text-[#FF6B35]">id_kelas (PK)</th><th class="p-3">nama_kelas</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b"><td class="p-3 font-extrabold text-[#FF6B35]">K01</td><td class="p-3">5 Sains 1</td></tr>
+                                <tr><td class="p-3 font-extrabold text-[#FF6B35]">K02</td><td class="p-3">5 Sains 2</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-6 text-gray-800 shadow-inner relative">
+                        <!-- Unicode Arrow visual enhancement -->
+                        <div class="bg-[#FF6B35] text-white text-xs font-bold p-2 rounded-lg mb-4 text-center tracking-widest uppercase">Jadual MURID (Anak)</div>
+                        <table class="w-full text-xs text-left">
+                            <thead class="bg-gray-100 border-b">
+                                <tr><th class="p-3">id_murid</th><th class="p-3">nama</th><th class="p-3 font-extrabold text-[#FF6B35]">id_kelas (FK)</th></tr>
+                            </thead>
+                            <tbody>
+                                <tr class="border-b"><td class="p-3">M101</td><td class="p-3">Adam</td><td class="p-3 font-bold bg-orange-50 text-[#FF6B35]">K01</td></tr>
+                                <tr><td class="p-3">M102</td><td class="p-3">Sarah</td><td class="p-3 font-bold bg-orange-50 text-[#FF6B35]">K01</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Anomali Data Section -->
+        <section class="mb-12">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl font-extrabold text-[#004E89] uppercase tracking-wide">Kesan Kegagalan: Anomali Data</h2>
+                <p class="text-gray-500 mt-2">Masalah kritikal yang berlaku apabila pangkalan data tidak ternormal dan integriti data diabaikan.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                <div class="card bg-white p-8">
+                    <h4 class="text-center font-bold text-gray-700 mb-8 uppercase text-sm tracking-widest">Analisis Kekerapan Anomali</h4>
+                    <div class="chart-container">
+                        <canvas id="anomalyBar"></canvas>
+                    </div>
+                </div>
+
+                <div class="flex flex-col justify-center space-y-4">
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <h5 class="font-extrabold text-[#FF6B35] text-lg mb-2">Anomali Sisipan (Insertion)</h5>
+                        <p class="text-sm text-gray-600">Berlaku apabila rekod baharu tidak dapat dimasukkan kerana data berkaitan tidak wujud dalam pangkalan data.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <h5 class="font-extrabold text-[#004E89] text-lg mb-2">Anomali Pemadaman (Deletion)</h5>
+                        <p class="text-sm text-gray-600">Kehilangan data yang masih diperlukan secara tidak sengaja apabila maklumat lain yang berkaitan dipadamkan.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm">
+                        <h5 class="font-extrabold text-[#00B4D8] text-lg mb-2">Anomali Kemas Kini (Update)</h5>
+                        <p class="text-sm text-gray-600">Ketidakkonsistenan data yang berlaku apabila maklumat diubah pada satu tempat tetapi tidak pada rujukan lain.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analisis Risiko Plotly -->
+        <section class="mb-12">
+            <div class="card p-10 bg-white">
+                <h2 class="text-2xl font-bold text-[#004E89] mb-4 text-center uppercase">Analisis Risiko Kehilangan Integriti</h2>
+                <p class="text-center text-sm text-gray-500 mb-10 max-w-2xl mx-auto">Graf sebaran ini menunjukkan hubung kait antara kekerapan input manual dengan risiko kegagalan kualiti data dalam sistem.</p>
+                <div id="riskScatter" class="w-full h-[400px]"></div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-100 py-12 text-center text-gray-400 text-xs no-print">
+        <p class="font-bold text-[#004E89] mb-2 uppercase tracking-widest">Sains Komputer KSSM Tingkatan 5</p>
+        <p>Integriti Data: Ketepatan, Kekalan, dan Kebolehpercayaan Maklumat.</p>
+    </footer>
+
+    <script>
+        // --- CHART.JS CONFIGURATION ---
+
+        function wrapLabel(label) {
+            if (label.length <= 16) return label;
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            words.forEach(word => {
+                if ((currentLine + word).length > 16) {
+                    if (currentLine.trim() !== '') lines.push(currentLine.trim());
+                    currentLine = word + ' ';
+                } else { currentLine += word + ' '; }
+            });
+            if (currentLine.trim() !== '') lines.push(currentLine.trim());
+            return lines;
+        }
+
+        const standardTooltip = {
+            callbacks: {
+                title: function(tooltipItems) {
+                    const item = tooltipItems[0];
+                    let label = item.chart.data.labels[item.dataIndex];
+                    return Array.isArray(label) ? label.join(' ') : label;
+                }
+            }
+        };
+
+        // Donut Chart
+        const ctxDonut = document.getElementById('integrityDonut').getContext('2d');
+        new Chart(ctxDonut, {
+            type: 'doughnut',
+            data: {
+                labels: [wrapLabel('Integriti Entiti (Primary Key)'), wrapLabel('Integriti Rujukan (Foreign Key)'), wrapLabel('Integriti Domain (Validasi Data)')],
+                datasets: [{
+                    data: [33, 33, 34],
+                    backgroundColor: ['#FF6B35', '#004E89', '#00B4D8'],
+                    hoverOffset: 20,
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { 
+                    legend: { position: 'bottom', labels: { padding: 20, font: { size: 12 } } }, 
+                    tooltip: standardTooltip 
+                },
+                cutout: '75%'
+            }
+        });
+
+        // Bar Chart
+        const ctxBar = document.getElementById('anomalyBar').getContext('2d');
+        new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: [wrapLabel('Anomali Sisipan'), wrapLabel('Anomali Pemadaman'), wrapLabel('Anomali Kemas Kini')],
+                datasets: [{
+                    data: [72, 85, 96],
+                    backgroundColor: ['#FF6B35', '#004E89', '#00B4D8'],
+                    borderRadius: 15
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false }, tooltip: standardTooltip },
+                scales: { 
+                    y: { beginAtZero: true, max: 100, title: { display: true, text: 'Tahap Kritikal (%)', font: { weight: 'bold' } } },
+                    x: { ticks: { font: { size: 11 } } }
+                }
+            }
+        });
+
+        // --- PLOTLY.JS CONFIGURATION (SCATTERGL WEBGL) ---
+        const traceRisk = {
+            x: [10, 30, 50, 70, 95], y: [15, 38, 52, 78, 98],
+            text: ['Automasi Penuh', 'Pilihan Dropdown', 'Input Teks Bebas', 'Tiada Validasi', 'Kemasukan Manual'],
+            mode: 'markers+text', type: 'scattergl', textposition: 'top center',
+            textfont: { family: 'Plus Jakarta Sans', size: 11 },
+            marker: {
+                size: [25, 35, 45, 55, 75],
+                color: ['#00B4D8', '#004E89', '#FF6B35', '#FF6B35', '#004E89'],
+                opacity: 0.8, line: { color: 'white', width: 2 }
+            }
+        };
+
+        const riskLayout = {
+            xaxis: { title: 'Tahap Input Manual (%)', gridcolor: '#f3f4f6', zeroline: false },
+            yaxis: { title: 'Risiko Kegagalan Integriti (%)', gridcolor: '#f3f4f6', zeroline: false },
+            margin: { t: 20, l: 60, r: 20, b: 60 },
+            paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+            hovermode: 'closest'
+        };
+
+        Plotly.newPlot('riskScatter', [traceRisk], riskLayout, { responsive: true, displayModeBar: false });
+    </script>
+</body>
+</html>
