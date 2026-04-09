@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akademi Pengekodan: Struktur Data & Modular</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+        
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #1e293b; }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+        .nav-item.active {
+            background-color: #3b82f6;
+            color: white;
+            font-weight: 600;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row h-screen overflow-hidden selection:bg-blue-500 selection:text-white bg-slate-900">
+
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-slate-800 border-b border-slate-700 p-4 flex justify-between items-center z-30">
+        <h1 class="text-lg font-bold text-white flex items-center gap-2">
+            <i class="fas fa-layer-group text-blue-400"></i> Akademi Kod (1.6)
+        </h1>
+        <button id="mobile-menu-btn" class="text-slate-300 hover:text-white focus:outline-none">
+            <i class="fas fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-slate-900/80 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition-transform duration-300 z-50 w-72 bg-slate-800 border-r border-slate-700 flex flex-col h-full shadow-2xl md:shadow-none">
+        <div class="p-6 border-b border-slate-700 hidden md:block">
+            <h1 class="text-xl font-bold text-white flex items-center gap-3">
+                <i class="fas fa-layer-group text-blue-400"></i>
+                Akademi Kod
+            </h1>
+            <p class="text-xs text-slate-400 mt-2">Sains Komputer - Topik 1.6</p>
+        </div>
+        
+        <div class="p-4 md:hidden flex justify-between items-center border-b border-slate-700">
+            <span class="text-white font-bold text-lg">Menu Navigasi</span>
+            <button id="close-sidebar-btn" class="text-slate-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+
+        <div class="p-4 border-b border-slate-700 bg-slate-800/50">
+            <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-semibold text-slate-300">Pengalaman (XP)</span>
+                <span id="xp-counter" class="text-sm font-bold text-yellow-400">0 / 1500</span>
+            </div>
+            <div class="w-full bg-slate-700 rounded-full h-2.5">
+                <div id="xp-bar" class="bg-yellow-400 h-2.5 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+            <a href="index.html" class="w-full flex items-center gap-3 px-4 py-3 mb-4 rounded-lg text-left text-white bg-slate-800 hover:bg-slate-700 transition-colors border border-slate-600 shadow-md">
+                <i class="fas fa-arrow-left w-5 text-center text-rose-400"></i>
+                <span class="font-bold">Kembali ke Portal</span>
+            </a>
+
+            <div class="pt-2 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Modul Pembelajaran</div>
+            <button onclick="loadModule('modul1')" id="nav-modul1" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-th text-blue-400 w-5 text-center"></i>
+                <span class="text-sm md:text-base">M1: Tatasusunan (Array)</span>
+            </button>
+            <button onclick="loadModule('modul2')" id="nav-modul2" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-puzzle-piece text-orange-400 w-5 text-center"></i>
+                <span class="text-sm md:text-base">M2: Subatur Cara</span>
+            </button>
+            <button onclick="loadModule('modul3')" id="nav-modul3" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-random text-green-400 w-5 text-center"></i>
+                <span class="text-sm md:text-base">M3: Function vs Procedure</span>
+            </button>
+            <button onclick="loadModule('modul4')" id="nav-modul4" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-project-diagram text-purple-400 w-5 text-center"></i>
+                <span class="text-sm md:text-base">M4: Atur Cara Bermodular</span>
+            </button>
+            <div class="pt-4 pb-2 px-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Penilaian</div>
+            <button onclick="loadModule('ujian')" id="nav-ujian" class="nav-item w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left text-slate-300 hover:bg-slate-700 transition-colors">
+                <i class="fas fa-trophy w-5 text-center text-yellow-400"></i>
+                <span class="text-sm md:text-base">Ujian Akhir (Boss)</span>
+            </button>
+        </nav>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 relative overflow-y-auto h-full">
+        <!-- Toast Notification -->
+        <div id="toast" class="fixed top-5 right-5 z-50 transform transition-transform duration-300 translate-x-full bg-slate-800 border border-slate-600 px-4 py-3 md:px-6 md:py-4 rounded-lg shadow-xl flex items-center gap-3">
+            <i id="toast-icon" class="fas fa-check-circle text-green-400 text-lg md:text-xl"></i>
+            <div>
+                <h4 id="toast-title" class="font-bold text-white text-sm md:text-base">Berjaya!</h4>
+                <p id="toast-msg" class="text-xs md:text-sm text-slate-300">Jawapan anda tepat. +50 XP</p>
+            </div>
+        </div>
+
+        <div id="content-area" class="max-w-5xl mx-auto p-4 md:p-8 pb-24 md:pb-20">
+            <!-- Content gets injected here -->
+        </div>
+    </main>
+
+    <script>
+        // --- Mobile Menu Logic ---
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            overlay.classList.toggle('hidden');
+        }
+
+        if(mobileMenuBtn) mobileMenuBtn.addEventListener('click', toggleSidebar);
+        if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
+        if(overlay) overlay.addEventListener('click', toggleSidebar);
+
+        // --- State Management ---
+        let currentXP = 0;
+        const state = { m1_done: false, m2_done: false, m3_done: false, m4_done: false, ujian_done: false };
+
+        function addXP(amount) {
+            currentXP += amount;
+            if (currentXP > 1500) currentXP = 1500;
+            document.getElementById('xp-counter').innerText = `${currentXP} / 1500`;
+            document.getElementById('xp-bar').style.width = `${(currentXP / 1500) * 100}%`;
+            
+            const counter = document.getElementById('xp-counter');
+            counter.classList.add('scale-125', 'text-white');
+            setTimeout(() => counter.classList.remove('scale-125', 'text-white'), 300);
+        }
+
+        function showToast(title, msg, type = 'success') {
+            const toast = document.getElementById('toast');
+            const icon = document.getElementById('toast-icon');
+            
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-msg').innerText = msg;
+            
+            if (type === 'success') {
+                icon.className = 'fas fa-check-circle text-green-400 text-xl';
+                toast.style.borderLeft = '4px solid #4ade80';
+            } else {
+                icon.className = 'fas fa-times-circle text-red-400 text-xl';
+                toast.style.borderLeft = '4px solid #f87171';
+            }
+
+            toast.classList.remove('translate-x-full');
+            setTimeout(() => { toast.classList.add('translate-x-full'); }, 3000);
+        }
+
+        function updateNavActive(moduleId) {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            const activeNav = document.getElementById(`nav-${moduleId}`);
+            if(activeNav) activeNav.classList.add('active');
+        }
+
+        function loadModule(moduleId) {
+            if (window.innerWidth < 768 && !sidebar.classList.contains('-translate-x-full')) {
+                toggleSidebar();
+            }
+
+            const container = document.getElementById('content-area');
+            updateNavActive(moduleId);
+            window.scrollTo(0, 0);
+            
+            let html = '';
+
+            switch (moduleId) {
+                case 'modul1':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-blue-500/20 text-blue-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.6.1</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Tatasusunan (Array) 1 Dimensi</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-sm md:text-lg">Tatasusunan membolehkan kita menyimpan banyak nilai yang mempunyai <strong>jenis data yang sama</strong> menggunakan hanya <strong>satu nama pemboleh ubah</strong>.</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-10">
+                                <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 hover:-translate-y-1 transition-transform">
+                                    <h3 class="font-bold text-blue-400 text-lg mb-3 border-b border-slate-700 pb-2"><i class="fas fa-boxes mr-2"></i>Konsep Indeks</h3>
+                                    <p class="text-sm text-slate-300 mb-4">Setiap kotak di dalam tatasusunan dipanggil <strong>elemen</strong>. Elemen ini dipanggil menggunakan nombor <strong>indeks</strong> yang sentiasa <strong>bermula dari SIFAR (0)</strong>.</p>
+                                    
+                                    <div class="flex gap-1 justify-center mb-2">
+                                        <div class="flex flex-col items-center"><div class="w-10 h-10 md:w-12 md:h-12 bg-blue-600 text-white flex items-center justify-center font-bold rounded shadow-inner">10</div><span class="text-xs text-slate-500 mt-1">Indeks 0</span></div>
+                                        <div class="flex flex-col items-center"><div class="w-10 h-10 md:w-12 md:h-12 bg-blue-600 text-white flex items-center justify-center font-bold rounded shadow-inner">20</div><span class="text-xs text-slate-500 mt-1">Indeks 1</span></div>
+                                        <div class="flex flex-col items-center"><div class="w-10 h-10 md:w-12 md:h-12 bg-blue-600 text-white flex items-center justify-center font-bold rounded shadow-inner">30</div><span class="text-xs text-slate-500 mt-1">Indeks 2</span></div>
+                                        <div class="flex flex-col items-center"><div class="w-10 h-10 md:w-12 md:h-12 bg-blue-600 text-white flex items-center justify-center font-bold rounded shadow-inner">40</div><span class="text-xs text-slate-500 mt-1">Indeks 3</span></div>
+                                    </div>
+                                </div>
+
+                                <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 hover:-translate-y-1 transition-transform">
+                                    <h3 class="font-bold text-emerald-400 text-lg mb-3 border-b border-slate-700 pb-2"><i class="fas fa-code mr-2"></i>Sintaks</h3>
+                                    <p class="text-sm text-slate-300 mb-3">Terdapat pelbagai cara untuk melakukan pengisytiharan dan umpukan nilai awal.</p>
+                                    <div class="bg-slate-900 rounded p-3 text-xs md:text-sm code-font text-slate-300 overflow-x-auto whitespace-pre">
+<span class="text-slate-500">// Isytihar saiz sahaja (5 elemen)</span>
+<span class="text-blue-400">int</span>[] markah = <span class="text-blue-400">new int</span>[<span class="text-orange-400">5</span>];
+
+<span class="text-slate-500">// Isytihar dan Umpukan nilai awal serentak</span>
+<span class="text-blue-400">String</span>[] nama = {<span class="text-green-300">"Ali"</span>, <span class="text-green-300">"Abu"</span>, <span class="text-green-300">"Siti"</span>};</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4"><i class="fas fa-dumbbell mr-2 text-blue-400"></i>Cabaran Indeks</h3>
+                                <p class="text-sm text-slate-300 mb-4">Diberi tatasusunan berikut: <code class="bg-slate-900 text-blue-300 px-2 py-1 rounded code-font">String[] nama = {"Ali", "Abu", "Siti", "Ahmad"};</code></p>
+                                <p class="text-sm text-slate-300 mb-4">Apakah nilai yang akan dikeluarkan jika kita memanggil <code class="text-orange-400 font-bold">nama[2]</code> ?</p>
+                                
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <input type="text" id="m1-q1-input" class="bg-slate-700 border border-slate-600 text-white rounded px-4 py-3 sm:py-2 w-full sm:w-1/2 focus:border-blue-500 outline-none text-base" placeholder="Taip nilai di sini...">
+                                    <button onclick="checkM1()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 sm:py-2 rounded-lg font-semibold transition-colors w-full sm:w-auto text-sm md:text-base">Semak Jawapan</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul2':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-orange-500/20 text-orange-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.6.2</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Subatur Cara & Parameter</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 md:mb-8 text-sm md:text-lg">Subatur cara ialah sebahagian blok kod kecil yang melakukan tugasan khusus. Ia dipanggil (call) oleh atur cara utama.</p>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden mb-8">
+                                <div class="bg-slate-700/50 p-4 border-b border-slate-700 flex justify-between items-center">
+                                    <h3 class="font-bold text-white text-sm md:text-base">Konsep Hantar Parameter & Kembalikan Data</h3>
+                                </div>
+                                <div class="p-4 md:p-6 flex flex-col lg:flex-row gap-6">
+                                    <div class="flex-1 bg-slate-900 rounded p-4 code-font text-xs md:text-sm text-slate-300 border border-slate-700 overflow-x-auto whitespace-pre">
+<span class="text-slate-500">// ATUR CARA UTAMA</span>
+<span class="text-blue-400">void</span> main() {
+  <span class="text-blue-400">int</span> x = 10, y = 5;
+  
+  <span class="text-slate-500">// Memanggil subatur cara (Hantar Argumen)</span>
+  <span class="text-blue-400">int</span> jawapan = kira(<span class="text-orange-400">x</span>, <span class="text-orange-400">y</span>); 
+}</div>
+                                    <div class="hidden lg:flex items-center justify-center text-slate-500 flex-col gap-2">
+                                        <i class="fas fa-arrow-right"></i><span class="text-[10px]">Hantar (Argumen)</span>
+                                        <i class="fas fa-arrow-left"></i><span class="text-[10px]">Terima (Return)</span>
+                                    </div>
+                                    <div class="flex-1 bg-slate-900 rounded p-4 code-font text-xs md:text-sm text-slate-300 border border-slate-700 overflow-x-auto whitespace-pre">
+<span class="text-slate-500">// SUBATUR CARA</span>
+<span class="text-slate-500">// Menerima data (Parameter)</span>
+<span class="text-blue-400">int</span> kira(<span class="text-orange-400">int a</span>, <span class="text-orange-400">int b</span>) {
+  <span class="text-blue-400">int</span> jumlah = a + b;
+  
+  <span class="text-slate-500">// Memulangkan nilai ke program utama</span>
+  <span class="text-purple-400 font-bold">return</span> jumlah; 
+}</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4">Latihan Kefahaman</h3>
+                                <p class="text-sm text-slate-300 mb-4">Apakah nama kata kunci (keyword) yang wajib digunakan di dalam subatur cara untuk <strong>memulangkan (mengembalikan)</strong> data hasil pengiraan kepada atur cara utama?</p>
+                                
+                                <div class="flex flex-col sm:flex-row gap-3">
+                                    <input type="text" id="m2-q1-input" class="bg-slate-700 border border-slate-600 text-white rounded px-4 py-3 sm:py-2 w-full sm:w-1/2 focus:border-orange-500 outline-none text-base code-font" placeholder="Taip keyword...">
+                                    <button onclick="checkM2()" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 sm:py-2 rounded-lg font-semibold transition-colors w-full sm:w-auto text-sm md:text-base">Semak Jawapan</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul3':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-green-500/20 text-green-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.6.3</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Function vs Procedure</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-sm md:text-lg">Terdapat DUA jenis subatur cara utama, dan perbezaannya amat penting.</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mb-8 md:mb-10">
+                                <!-- Function -->
+                                <div class="bg-slate-800 p-5 md:p-6 rounded-xl border border-slate-700 hover:-translate-y-1 transition-transform">
+                                    <div class="w-12 h-12 bg-green-500/20 text-green-400 rounded-lg flex items-center justify-center text-xl mb-4">
+                                        <i class="fas fa-reply-all"></i>
+                                    </div>
+                                    <h3 class="text-lg md:text-xl font-bold text-white mb-2">1. Fungsi (Function)</h3>
+                                    <p class="text-slate-400 text-sm mb-4">Subatur cara jenis ini <strong>WAJIB memulangkan data (return)</strong> kembali kepada atur cara yang memanggilnya.</p>
+                                    <div class="bg-slate-900 rounded p-3 text-xs text-slate-300 border border-slate-700 code-font overflow-x-auto whitespace-pre">
+<span class="text-blue-400">int</span> tambah(<span class="text-blue-400">int</span> a, <span class="text-blue-400">int</span> b) {
+  <span class="text-purple-400 font-bold">return</span> a + b;
+}</div>
+                                </div>
+
+                                <!-- Procedure -->
+                                <div class="bg-slate-800 p-5 md:p-6 rounded-xl border border-slate-700 hover:-translate-y-1 transition-transform">
+                                    <div class="w-12 h-12 bg-rose-500/20 text-rose-400 rounded-lg flex items-center justify-center text-xl mb-4">
+                                        <i class="fas fa-ban"></i>
+                                    </div>
+                                    <h3 class="text-lg md:text-xl font-bold text-white mb-2">2. Prosedur (Procedure)</h3>
+                                    <p class="text-slate-400 text-sm mb-4">Subatur cara ini melakukan tugas tetapi <strong>TIDAK memulangkan sebarang nilai</strong>. Biasanya dipanggil dengan kata kunci <code class="text-rose-400 font-bold">void</code>.</p>
+                                    <div class="bg-slate-900 rounded p-3 text-xs text-slate-300 border border-slate-700 code-font overflow-x-auto whitespace-pre">
+<span class="text-rose-400 font-bold">void</span> paparMesej() {
+  print("Tugas Selesai!");
+}</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4">Kenal Pasti Subatur Cara</h3>
+                                <p class="text-sm text-slate-300 mb-4">Berdasarkan sintaks permulaan di bawah, adakah ia sebuah Fungsi (Function) atau Prosedur (Procedure)?<br><br><code class="bg-slate-900 text-blue-300 p-2 rounded code-font text-lg">void semakLulus(int markah)</code></p>
+                                
+                                <div class="flex flex-wrap gap-2 md:gap-3">
+                                    <button onclick="checkM3('function')" class="flex-1 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded px-4 py-3 transition-colors text-sm md:text-base font-semibold">Ia adalah Fungsi (Function)</button>
+                                    <button onclick="checkM3('procedure')" class="flex-1 bg-slate-700 hover:bg-slate-600 border border-slate-600 text-white rounded px-4 py-3 transition-colors text-sm md:text-base font-semibold">Ia adalah Prosedur (Procedure)</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'modul4':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-4 md:mb-6">
+                                <span class="bg-purple-500/20 text-purple-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold flex-shrink-0">1.6.4</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white leading-tight">Atur Cara Bermodular</h2>
+                            </div>
+                            
+                            <p class="text-slate-300 mb-6 text-sm md:text-lg">Kini kita gabungkan kefahaman <strong>Tatasusunan</strong> dan <strong>Subatur cara</strong> ke dalam satu program bermodular.</p>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl overflow-hidden mb-8">
+                                <div class="bg-slate-700/50 p-4 border-b border-slate-700 flex justify-between items-center">
+                                    <h3 class="font-bold text-white text-sm md:text-base">Menghantar Tatasusunan ke Subatur Cara</h3>
+                                </div>
+                                <div class="p-4 md:p-6">
+                                    <div class="bg-slate-900 rounded p-4 code-font text-xs md:text-sm text-slate-300 border border-slate-700 overflow-x-auto whitespace-pre">
+<span class="text-slate-500">// ATUR CARA UTAMA</span>
+<span class="text-blue-400">void</span> main() {
+  <span class="text-slate-500">// Membina array</span>
+  <span class="text-blue-400">int</span>[] markah = {<span class="text-orange-400">10, 20, 30</span>}; 
+  
+  <span class="text-slate-500">// Memanggil function dan menghantar array</span>
+  <span class="text-blue-400">int</span> hasil = jumlahkan(markah); 
+  print(hasil);
+}
+
+<span class="text-slate-500">// FUNGSI (FUNCTION)</span>
+<span class="text-blue-400">int</span> jumlahkan(<span class="text-blue-400">int</span>[] data) {
+  <span class="text-blue-400">int</span> total = <span class="text-orange-400">0</span>;
+  <span class="text-blue-400">for</span>(<span class="text-blue-400">int</span> i = <span class="text-orange-400">0</span>; i < <span class="text-orange-400">3</span>; i++) {
+    total = total + data[i]; <span class="text-slate-500">// Proses tambah</span>
+  }
+  <span class="text-purple-400">return</span> total;
+}</div>
+                                </div>
+                            </div>
+
+                            <div class="bg-slate-800 border border-slate-700 rounded-xl p-5 md:p-6">
+                                <h3 class="text-lg md:text-xl font-bold text-white mb-4">Berapakah Outputnya?</h3>
+                                <p class="text-sm text-slate-300 mb-4">Berdasarkan atur cara bermodular yang menggunakan tatasusunan (array) di atas, berapakah nilai yang akan dipaparkan ke skrin (print hasil) di atur cara utama?</p>
+                                
+                                <div class="flex flex-col md:flex-row gap-3">
+                                    <input type="number" id="m4-q1-input" class="bg-slate-700 border border-slate-600 text-white rounded px-4 py-3 md:py-2 md:w-32 focus:border-purple-500 outline-none text-base font-bold" placeholder="?">
+                                    <button onclick="checkM4()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 md:py-2 rounded-lg font-semibold transition-colors text-sm md:text-base">Semak Output</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+
+                case 'ujian':
+                    html = `
+                        <div class="animate-fade-in">
+                            <div class="flex items-center gap-3 mb-6">
+                                <span class="bg-yellow-500/20 text-yellow-400 py-1 px-3 rounded-full text-xs md:text-sm font-bold"><i class="fas fa-trophy mr-2"></i>BOSS</span>
+                                <h2 class="text-2xl md:text-3xl font-bold text-white">Ujian Penilaian Akhir</h2>
+                            </div>
+                            
+                            <div class="bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 rounded-xl p-5 md:p-8 shadow-2xl relative overflow-hidden">
+                                <div class="relative z-10">
+                                    <h3 class="text-lg md:text-xl font-bold text-white mb-6 border-b border-slate-700 pb-4">Jawab 15 soalan berikut dengan tepat untuk melengkapkan kursus Topik 1.6.</h3>
+                                    
+                                    <div class="space-y-8 md:space-y-10">
+                                        <!-- Q1 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">1. Apakah kegunaan utama tatasusunan (array) dalam pengaturcaraan?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq1" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Menyimpan banyak nilai menggunakan satu nama pemboleh ubah.</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq1" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Memulangkan nilai kepada program utama.</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q2 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">2. Indeks bagi tatasusunan sentiasa bermula dengan nombor...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq2" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">1 (Satu)</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq2" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">0 (Sifar)</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q3 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">3. Yang manakah sintaks pengisytiharan array integer yang betul di Jawa/C#?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq3" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base code-font">int array senarai;</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq3" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base code-font">int[] senarai;</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q4 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">4. Jika <code class="bg-slate-800 px-1 rounded code-font">arr = {10, 20, 30}</code>, berapakah nilai <code class="bg-slate-800 px-1 rounded code-font">arr[1]</code>?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq4" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">10</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq4" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">20</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq4" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">30</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q5 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">5. Apakah kebaikan utama menggunakan Subatur Cara?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq5" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Memecahkan atur cara besar kepada blok yang lebih kecil dan boleh diguna semula (reusable).</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq5" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Menjadikan kod tidak perlu mematuhi ralat sintaks.</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q6 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">6. "Pemboleh ubah yang diisytiharkan di dalam tanda kurungan subatur cara untuk menerima data". Ini definisi bagi...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq6" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Pemalar (Constant)</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq6" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Parameter</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q7 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">7. Nilai sebenar yang dihantar semasa memanggil (calling) subatur cara dikenali sebagai...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq7" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Indeks</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq7" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Argumen (Argument)</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q8 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">8. Perbezaan ketara antara *Function* dan *Procedure* ialah...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq8" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Function memulangkan nilai, Procedure tidak memulangkan nilai.</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq8" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Procedure memulangkan nilai, Function tidak.</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q9 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">9. Kata kunci yang digunakan untuk memulangkan nilai dalam sebuah Fungsi (Function) ialah...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq9" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base code-font">return</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq9" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base code-font">void</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q10 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">10. Subatur cara yang bermula dengan kata kunci <code class="bg-slate-800 px-1 rounded code-font">void</code> merupakan sebuah...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq10" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Procedure (Prosedur)</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq10" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Function (Fungsi)</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q11 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">11. Bolehkah kita menghantar struktur tatasusunan (array) secara penuh ke dalam sebuah subatur cara?</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq11" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Tidak, ia dilarang.</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq11" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Ya, ia boleh dilakukan.</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q12 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">12. Jika pengisytiharan ialah <code class="bg-slate-800 px-1 rounded code-font">int kiraUmur()</code>, ia bermaksud subatur cara tersebut mesti...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq12" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Menerima parameter text</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq12" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Memulangkan nilai berjenis integer.</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q13 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">13. Atur cara bermodular memudahkan pengatur cara untuk...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq13" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Mengesan dan menyahpepijat ralat kerana masalah tertumpu pada modul tertentu sahaja.</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq13" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Menulis satu blok kod tanpa sebarang gelung (loop).</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q14 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">14. Secara umumnya, saiz tatasusunan (array) biasa (asas) adalah...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq14" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Tidak terhad</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq14" value="B" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Tetap (Fixed) sejak pengisytiharan awal.</span></label>
+                                            </div>
+                                        </div>
+                                        <!-- Q15 -->
+                                        <div>
+                                            <p class="font-semibold text-slate-200 mb-3 text-sm md:text-base">15. Pengepala <code class="bg-slate-800 px-1 rounded code-font">void paparData(int[] senarai)</code> bermaksud...</p>
+                                            <div class="space-y-2">
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq15" value="A" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Sebuah Function yang memulangkan integer.</span></label>
+                                                <label class="flex items-start gap-3 p-3 rounded bg-slate-800/50 border border-slate-700 cursor-pointer"><input type="radio" name="uq15" value="C" class="mt-1"><span class="text-slate-300 text-sm md:text-base">Sebuah Procedure yang menerima tatasusunan (array) sebagai parameternya.</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button onclick="checkUjian()" class="w-full mt-10 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-900/20 transform transition hover:-translate-y-1">Hantar Jawapan</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    break;
+            }
+
+            container.innerHTML = html;
+        }
+
+        // --- Evaluators ---
+        function checkM1() {
+            const val = document.getElementById('m1-q1-input').value.trim().toLowerCase();
+            if (val === 'siti' || val === '"siti"') {
+                if(!state.m1_done) { addXP(150); state.m1_done = true; }
+                showToast("Tepat!", "Indeks bermula dari Sifar (0). Jadi, Indeks 2 adalah elemen ketiga iaitu 'Siti'.");
+            } else {
+                showToast("Salah", "Ingat, kiraan bermula dari Sifar (Ali=0, Abu=1...). Cuba sekali lagi.", "error");
+            }
+        }
+
+        function checkM2() {
+            const val = document.getElementById('m2-q1-input').value.trim().toLowerCase();
+            if (val === 'return') {
+                if(!state.m2_done) { addXP(150); state.m2_done = true; }
+                showToast("Tepat Sekali!", "Kata kunci 'return' akan memberhentikan fungsi dan membawa data (nilai) pulang ke baris utama.");
+            } else {
+                showToast("Salah", "Kata kunci tersebut terdapat di dalam kotak hijau baris 7 di atas.", "error");
+            }
+        }
+
+        function checkM3(val) {
+            if (val === 'procedure') {
+                if(!state.m3_done) { addXP(100); state.m3_done = true; }
+                showToast("Hebat!", "Betul! 'void' bermaksud tiada (kosong), jadi ia adalah satu Prosedur yang tidak memulangkan apa-apa nilai.");
+            } else {
+                showToast("Salah", "Sila baca perbezaan di atas. 'void' digunakan apabila ia TIDAK memulangkan sebarang nilai.", "error");
+            }
+        }
+
+        function checkM4() {
+            const val = document.getElementById('m4-q1-input').value.trim();
+            if (val === '60') {
+                if(!state.m4_done) { addXP(150); state.m4_done = true; }
+                showToast("Penyelesaian Sempurna!", "Gelung menambah 10 + 20 + 30. Nilai hasil yang dipulangkan (return) adalah 60.");
+            } else {
+                showToast("Kiraan Tersasar", "Perhatikan tatasusunan 'markah'. Berapakah hasil tambahan kesemua nombor di dalam tersebut?", "error");
+            }
+        }
+
+        function checkUjian() {
+            // Skema Jawapan untuk 15 Soalan (Topik 1.6)
+            const answers = { uq1: 'A', uq2: 'C', uq3: 'B', uq4: 'B', uq5: 'A', uq6: 'B', uq7: 'C', uq8: 'A', uq9: 'A', uq10: 'B', uq11: 'B', uq12: 'C', uq13: 'A', uq14: 'B', uq15: 'C' };
+            let allAnswered = true, allCorrect = true;
+
+            for (let i = 1; i <= 15; i++) {
+                const q = document.querySelector(`input[name="uq${i}"]:checked`);
+                if (!q) { allAnswered = false; break; }
+                if (q.value !== answers[`uq${i}`]) { allCorrect = false; }
+            }
+
+            if (!allAnswered) {
+                showToast("Perhatian", "Sila jawab kesemua 15 soalan.", "error"); return;
+            }
+
+            if (allCorrect) {
+                if(!state.ujian_done) { addXP(1000); state.ujian_done = true; }
+                document.getElementById('content-area').innerHTML = `
+                    <div class="animate-fade-in text-center pt-10 md:pt-20 pb-20">
+                        <i class="fas fa-medal text-7xl md:text-9xl text-blue-400 mb-8 drop-shadow-[0_0_30px_rgba(59,130,246,0.5)]"></i>
+                        <h1 class="text-3xl md:text-4xl font-bold text-white mb-4">Tahniah! Anda Lulus.</h1>
+                        <p class="text-sm md:text-xl text-slate-300 max-w-2xl mx-auto px-4">Anda telah menguasai asas Tatasusunan (Array), Function, dan Procedure dalam pengaturcaraan modular!</p>
+                        <p class="mt-8 text-xl md:text-2xl font-bold text-blue-400">Total XP: ${currentXP}</p>
+                        <div class="mt-12">
+                            <a href="index.html" class="inline-block bg-blue-600 hover:bg-blue-500 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl font-bold text-sm md:text-lg transition-colors shadow-lg shadow-blue-900/50">
+                                <i class="fas fa-home mr-2"></i> Kembali ke Portal Utama
+                            </a>
+                        </div>
+                    </div>
+                `;
+                window.scrollTo(0, 0);
+            } else {
+                showToast("Gagal", "Terdapat jawapan yang salah. Sila cuba lagi.", "error");
+            }
+        }
+
+        window.onload = () => { loadModule('modul1'); };
+    </script>
+</body>
+</html>
